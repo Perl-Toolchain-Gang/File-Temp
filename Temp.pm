@@ -103,8 +103,6 @@ $DEBUG = 0;
 
 # We are exporting functions
 
-#require Exporter;
-#@ISA = qw/Exporter/;
 use base qw/Exporter/;
 
 # Export list - to allow fine tuning of export table
@@ -133,7 +131,7 @@ Exporter::export_tags('POSIX','mktemp');
 
 # Version number 
 
-$VERSION = '0.07';
+$VERSION = '0.08';
 
 # This is a list of characters that can be used in random filenames
 
@@ -670,71 +668,85 @@ sub _can_unlink_opened_file {
 #   - isdir      (flag to indicate that we are being given a directory)
 #                 [and hence no filehandle]
 
-# Status is not referred since all the magic is done with END blocks
+# Status is not referred to since all the magic is done with and END block
 
-sub _deferred_unlink {
+{
+  # Will set up two lexical variables to contain all the files to be
+  # removed. One array for files, another for directories
+  # They will only exist in this block
+  # This means we only have to set up a single END block to remove all files
+  # @files_to_unlink contains an array ref with the filehandle and filename
+  my (@files_to_unlink, @dirs_to_unlink);
 
-  croak 'Usage:  _deferred_unlink($fh, $fname, $isdir)'
-    unless scalar(@_) == 3;
+  # Set up an end block to use these arrays
+  END {
+    # Dirs
+    foreach my $dir (@dirs_to_unlink) {
+      if (-d $dir) {
+	rmtree($dir, $DEBUG, 1);
+      }
+    }
+    # Files
+    foreach my $file (@files_to_unlink) {
+      # close the filehandle without checking its state
+      # in order to make real sure that this is closed
+      # if its already closed then I dont care about the answer
+      # probably a better way to do this
+      close($file->[0]);  # file handle is [0]
 
-  my ($fh, $fname, $isdir) = @_;
-
-  warn "Setting up deferred removal of $fname\n"
-    if $DEBUG;
-
-  # If we have a directory, check that it is a directory
-  if ($isdir) {
-
-    if (-d $fname) {
-
-      # Directory exists so set up END block
-      # (quoted to preserve lexical variables)
-      eval q{
-	END {
-	  if (-d $fname) {
-	    rmtree($fname, $DEBUG, 1);
-	  }
-	}
-	1;
-      }  || die;
-
-    } else {
-      carp "Request to remove directory $fname could not be completed since it does not exists!\n";
+      if (-f $file->[1]) {  # file name is [1]
+	unlink $file->[1] or warn "Error removing ".$file->[1];
+      }
+      
     }
 
-
-  } else {
-
-    if (-f $fname) {
-
-      # dile exists so set up END block
-      # (quoted to preserve lexical variables)
-      eval q{
-	END {
-	  # close the filehandle without checking its state
-	  # in order to make real sure that this is closed
-	  # if its already closed then I dont care about the answer
-	  # probably a better way to do this
-	  close($fh);
-
-	  if (-f $fname) {
-	    unlink $fname
-	      || warn "Error removing $fname";
-	  }
-	}
-	1;
-      } || die;
-
-    } else {
-      carp "Request to remove file $fname could not be completed since it is not there!\n";
-    }
-
-
-    
   }
 
-}
+  # This is the sub called to register a file for deferred unlinking
+  # This could simply store the input parameters and defer everything
+  # until the END block. For now we do a bit of checking at this
+  # point in order to make sure that (1) we have a file/dir to delete
+  # and (2) we have been called with the correct arguments.
+  sub _deferred_unlink {
 
+    croak 'Usage:  _deferred_unlink($fh, $fname, $isdir)'
+      unless scalar(@_) == 3;
+    
+    my ($fh, $fname, $isdir) = @_;
+
+    warn "Setting up deferred removal of $fname\n"
+      if $DEBUG;
+    
+    # If we have a directory, check that it is a directory
+    if ($isdir) {
+
+      if (-d $fname) {
+
+	# Directory exists so store it
+	push (@dirs_to_unlink, $fname);
+
+      } else {
+	carp "Request to remove directory $fname could not be completed since it does not exists!\n";
+      }
+
+      
+    } else {
+
+      if (-f $fname) {
+
+	# file exists so store handle and name for later removal
+	push(@files_to_unlink, [$fh, $fname]);
+
+      } else {
+	carp "Request to remove file $fname could not be completed since it is not there!\n";
+      }
+
+    }
+
+  }
+
+
+}
 
 =head1 FUNCTIONS
 
