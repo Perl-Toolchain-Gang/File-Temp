@@ -1,6 +1,16 @@
+2003-08-15  Tim Jenness  <tjenness@cpan.org>
+
+	--- RELEASE V0.13 ---
+	
+	* Temp.pm: Integrate doc fixes from bleadperl (Slaven Rezic and
+	Jeffrey Friedl)
+
+	* Makefile.PL: Add INSTALLDIRS switch on perl version so that the
+	module installs into the correct place for perl 5.6.1 and newer.
+
 2002-08-28  Tim Jenness  <timj@jach.hawaii.edu>
 
-	* Temp.pm: Synch with perl 5.8.0 v0.13 MacOS fixes
+	* Temp.pm: Synch with perl 5.8.0 v0.13 MacOS fixes (Chris Nandor)
 
 2001-02-22  Tim Jenness  <timj@jach.hawaii.edu>
 
