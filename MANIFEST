@@ -8,3 +8,4 @@ t/tempfile.t
 t/security.t
 ChangeLog
 misc/benchmark.pl
+misc/results.txt
