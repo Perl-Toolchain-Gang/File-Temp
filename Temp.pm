@@ -1238,7 +1238,8 @@ sub tempfile {
   # we have to indicate temporary-ness when we open the file. In general
   # we only want a true temporary file if we are returning just the
   # filehandle - if the user wants the filename they probably do not
-  # want the file to disappear as soon as they close it.
+  # want the file to disappear as soon as they close it (which may be
+  # important if they want a child process to use the file)
   # For this reason, tie unlink_on_close to the return context regardless
   # of OS.
   my $unlink_on_close = ( wantarray ? 0 : 1);
