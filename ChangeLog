@@ -13,7 +13,7 @@
 	* Temp.pm: Add note on forking (prompted by Daniel Macks)
 
 	* Temp.pm (cmpstat): Roman Vasicek reported problems with the _
-	filehandle. Play it safe and remove that handle.
+	filehandle. Play it safe and remove that handle. (see RT bug #8822)
 
 	* t/tempfile.t: Add test for write proteceted temp file (thanks to
 	Slaven Rezic)
