@@ -82,15 +82,18 @@ that the file will not exist by the time the caller opens the filename.
 
 =cut
 
-use v5.5.670;  # Uses S_IWOTH in Fcntl and auto-viv filehandles, new File::Spec
+# 5.6.0 gives us S_IWOTH, S_IWGRP, our and auto-vivifying filehandls
+# People would like a version on 5.005 so give them what they want :-)
+use 5.005;
 use strict;
 use Carp;
 use File::Spec 0.8;
 use File::Path qw/ rmtree /;
-use Fcntl 1.03 qw/ :DEFAULT S_IWOTH S_IWGRP /;
+use Fcntl 1.03;
 use Errno qw( EEXIST ENOENT ENOTDIR EINVAL );
 
-our ($VERSION, @EXPORT_OK, %EXPORT_TAGS, $DEBUG);
+# use 'our' on v5.6.0
+use vars qw($VERSION @EXPORT_OK %EXPORT_TAGS $DEBUG);
 
 $DEBUG = 0;
 
@@ -126,7 +129,7 @@ Exporter::export_tags('POSIX','mktemp');
 
 # Version number 
 
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 # This is a list of characters that can be used in random filenames
 
@@ -338,6 +341,12 @@ sub _gettemp {
     if ($options{"open"}) {
       my $fh;
 
+      # If we are running before perl5.6.0 we can not auto-vivify
+      if ($] < 5.006) {
+	require Symbol;
+	$fh = &Symbol::gensym;
+      }
+
       # Try to make sure this will be marked close-on-exec
       # XXX: Win32 doesn't respect this, nor the proper fcntl,
       #      but may have O_NOINHERIT. This may or may not be in Fcntl.
@@ -535,8 +544,8 @@ sub _is_safe {
   # use 022 to check writability
   # Do it with S_IWOTH and S_IWGRP for portability (maybe)
   # mode is in info[2]
-  if (($info[2] & S_IWGRP) ||   # Is group writable?
-      ($info[2] & S_IWOTH) ) {  # Is world writable?
+  if (($info[2] & &Fcntl::S_IWGRP) ||   # Is group writable?
+      ($info[2] & &Fcntl::S_IWOTH) ) {  # Is world writable?
     return 0 unless -d _;       # Must be a directory
     return 0 unless -k _;       # Must be sticky
   }
@@ -1383,10 +1392,11 @@ sub unlink0 {
     #      resulting in recursive removal
     croak "unlink0: $path has become a directory!" if -d $path;
     unlink($path) or return 0;
-#    rmtree ($path, $DEBUG,1) or return 0;
 
     # Stat the filehandle
     @fh = stat $fh;
+
+    print "Link count = $fh[3] \n" if $DEBUG;
 
     # Make sure that the link count is zero
     return ( $fh[3] == 0 ? 1 : 0);
@@ -1453,6 +1463,13 @@ The level can be changed as follows:
 
 The level constants are not exported by the module.
 
+Currently, you must be running at least perl v5.6.0 in order to
+run with MEDIUM or HIGH security. This is simply because the 
+safety tests use functions from L<Fcntl|Fcntl> that are not
+available in older versions of perl. The problem is that the version
+number for Fcntl is the same in perl 5.6.0 and in 5.005_03 even though
+they are different versions.....
+
 =cut
 
 {
@@ -1465,6 +1482,10 @@ The level constants are not exported by the module.
       if (($level != STANDARD) && ($level != MEDIUM) && ($level != HIGH)) {
 	carp "safe_level: Specified level ($level) not STANDARD, MEDIUM or HIGH - ignoring\n";
       } else {
+	if ($] < 5.006 && $level != STANDARD) {
+	  # Cant do MEDIUM or HIGH checks
+	  croak "Currently requires perl 5.006 or newer to do the safe checks";
+	}
         $LEVEL = $level; 
       }
     }
