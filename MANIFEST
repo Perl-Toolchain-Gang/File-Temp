@@ -6,6 +6,7 @@ t/mktemp.t
 t/posix.t
 t/tempfile.t
 t/security.t
+t/object.t
 ChangeLog
 misc/benchmark.pl
 misc/results.txt
