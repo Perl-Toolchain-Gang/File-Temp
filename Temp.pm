@@ -183,7 +183,7 @@ Exporter::export_tags('POSIX','mktemp');
 
 # Version number
 
-$VERSION = '0.15';
+$VERSION = '0.16';
 
 # This is a list of characters that can be used in random filenames
 
@@ -631,8 +631,6 @@ sub _replace_XX {
   } else {
     $path =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS ) ) ]/ge;
   }
-
-  print "Chose path: $path\n";
   return $path;
 }
 

@@ -1,6 +1,6 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.15 of File::Temp. This module can be used to
+This is release V0.16 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
@@ -125,6 +125,8 @@ terms as Perl itself.
 
 CHANGES IN THIS RELEASE
 
+V0.16
+      - Remove leftover debugging statement!
 V0.15
       + Can now control whether the temp file is removed or not
         after the object is created using the unlink_on_destroy method.

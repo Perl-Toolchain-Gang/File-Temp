@@ -1,3 +1,9 @@
+2005-02-22  Tim Jenness  <timj@jach.hawaii.edu>
+
+	--- RELEASE V0.16 ---
+	
+	* Temp.pm: Remove spurious debug statement
+
 2005-02-21  Tim Jenness  <tjenness@cpan.org>
 
 	--- RELEASE V0.15 ---
