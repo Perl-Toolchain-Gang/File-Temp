@@ -15,7 +15,7 @@ my (@files, @dirs); # Array containing list of dirs/files to test
 END { foreach (@files) { ok( !(-e $_) )} }
 
 # And a test for directories
-END { foreach (@dirs) { ok( !(-d $_) )} } 
+END { foreach (@dirs)  { ok( !(-d $_) )} } 
 
 # Need to make sure that the END blocks are setup before
 # the ones that File::Temp configures since END blocks are evaluated
@@ -88,5 +88,5 @@ print "# TEMPFILE: Created $tempfile\n";
 ok( (-f $tempfile) );
 push(@files, $tempfile);
 
-# no tests yet to make sure that the END{} blocks correctly remove
-# the files
+# Now END block will execute to test the removal of directories
+
