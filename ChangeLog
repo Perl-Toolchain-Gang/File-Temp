@@ -1,3 +1,19 @@
+2000-05-08  Tim Jenness  <timj@jach.hawaii.edu>
+
+	* Temp.pm: Reorganize END block 
+
+	* t/tempfile.t: Correct tests for new position of END{} block
+
+	* t/security.t: Correct tests for new position of END{} block
+
+	* t/posix.t: add # to print output
+
+	* t/tempfile.t: Add # to print output
+
+	* t/mktemp.t: Add # to print output
+
+	* t/security.t: Add # to print output
+
 2000-04-28  Tim Jenness  <timj@jach.hawaii.edu>
 
 	* Temp.pm: Calculate OPENFLAGS outside of subroutine. This
