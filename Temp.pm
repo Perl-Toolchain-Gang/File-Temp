@@ -168,6 +168,7 @@ use base qw/Exporter/;
 	      mkstemps
 	      mkdtemp
 	      unlink0
+	      cleanup
 		};
 
 # Groups of functions for export
@@ -869,6 +870,12 @@ sub _can_do_level {
 
   # Set up an end block to use these arrays
   END {
+    cleanup();
+  }
+
+  # Cleanup function. Always triggered on END but can be invoked
+  # manually.
+  sub cleanup {
     if (!$KEEP_ALL) {
       # Files
       my @files = (exists $files_to_unlink{$$} ?
@@ -893,8 +900,15 @@ sub _can_do_level {
 	  rmtree($dir, $DEBUG, 0);
 	}
       }
+
+      # clear the arrays
+      @{ $files_to_unlink{$$} } = ()
+	if exists $files_to_unlink{$$};
+      @{ $dirs_to_unlink{$$} } = ()
+	if exists $dirs_to_unlink{$$};
     }
   }
+
 
   # This is the sub called to register a file for deferred unlinking
   # This could simply store the input parameters and defer everything
@@ -1948,6 +1962,22 @@ sub unlink1 {
   return unlink($path);
 }
 
+=item B<cleanup>
+
+Calling this function will cause any temp files or temp directories
+that are registered for removal to be removed. This happens automatically
+when the process exits but can be triggered manually if the caller is sure
+that none of the temp files are required. This method can be registered as
+an Apache callback.
+
+On OSes where temp files are automatically removed when the temp file
+is closed, calling this function will have no effect other than to remove
+temporary directories (which may include temporary files).
+
+  File::Temp::cleanup();
+
+Not exported by default.
+
 =back
 
 =head1 PACKAGE VARIABLES
@@ -2162,8 +2192,8 @@ as a standard part of perl from v5.6.1.
 
 L<POSIX/tmpnam>, L<POSIX/tmpfile>, L<File::Spec>, L<File::Path>
 
-See L<IO::File> and L<File::MkTemp> for different implementations of
-temporary file handling.
+See L<IO::File> and L<File::MkTemp>, L<Apachae::TempFile> for
+different implementations of temporary file handling.
 
 =head1 AUTHOR
 

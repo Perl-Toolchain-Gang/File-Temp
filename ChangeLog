@@ -3,6 +3,10 @@
 	* Temp.pm: Add $KEEP_ALL to allow the temporary files to be
 	retained whilst debugging (suggestion from Ed Avis [and others]).
 
+	* Temp.pm: Add cleanup() function so that temp files that would be
+	removed by an END block can be removed by a daemon. (RT wishlist
+	item #6928 by Robert Rothenberg)
+
 	* Temp.pm: Force chmod on file before unlinking it. This can be a
 	problem on windows (see RT bug #6935). tempdir() has been fixed by
 	Slaven's earlier patch to change the rmtree arguments.
@@ -14,7 +18,7 @@
 
 	* Temp.pm: Add note on forking and make sure that END blocks only
 	remove temporary files created by the current process ID (prompted
-	by Daniel Macks)
+	by Daniel Macks in RT bug #11067)
 
 	* Temp.pm (cmpstat): Roman Vasicek reported problems with the _
 	filehandle. Play it safe and remove that handle. (see RT bug #8822)
