@@ -1,5 +1,15 @@
 2000-11-24  Tim Jenness  <timj@jach.hawaii.edu>
 
+        --- RELEASE V0.11 ----
+
+	* t/tempfile.t: Add a test to make sure the file is present after
+	close and another to use tempfile in a scalar context.
+
+	* Temp.pm: Fix bug on NT with O_TEMPORARY causing the file to be
+	removed before the program exits. 
+
+        ---- RELEASE V0.10 ----
+	
 	* Temp.pm: Incorporate fixes up to bleedperl 7825. Cross platform
 	fixes.
 
