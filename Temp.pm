@@ -2116,7 +2116,7 @@ The value is only relevant when C<safe_level> is set to MEDIUM or higher.
   }
 }
 
-=item B<KEEP_ALL>
+=item B<$KEEP_ALL>
 
 Controls whether temporary files and directories should be retained
 regardless of any instructions in the program to remove them
