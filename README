@@ -1,6 +1,6 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.14 of File::Temp. This module can be used to
+This is release V0.15 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
@@ -102,16 +102,27 @@ stickyness test does not work on NT, and neither does unlink on an open
 file). MEDIUM and HIGH security checks have only been tested on Unix.
 Porting notes are provided at the start of Temp.pm.
 
+FILE::PATH PROBLEM
+
+In perl releases prior to perl 5.6.1 File::Temp will fail to remove
+directory paths if taint checking is enabled. The problem is a bug in
+the implementation of File::Path's rmtree function that is fixed in
+version 1.05 of File::Path. You may want to upgrade File::Path if you
+come across this problem (you should be able to simply copy in the new
+implementation of File::Path from a newer perl)..
+
 AUTHOR
 
 Tim Jenness <tjenness@cpan.org>
 
-Copyright (C) 1999 - 2003 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999 - 2005 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.15
 
 V0.14
       - new Object oriented interface. The file can now be deleted
