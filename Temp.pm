@@ -852,17 +852,28 @@ sub _can_do_level {
 
 {
   # Will set up two lexical variables to contain all the files to be
-  # removed. One array for files, another for directories
-  # They will only exist in this block
-  # This means we only have to set up a single END block to remove all files
-  # @files_to_unlink contains an array ref with the filehandle and filename
-  my (@files_to_unlink, @dirs_to_unlink);
+  # removed. One array for files, another for directories They will
+  # only exist in this block.
+
+  #  This means we only have to set up a single END block to remove
+  #  all files. 
+
+  # in order to prevent child processes inadvertently deleting the parent
+  # temp files we use a hash to store the temp files and directories
+  # created by a particular process id.
+
+  # %files_to_unlink contains values that are references to an array of
+  # array references containing the filehandle and filename associated with
+  # the temp file.
+  my (%files_to_unlink, %dirs_to_unlink);
 
   # Set up an end block to use these arrays
   END {
     if (!$KEEP_ALL) {
       # Files
-      foreach my $file (@files_to_unlink) {
+      my @files = (exists $files_to_unlink{$$} ?
+		   @{ $files_to_unlink{$$} } : () );
+      foreach my $file (@files) {
 	# close the filehandle without checking its state
 	# in order to make real sure that this is closed
 	# if its already closed then I dont care about the answer
@@ -875,7 +886,9 @@ sub _can_do_level {
 	}
       }
       # Dirs
-      foreach my $dir (@dirs_to_unlink) {
+      my @dirs = (exists $dirs_to_unlink{$$} ?
+		  @{ $dirs_to_unlink{$$} } : () );
+      foreach my $dir (@dirs) {
 	if (-d $dir) {
 	  rmtree($dir, $DEBUG, 0);
 	}
@@ -906,7 +919,9 @@ sub _can_do_level {
 	# Directory exists so store it
 	# first on VMS turn []foo into [.foo] for rmtree
 	$fname = VMS::Filespec::vmspath($fname) if $^O eq 'VMS';
-	push (@dirs_to_unlink, $fname);
+	$dirs_to_unlink{$$} = [] 
+	  unless exists $dirs_to_unlink{$$};
+	push (@{ $dirs_to_unlink{$$} }, $fname);
 
       } else {
 	carp "Request to remove directory $fname could not be completed since it does not exist!\n" if $^W;
@@ -917,7 +932,9 @@ sub _can_do_level {
       if (-f $fname) {
 
 	# file exists so store handle and name for later removal
-	push(@files_to_unlink, [$fh, $fname]);
+	$files_to_unlink{$$} = []
+	  unless exists $files_to_unlink{$$};
+	push(@{ $files_to_unlink{$$} }, [$fh, $fname]);
 
       } else {
 	carp "Request to remove file $fname could not be completed since it is not there!\n" if $^W;
@@ -2118,13 +2135,11 @@ a local disk.
 =head2 Forking
 
 In some cases files created by File::Temp are removed from within an
-END block. This can lead to problems for long running processes where
-it is advised to use the object interface (files will then be deleted
-when the objects go out of scope) and also when a child perl process
-exits the END block will be triggered such that any temporary files
-created before the fork will be removed by the child. Currently the
-best advice is to use the C<POSIX::_exit()> function in the child such
-that END blocks will not be triggered.
+END block. Since END blocks are triggered when a child process exits
+(unless C<POSIX::_exit()> is used by the child) File::Temp takes care
+to only remove those temp files created by a particular process ID. This
+means that a child will not attempt to remove temp files created by the
+parent process.
 
 =head1 HISTORY
 
@@ -2132,7 +2147,8 @@ Originally began life in May 1999 as an XS interface to the system
 mkstemp() function. In March 2000, the OpenBSD mkstemp() code was
 translated to Perl for total control of the code's
 security checking, to ensure the presence of the function regardless of
-operating system and to help with portability.
+operating system and to help with portability. The module was shipped
+as a standard part of perl from v5.6.1.
 
 =head1 SEE ALSO
 
