@@ -1,9 +1,11 @@
 2005-02-21  Tim Jenness  <tjenness@cpan.org>
 
+	--- RELEASE V0.15 ---
+	
 	* Temp.pm (unlink_on_destroy): Add post-object creation method to
 	control whether the temp file will be unlinked when the object
 	goes out of scope.
-
+	
 	* Temp.pm: Increase maximum number of tries before aborting.
 
 	* Temp.pm: Add $KEEP_ALL to allow the temporary files to be

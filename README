@@ -10,8 +10,10 @@ tested on six operating systems. The Windows implementation is not
 yet at release quality since currently files are only deleted when
 the program exits (via an END block), this differs from the Unix
 implementation where files can be deleted when the file is closed.
-The object-oriented implementation can get around this problem
-by making use of the object destructor to delete the file.
+
+The object-oriented implementation can get around this problem by
+making use of the object destructor to delete the file and is the
+recommended interface.
 
 Please let me know if it fails on other operating systems.
 
@@ -84,6 +86,7 @@ PLATFORMS
 
 Tested on the following platforms:
 
+ SUSe Linux 9.1, perl 5.8.3
  Redhat Linux 9, perl 5.8.0
  RedHat Linux 7, perl 5.6.0
  Solaris 2.6, perl 5.6.0
@@ -123,6 +126,26 @@ terms as Perl itself.
 CHANGES IN THIS RELEASE
 
 V0.15
+      + Can now control whether the temp file is removed or not
+        after the object is created using the unlink_on_destroy method.
+      + A cleanup() function has been added to allow temp files to be
+        tidied up before the END block triggers. (RT#6928; thanks to
+        Robert Rothenberg)
+      + A global variable $KEEP_ALL can be used to control whether temp
+        files are removed on program exit (used for debugging)
+      + Add support for Interix from Todd Vierling
+      + Processes keep track of which files they are expected to remove
+        so that child processes no longer remove the parent's files
+        (RT#11067; Daniel Macks)
+      - Fix RT bug #8822 (very strange clash with the _ filehandle)
+      - Files are chmodded before removal to make sure they are writable
+        (RT#6935)
+      - The NOFOLLOW flag was not being used when it was supposed to be.
+        (thanks to Marc Tardif)
+      - The number of retries has been increased.
+      - Improved pod and comments
+      - Directories are now removed with the correct option to rmtree
+        to overcome problems with file permissions (thanks to Slaven Rezic)
 
 V0.14
       - new Object oriented interface. The file can now be deleted
