@@ -194,7 +194,7 @@ my @CHARS = (qw/ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 
 # Maximum number of tries to make a temp file before failing
 
-use constant MAX_TRIES => 10;
+use constant MAX_TRIES => 1000;
 
 # Minimum number of X characters that should be in a template
 use constant MINX => 4;
