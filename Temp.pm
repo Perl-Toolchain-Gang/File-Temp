@@ -351,7 +351,7 @@ sub _gettemp {
   # we know where we are looking and what we are looking for
 
   if (substr($template, $start - MINX + 1, MINX) ne 'X' x MINX) {
-    ${$options{ErrStr}} = "The template must contain at least ".
+    ${$options{ErrStr}} = "The template must end with at least ".
       MINX . " 'X' characters\n";
     return ();
   }
