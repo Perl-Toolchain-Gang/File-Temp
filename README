@@ -1,12 +1,12 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.08 of File::Temp. This module can be used to
+This is release V0.09 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
 
-It could be considered to be in an early beta state since it has only been
-tested on four operating systems.
+It could be considered to be in a beta state since it has only been
+tested on six operating systems.
 
 Please let me know if it fails on other operating systems.
 
@@ -39,6 +39,8 @@ Tested on the following platforms:
  RedHat Linux 6.1, perl 5.6.0
  Solaris 2.6, perl 5.6.0
  Windows NT 4, perl 5.6.0
+ VMS, perl5.6
+ OS/2, perl5.6
 
  RedHat Linux 6.1, perl 5.005_03
  Digital Unix 4.0, perl 5.005_03
@@ -57,6 +59,10 @@ software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.09:
+      - Add VMS support
+      - OS/2 can not understand sticky bits
 
 V0.08:
       - Improve performance by a factor of 3 over V0.07

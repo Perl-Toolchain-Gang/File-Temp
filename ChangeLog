@@ -1,3 +1,9 @@
+2000-07-26  Tim Jenness  <timj@jach.hawaii.edu>
+
+	* Release V0.09 to CPAN
+	
+	* README: Update for V0.09
+
 2000-07-25  Tim Jenness  <timj@jach.hawaii.edu>
 
 	* t/security.t: OS/2 can not do the security tests.
