@@ -7,3 +7,4 @@ t/posix.t
 t/tempfile.t
 t/security.t
 ChangeLog
+misc/benchmark.pl
