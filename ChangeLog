@@ -2,7 +2,10 @@
 
 	* Temp.pm: Add $KEEP_ALL to allow the temporary files to be
 	retained whilst debugging.
-	
+
+	* Temp.pm: Force chmod on file before unlinking it. This can be a
+	problem on windows (see RT bug #6935)
+
 	* Temp.pm (top_system_uid): Add interix patch from Todd Vierling
 
 	* Temp.pm (_gettemp): Pod patch from Steven Lembark

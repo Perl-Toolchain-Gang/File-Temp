@@ -635,6 +635,18 @@ sub _replace_XX {
   return $path;
 }
 
+# Internal routine to force a temp file to be writable after
+# it is created so that we can unlink it. Windows seems to occassionally
+# force a file to be readonly when written to certain temp locations
+sub _force_writable {
+  my $file = shift;
+  my $umask = umask();
+  umask(066);
+  chmod 0600, $file;
+  umask($umask) if defined $umask;
+}
+
+
 # internal routine to check to see if the directory is safe
 # First checks to see if the directory is not owned by the
 # current user or root. Then checks to see if anyone else
@@ -858,6 +870,7 @@ sub _can_do_level {
 	close($file->[0]);  # file handle is [0]
 
 	if (-f $file->[1]) {  # file name is [1]
+	  _force_writable( $file->[1] ); # for windows
 	  unlink $file->[1] or warn "Error removing ".$file->[1];
 	}
       }
@@ -1037,6 +1050,7 @@ sub DESTROY {
     # do an unlink without test. Seems to be silly
     # to do this when we are trying to be careful
     # about security
+    _force_writable( $self->filename ); # for windows
     unlink1( $self, $self->filename )
       or unlink($self->filename);
   }
@@ -1903,6 +1917,9 @@ sub unlink1 {
 
   # Close the file
   close( $fh ) or return 0;
+
+  # Make sure the file is writable (for windows)
+  _force_writable( $path );
 
   # return early (without unlink) if we have been instructed to retain files.
   return 1 if $KEEP_ALL;
