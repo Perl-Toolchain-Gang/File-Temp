@@ -1029,9 +1029,12 @@ sub new {
 
   # Store unlink information in hash slot (plus other constructor info)
   %{*$fh} = %args;
-  ${*$fh}{UNLINK} = $unlink;
 
+  # create the object
   bless $fh, $class;
+
+  # final method-based configuration
+  $fh->unlink_on_destroy( $unlink );
 
   return $fh;
 }
@@ -1055,6 +1058,25 @@ sub filename {
 sub STRINGIFY {
   my $self = shift;
   return $self->filename;
+}
+
+=item B<unlink_on_destroy>
+
+Control whether the file is unlinked when the object goes out of scope.
+The file is removed if this value is true and $KEEP_ALL is not.
+
+ $fh->unlink_on_destroy( 1 );
+
+Default is for the file to be removed.
+
+=cut
+
+sub unlink_on_destroy {
+  my $self = shift;
+  if (@_) {
+    ${*$self}{UNLINK} = shift;
+  }
+  return ${*$self}{UNLINK};
 }
 
 =item B<DESTROY>

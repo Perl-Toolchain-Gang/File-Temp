@@ -1,5 +1,9 @@
 2005-02-21  Tim Jenness  <tjenness@cpan.org>
 
+	* Temp.pm (unlink_on_destroy): Add post-object creation method to
+	control whether the temp file will be unlinked when the object
+	goes out of scope.
+	
 	* Temp.pm: Add $KEEP_ALL to allow the temporary files to be
 	retained whilst debugging (suggestion from Ed Avis [and others]).
 
