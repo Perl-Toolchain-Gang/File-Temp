@@ -39,6 +39,8 @@ $fh = tmpfile();
 ok( $fh );
 print "TMPFILE: tmpfile got FH $fh\n";
 
+$fh->autoflush(1);
+
 # print something to it
 my $original = "Hello a test\n";
 print "TMPFILE: Wrote line: $original";

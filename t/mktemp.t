@@ -24,6 +24,8 @@ print "MKSTEMP: FH is $fh File is $template fileno=".fileno($fh)."\n";
 # Check if the file exists
 ok( (-e $template) );
 
+# Autoflush
+$fh->autoflush(1);
 
 # Try printing something to the file
 my $string = "woohoo\n";
