@@ -1,5 +1,11 @@
 2003-08-16  Tim Jenness  <tjenness@cpan.org>
 
+	--- RELEASE V0.14 ---
+
+	* t/object.t: Add test of OO interface and switch to Test::More
+
+	* Temp.pm: Add object-oriented interface.
+	
 	* Temp.pm: mpeix fixes from Ken Hirsch <hirschk@labcorp.com>
 
 2003-08-15  Tim Jenness  <tjenness@cpan.org>

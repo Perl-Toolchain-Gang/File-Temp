@@ -1,12 +1,17 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.13 of File::Temp. This module can be used to
+This is release V0.14 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
 
-It could be considered to be in a beta state since it has only been
-tested on six operating systems.
+It could be considered to be in a late beta state since it has only been
+tested on six operating systems. The Windows implementation is not
+yet at release quality since currently files are only deleted when
+the program exits (via an END block), this differs from the Unix
+implementation where files can be deleted when the file is closed.
+The object-oriented implementation can get around this problem
+by making use of the object destructor to delete the file.
 
 Please let me know if it fails on other operating systems.
 
@@ -79,6 +84,7 @@ PLATFORMS
 
 Tested on the following platforms:
 
+ Redhat Linux 9, perl 5.8.0
  RedHat Linux 7, perl 5.6.0
  Solaris 2.6, perl 5.6.0
  Windows NT 4, perl 5.6.0
@@ -106,6 +112,13 @@ software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.14
+      - new Object oriented interface. The file can now be deleted
+	when the object goes out of scope:
+          $tmp = new File::Temp;
+	  print $tmp "Some data\n";
+          print "Filename is $tmp\n";
 
       - MPE/IX fixes from Ken Hirsch
 
