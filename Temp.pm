@@ -2179,6 +2179,12 @@ to only remove those temp files created by a particular process ID. This
 means that a child will not attempt to remove temp files created by the
 parent process.
 
+=head2 BINMODE
+
+The file returned by File::Temp will have been opened in binary mode
+if such a mode is available. If that is not correct, use the binmode()
+function to change the mode of the filehandle.
+
 =head1 HISTORY
 
 Originally began life in May 1999 as an XS interface to the system

@@ -33,6 +33,8 @@
 	attempt to remove write-protected files on cleanup (thanks to
 	Slaven Rezic)
 
+	* Temp.pm: Add note on binmode usage
+	
 2003-08-16  Tim Jenness  <tjenness@cpan.org>
 
 	--- RELEASE V0.14 ---
