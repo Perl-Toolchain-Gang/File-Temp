@@ -474,12 +474,12 @@ sub _gettemp {
 
       # Attempt to open the file
       my $open_success = undef;
-      if ( $^O eq 'VMS' and $options{"unlink_on_close"} ) {
+      if ( $^O eq 'VMS' and $options{"unlink_on_close"} && !$KEEP_ALL) {
         # make it auto delete on close by setting FAB$V_DLT bit
 	$fh = VMS::Stdio::vmssysopen($path, $OPENFLAGS, 0600, 'fop=dlt');
 	$open_success = $fh;
       } else {
-	my $flags = ( $options{"unlink_on_close"} ?
+	my $flags = ( ($options{"unlink_on_close"} && !$KEEP_ALL) ?
 		      $OPENTEMPFLAGS :
 		      $OPENFLAGS );
 	$open_success = sysopen($fh, $path, $flags, 0600);
@@ -1119,7 +1119,7 @@ automatically removed when the program exits. Default is for the file
 to be removed if a file handle is requested and to be kept if the
 filename is requested. In a scalar context (where no filename is
 returned) the file is always deleted either on exit or when it is closed
-(unless $KEEP_ALL is true).
+(unless $KEEP_ALL is true when the temp file is created).
 
 If the template is not specified, a template is always
 automatically generated. This temporary file is placed in tmpdir()
@@ -1765,7 +1765,9 @@ Finally, on NFS file systems the link count of the file handle does
 not always go to zero immediately after unlinking. Currently, this
 command is expected to fail on NFS disks.
 
-This function is disabled if the global variable $KEEP_ALL is true.
+This function is disabled if the global variable $KEEP_ALL is true
+and an unlink on open file is supported. If the unlink is to be deferred
+to the END block, the file is still registered for removal.
 
 =cut
 
@@ -1779,11 +1781,12 @@ sub unlink0 {
 
   cmpstat($fh, $path) or return 0;
 
-  # return early (Without unlink) if we have been instructed to retain files.
-  return 1 if $KEEP_ALL;
-
   # attempt remove the file (does not work on some platforms)
   if (_can_unlink_opened_file()) {
+
+    # return early (Without unlink) if we have been instructed to retain files.
+    return 1 if $KEEP_ALL;
+
     # XXX: do *not* call this on a directory; possible race
     #      resulting in recursive removal
     croak "unlink0: $path has become a directory!" if -d $path;
@@ -2093,6 +2096,11 @@ production code.
   $File::Temp::KEEP_ALL = 1;
 
 Default is for files to be removed as requested by the caller.
+
+In some cases, files will only be retained if this variable is true
+when the file is created. This means that you can not create a temporary
+file, set this variable and expect the temp file to still be around
+when the program exits.
 
 =item B<$DEBUG>
 
