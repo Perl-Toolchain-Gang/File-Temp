@@ -1,6 +1,13 @@
 2001-02-22  Tim Jenness  <timj@jach.hawaii.edu>
 
 	--- RELEASE V0.12 ---
+	
+	* t/posix.t: The unlink0 tests now skip on failure
+
+	* t/mktemp.t: The unlink0 tests now skip on failure
+
+	* Temp.pm (tmpfile): tmpfile returns undef on failure rather than
+	croaking.
 
 2001-02-21  Timothy Jenness  <t.jenness@jach.hawaii.edu>
 
