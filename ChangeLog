@@ -1,7 +1,13 @@
+2001-02-22  Tim Jenness  <timj@jach.hawaii.edu>
+
+	--- RELEASE V0.12 ---
+
 2001-02-21  Timothy Jenness  <t.jenness@jach.hawaii.edu>
 
-	* Temp.pm: Add fix for CGI::Carp
-		- Use error string to propogate reason rather than a carp
+	* Temp.pm: 
+	      -Add fix for CGI::Carp 
+                  [Thanks to John Labovitz <johnl@valiha.inside.sealabs.com>]
+              - Use error string to propogate reason rather than a carp
 
 2000-11-24  Tim Jenness  <timj@jach.hawaii.edu>
 
