@@ -1,3 +1,17 @@
+2000-08-16  Tim Jenness  <timj@jach.hawaii.edu>
+
+	* Temp.pm (_gettemp): Dont use VMS::Stdio if we want the file
+	to remain after closing.
+
+2000-08-15  Tim Jenness  <timj@jach.hawaii.edu>
+
+	* Temp.pm (_can_do_level): cygwin patch
+
+2000-08-14  Tim Jenness  <timj@jach.hawaii.edu>
+
+	* Temp.pm: Add OPENTEMPFLAGS to support UNLINK=>0
+		More tweaks to VMS support (now uses VMS::Stdio)
+
 2000-07-26  Tim Jenness  <timj@jach.hawaii.edu>
 
 	* Release V0.09 to CPAN
