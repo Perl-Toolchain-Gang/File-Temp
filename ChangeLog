@@ -1,3 +1,12 @@
+2005-02-21  Tim Jenness  <tjenness@cpan.org>
+
+	* t/tempfile.t: Add test for write proteceted temp file (thanks to
+	Slaven Rezic)
+
+	* Temp.pm (_can_do_level): Change argument to rmtree to make it
+	attempt to remove write-protected files on cleanup (thanks to
+	Slaven Rezic)
+
 2003-08-16  Tim Jenness  <tjenness@cpan.org>
 
 	--- RELEASE V0.14 ---
