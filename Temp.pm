@@ -92,6 +92,10 @@ use File::Path qw/ rmtree /;
 use Fcntl 1.03;
 use Errno qw( EEXIST ENOENT ENOTDIR EINVAL );
 
+# Need the Symbol package if we are running older perl 
+require Symbol if $] < 5.006;
+
+
 # use 'our' on v5.6.0
 use vars qw($VERSION @EXPORT_OK %EXPORT_TAGS $DEBUG);
 
@@ -154,6 +158,19 @@ use constant TEMPXXX => 'X' x 10;
 use constant STANDARD => 0;
 use constant MEDIUM   => 1;
 use constant HIGH     => 2;
+
+# OPENFLAGS. If we defined the flag to use with Sysopen here this gives
+# us an optimisation when many temporary files are requested
+
+my $OPENFLAGS = O_CREAT | O_EXCL | O_RDWR;
+
+for my $oflag (qw/FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT TEMPORARY/) {
+  my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
+  no strict 'refs';
+  $OPENFLAGS |= $bit if eval { $bit = &$func(); 1 };
+}
+
+
 
 # INTERNAL ROUTINES - not to be used outside of package
 
@@ -320,18 +337,18 @@ sub _gettemp {
 
   # Calculate the flags that we wish to use for the sysopen
   # Some of these are not always available
-  my $openflags;
-  if ($options{"open"}) {
+#  my $openflags;
+#  if ($options{"open"}) {
     # Default set
-    $openflags = O_CREAT | O_EXCL | O_RDWR;
+#    $openflags = O_CREAT | O_EXCL | O_RDWR;
 
-    for my $oflag (qw/FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT TEMPORARY/) {
-        my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
-        no strict 'refs';
-        $openflags |= $bit if eval { $bit = &$func(); 1 };
-    }
+#    for my $oflag (qw/FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT TEMPORARY/) {
+#        my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
+#        no strict 'refs';
+#        $openflags |= $bit if eval { $bit = &$func(); 1 };
+#    }
 
-  }
+#  }
   
 
   # Now try MAX_TRIES time to open the file
@@ -343,7 +360,6 @@ sub _gettemp {
 
       # If we are running before perl5.6.0 we can not auto-vivify
       if ($] < 5.006) {
-	require Symbol;
 	$fh = &Symbol::gensym;
       }
 
@@ -359,7 +375,7 @@ sub _gettemp {
       umask(066);
 
       # Attempt to open the file
-      if ( sysopen($fh, $path, $openflags, 0600) ) {
+      if ( sysopen($fh, $path, $OPENFLAGS, 0600) ) {
 
 	# Reset umask
 	umask($umask);
@@ -449,7 +465,7 @@ sub _gettemp {
 
     # Check for out of control looping
     if ($counter > $MAX_GUESS) {
-      carp "Tried to get a new temp name different to the previous value$MAX_GUESS times.\nSomething wrong with template?? ($template)";
+      carp "Tried to get a new temp name different to the previous value $MAX_GUESS times.\nSomething wrong with template?? ($template)";
       return ();
     }
 
@@ -468,6 +484,10 @@ sub _gettemp {
 # will do one automatically
 
 # No arguments. Return value is the random character
+
+# No longer called since _replace_XX runs a few percent faster if
+# I inline the code. This is important if we are creating thousands of
+# temporary files.
 
 sub _randchar {
 
@@ -497,9 +517,9 @@ sub _replace_XX {
   # Don't want to always use substr when not required though.
 
   if ($ignore) {
-    substr($path, 0, - $ignore) =~ s/X(?=X*\z)/_randchar()/ge;
+    substr($path, 0, - $ignore) =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS ) ) ]/ge;
   } else {
-    $path =~ s/X(?=X*\z)/_randchar()/ge;
+    $path =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS ) ) ]/ge;
   }
 
   return $path;

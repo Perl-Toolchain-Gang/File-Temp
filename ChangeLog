@@ -1,3 +1,10 @@
+2000-04-28  Tim Jenness  <timj@jach.hawaii.edu>
+
+	* Temp.pm: Calculate OPENFLAGS outside of subroutine. This
+	improves speed of the commands by nearly a factor of 3.
+	(_replace_XX): Inline the character replacement code rather than
+	using _randchar subroutine. Improves performance by an additional 8%.
+
 2000-04-27  Tim Jenness  <t.jenness@jach.hawaii.edu>
 
 	* t/posix.t: Add explicit autoflush on filehandle
