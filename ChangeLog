@@ -1,5 +1,9 @@
-2003-08-15  Tim Jenness  <tjenness@cpan.org>
+2003-08-16  Tim Jenness  <tjenness@cpan.org>
 
+	* Temp.pm: mpeix fixes from Ken Hirsch <hirschk@labcorp.com>
+
+2003-08-15  Tim Jenness  <tjenness@cpan.org>
+	
 	--- RELEASE V0.13 ---
 	
 	* Temp.pm: Integrate doc fixes from bleadperl (Slaven Rezic and

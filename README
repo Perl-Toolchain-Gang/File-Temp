@@ -107,6 +107,8 @@ terms as Perl itself.
 
 CHANGES IN THIS RELEASE
 
+      - MPE/IX fixes from Ken Hirsch
+
 V0.13:
       - Documentation tweaks from Slaven Rezic and Jeffrey Friedl
       - MacOS patches from Chris Nandor
