@@ -283,11 +283,16 @@ sub _gettemp {
       $parent = File::Spec->curdir;
     } else {
 
-      # Put it back together without the last one
-      $parent = File::Spec->catdir(@dirs[0..$#dirs-1]);
+      if ($^O eq 'VMS') {  # need volume to avoid relative dir spec
+        $parent = File::Spec->catdir($volume, @dirs[0..$#dirs-1]);
+      } else {
 
-      # ...and attach the volume (no filename)
-      $parent = File::Spec->catpath($volume, $parent, '');
+	# Put it back together without the last one
+	$parent = File::Spec->catdir(@dirs[0..$#dirs-1]);
+
+	# ...and attach the volume (no filename)
+	$parent = File::Spec->catpath($volume, $parent, '');
+      }
 
     }
 
@@ -547,6 +552,7 @@ sub _is_safe {
   # Stat path
   my @info = stat($path);
   return 0 unless scalar(@info);
+  return 1 if $^O eq 'VMS';  # owner delete control at file level
 
   # Check to see whether owner is neither superuser (or a system uid) nor me
   # Use the real uid from the $< variable
@@ -584,6 +590,7 @@ sub _is_verysafe {
   require POSIX;
 
   my $path = shift;
+  return 1 if $^O eq 'VMS';  # owner delete control at file level
 
   # Should Get the value of _PC_CHOWN_RESTRICTED if it is defined
   # and If it is not there do the extensive test
@@ -643,11 +650,14 @@ sub _is_verysafe {
 # platform for files that are currently open.
 # Returns true if we can, false otherwise.
 
-# Currently WinNT and OS/2 can not unlink an opened file
+# Currently WinNT, OS/2 and VMS can not unlink an opened file
+# On VMS this is because the O_EXCL flag is used to open the
+# temporary file. Currently I do not know enough about the issues
+# on VMS to decide whether O_EXCL is a requirement.
 
 sub _can_unlink_opened_file {
 
-  if ($^O eq 'MSWin32' || $^O eq 'os2') {
+  if ($^O eq 'MSWin32' || $^O eq 'os2' || $^O eq 'VMS') {
     return 0;
   } else {
     return 1;
@@ -681,7 +691,7 @@ sub _can_do_level {
 
 # This routine sets up a deferred unlinking of a specified
 # filename and filehandle. It is used in the following cases:
-#  - Called by unlink0 if an opend file can not be unlinked
+#  - Called by unlink0 if an opened file can not be unlinked
 #  - Called by tempfile() if files are to be removed on shutdown
 #  - Called by tempdir() if directories are to be removed on shutdown
 
@@ -1050,11 +1060,16 @@ sub tempdir  {
 
   # Create the directory
   my $tempdir;
+  my $suffixlen = 0;
+  if ($^O eq 'VMS') {  # dir names can end in delimiters
+    $template =~ m/([\.\]:>]+)$/;
+    $suffixlen = length($1);
+  }
   croak "Error in tempdir() using $template"
     unless ((undef, $tempdir) = _gettemp($template,
 				    "open" => 0,
 				    "mkdir"=> 1 ,
-				    "suffixlen" => 0,
+				    "suffixlen" => $suffixlen,
 				   ) );
 
   # Install exit handler; must be dynamic to get lexical
@@ -1180,13 +1195,17 @@ sub mkdtemp {
     if scalar(@_) != 1;
 
   my $template = shift;
-
+  my $suffixlen = 0;
+  if ($^O eq 'VMS') {  # dir names can end in delimiters
+    $template =~ m/([\.\]:>]+)$/;
+    $suffixlen = length($1);
+  }
   my ($junk, $tmpdir);
   croak "Error creating temp directory from template $template\n"
     unless (($junk, $tmpdir) = _gettemp($template,
 					"open" => 0,
 					"mkdir"=> 1 ,
-					"suffixlen" => 0,
+					"suffixlen" => $suffixlen,
 				       ) );
 
   return $tmpdir;
@@ -1435,12 +1454,19 @@ sub unlink0 {
   my @okstat = (0..$#fh);  # Use all by default
   if ($^O eq 'MSWin32') {
     @okstat = (1,2,3,4,5,7,8,9,10);
+  }  elsif ($^O eq 'VMS') {
+    @okstat = (0,1,2,3,4,5,7,8,9,10);
+  } elsif ($^O eq 'os2') {
+    @okstat = (0, 2..10, 13..$#fh);
   }
 
   # Now compare each entry explicitly by number
   for (@okstat) {
     print "Comparing: $_ : $fh[$_] and $path[$_]\n" if $DEBUG;
-    unless ($fh[$_] == $path[$_]) {
+    # Use eq rather than == since on OS/2 elements 11 and 12 return
+    # the empty string rather than a null. This is fine since we
+    # are only comparing integers.
+    unless ($fh[$_] eq $path[$_]) {
       warn "Did not match $_ element of stat\n" if $DEBUG;
       return 0;
     }

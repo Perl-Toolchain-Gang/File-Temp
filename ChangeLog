@@ -1,3 +1,9 @@
+2000-07-25  Tim Jenness  <timj@jach.hawaii.edu>
+
+	* t/security.t: OS/2 can not do the security tests.
+
+	* Temp.pm: Add Support for VMS and OS/2 
+
 2000-05-15  Tim Jenness  <timj@jach.hawaii.edu>
 
         * Release V0.08 to CPAN
