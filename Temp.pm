@@ -8,11 +8,15 @@ File::Temp - return name and handle of a temporary file safely
 
 =head1 PORTABILITY
 
-This module is designed to be portable across operating systems
-and it currently supports Unix, VMS, DOS, OS/2, Windows and
-Mac OS (Classic). When
-porting to a new OS there are generally three main issues
-that have to be solved:
+This section is at the top in order to provide easier access to
+porters.  It is not expected to be rendered by a standard pod
+formatting tool. Please skip straight to the SYNOPSIS section if you
+are not trying to port this module to a new platform.
+
+This module is designed to be portable across operating systems and it
+currently supports Unix, VMS, DOS, OS/2, Windows and Mac OS
+(Classic). When porting to a new OS there are generally three main
+issues that have to be solved:
 
 =over 4
 
@@ -43,13 +47,15 @@ The C<_can_do_level> method should be modified accordingly.
 
   use File::Temp qw/ tempfile tempdir /;
 
-  $dir = tempdir( CLEANUP => 1 );
-  ($fh, $filename) = tempfile( DIR => $dir );
+  $fh = tempfile();
+  ($fh, $filename) = tempfile();
 
   ($fh, $filename) = tempfile( $template, DIR => $dir);
   ($fh, $filename) = tempfile( $template, SUFFIX => '.dat');
 
-  $fh = tempfile();
+
+  $dir = tempdir( CLEANUP => 1 );
+  ($fh, $filename) = tempfile( DIR => $dir );
 
 Object interface:
 
@@ -63,6 +69,8 @@ Object interface:
   print $tmp "Some data\n";
   print "Filename is $tmp\n";
 
+The following interfaces are provided for compatibility with
+existing APIs. They should not be used in new code.
 
 MkTemp family:
 
@@ -83,8 +91,6 @@ POSIX functions:
   $fh = tmpfile();
 
   ($fh, $file) = tmpnam();
-  $fh = tmpfile();
-
 
 Compatibility functions:
 
@@ -908,7 +914,7 @@ sub _can_do_level {
 
 }
 
-=head1 OO INTERFACE
+=head1 OBJECT-ORIENTED INTERFACE
 
 This is the primary interface for interacting with
 C<File::Temp>. Using the OO interface a temporary file can be created
@@ -1045,6 +1051,7 @@ temporary files and directories.
 This is the basic function to generate temporary files.
 The behaviour of the file can be changed using various options:
 
+  $fh = tempfile();
   ($fh, $filename) = tempfile();
 
 Create a temporary file in  the directory specified for temporary
@@ -1084,16 +1091,16 @@ DIR option.
 
   $fh = tempfile( $template, DIR => $dir );
 
-If called in scalar context, only the filehandle is returned
-and the file will automatically be deleted when closed (see
-the description of tmpfile() elsewhere in this document).
-This is the preferred mode of operation, as if you only
-have a filehandle, you can never create a race condition
-by fumbling with the filename. On systems that can not unlink
-an open file or can not mark a file as temporary when it is opened
-(for example, Windows NT uses the C<O_TEMPORARY> flag)
-the file is marked for deletion when the program ends (equivalent
-to setting UNLINK to 1). The C<UNLINK> flag is ignored if present.
+If called in scalar context, only the filehandle is returned and the
+file will automatically be deleted when closed on operating systems
+that support this (see the description of tmpfile() elsewhere in this
+document).  This is the preferred mode of operation, as if you only
+have a filehandle, you can never create a race condition by fumbling
+with the filename. On systems that can not unlink an open file or can
+not mark a file as temporary when it is opened (for example, Windows
+NT uses the C<O_TEMPORARY> flag) the file is marked for deletion when
+the program ends (equivalent to setting UNLINK to 1). The C<UNLINK>
+flag is ignored if present.
 
   (undef, $filename) = tempfile($template, OPEN => 0);
 
@@ -1695,7 +1702,8 @@ verify that the number of links on that file is now 0.  This is the
 closest you can come to making sure that the filename unlinked was the
 same as the file whose descriptor you hold.
 
-  unlink0($fh, $path) or die "Error unlinking file $path safely";
+  unlink0($fh, $path)
+     or die "Error unlinking file $path safely";
 
 Returns false on error. The filehandle is not closed since on some
 occasions this is not required.
@@ -1765,7 +1773,8 @@ can be used to check that the filename and filehandle initially point
 to the same file and that the number of links to the file is 1 (all
 fields returned by stat() are compared).
 
-  cmpstat($fh, $path) or die "Error comparing handle with file";
+  cmpstat($fh, $path)
+     or die "Error comparing handle with file";
 
 Returns false if the stat information differs or if the link count is
 greater than 1.
@@ -1861,7 +1870,8 @@ allows the file to be removed without using an END block, but does
 mean that the post-unlink comparison of the filehandle state provided
 by C<unlink0> is not available.
 
-  unlink1($fh, $path) or die "Error closing and unlinking file";
+  unlink1($fh, $path)
+     or die "Error closing and unlinking file";
 
 Usually called from the object destructor when using the OO interface.
 
@@ -2006,8 +2016,6 @@ UID.
 This value can be adjusted to reduce security checking if required.
 The value is only relevant when C<safe_level> is set to MEDIUM or higher.
 
-=back
-
 =cut
 
 {
@@ -2024,6 +2032,8 @@ The value is only relevant when C<safe_level> is set to MEDIUM or higher.
     return $TopSystemUID;
   }
 }
+
+=back
 
 =head1 WARNING
 
@@ -2072,7 +2082,7 @@ temporary file handling.
 
 Tim Jenness E<lt>tjenness@cpan.orgE<gt>
 
-Copyright (C) 1999-2003 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999-2005 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
