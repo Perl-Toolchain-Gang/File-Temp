@@ -1,12 +1,12 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.07 of File::Temp. This module can be used to
+This is release V0.08 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
 
-It could be considered to be in a late alpha state since it has only been
-tested on three operating systems.
+It could be considered to be in an early beta state since it has only been
+tested on four operating systems.
 
 Please let me know if it fails on other operating systems.
 
@@ -37,9 +37,11 @@ PLATFORMS
 Tested on the following platforms:
 
  RedHat Linux 6.1, perl 5.6.0
- RedHat Linux 6.1, perl 5.005_03
-
+ Solaris 2.6, perl 5.6.0
  Windows NT 4, perl 5.6.0
+
+ RedHat Linux 6.1, perl 5.005_03
+ Digital Unix 4.0, perl 5.005_03
 
 Still needs work on non-Unix platforms to adjust test severity (for example
 stickyness test does not work on NT, and neither does unlink on an open
@@ -55,6 +57,13 @@ software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.08:
+      - Improve performance by a factor of 3 over V0.07
+      - Simplify the END block code
+      - Ignore requests for HIGH or MEDIUM safety on platforms that 
+        can not support it (rather than generating a fatal error)
+      - Add OS/2 to list of platforms that can not unlink open file
 
 V0.07:
       - Add support for perl 5.005. On perl 5.005 the HIGH and
