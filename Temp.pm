@@ -41,7 +41,7 @@ The C<_can_do_level> method should be modified accordingly.
 
 =head1 SYNOPSIS
 
-  use File::Temp qw/ tempfile tempdir /; 
+  use File::Temp qw/ tempfile tempdir /;
 
   $dir = tempdir( CLEANUP => 1 );
   ($fh, $filename) = tempfile( DIR => $dir );
@@ -70,7 +70,7 @@ POSIX functions:
   $fh = tmpfile();
 
   ($fh, $file) = tmpnam();
-  ($fh, $file) = tmpfile();
+  $fh = tmpfile();
 
 
 Compatibility functions:
@@ -92,7 +92,7 @@ Objects (NOT YET IMPLEMENTED):
 
 C<File::Temp> can be used to create and open temporary files in a safe way.
 The tempfile() function can be used to return the name and the open
-filehandle of a temporary file.  The tempdir() function can 
+filehandle of a temporary file.  The tempdir() function can
 be used to create a temporary directory.
 
 The security aspect of temporary file creation is emphasized such that
@@ -165,7 +165,7 @@ use base qw/Exporter/;
 # add contents of these tags to @EXPORT
 Exporter::export_tags('POSIX','mktemp');
 
-# Version number 
+# Version number
 
 $VERSION = '0.13';
 
@@ -200,16 +200,16 @@ my $OPENFLAGS = O_CREAT | O_EXCL | O_RDWR;
 
 unless ($^O eq 'MacOS') {
   for my $oflag (qw/ FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT /) {
-  my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
-  no strict 'refs';
-  $OPENFLAGS |= $bit if eval {
-    # Make sure that redefined die handlers do not cause problems
-    # eg CGI::Carp
-    local $SIG{__DIE__} = sub {};
-    local $SIG{__WARN__} = sub {};
-    $bit = &$func();
-    1;
-  };
+    my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
+    no strict 'refs';
+    $OPENFLAGS |= $bit if eval {
+      # Make sure that redefined die handlers do not cause problems
+      # eg CGI::Carp
+      local $SIG{__DIE__} = sub {};
+      local $SIG{__WARN__} = sub {};
+      $bit = &$func();
+      1;
+    };
   }
 }
 
@@ -223,16 +223,16 @@ unless ($^O eq 'MacOS') {
 my $OPENTEMPFLAGS = $OPENFLAGS;
 unless ($^O eq 'MacOS') {
   for my $oflag (qw/ TEMPORARY /) {
-  my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
-  no strict 'refs';
-  $OPENTEMPFLAGS |= $bit if eval {
-    # Make sure that redefined die handlers do not cause problems
-    # eg CGI::Carp
-    local $SIG{__DIE__} = sub {};
-    local $SIG{__WARN__} = sub {};
-    $bit = &$func();
-    1;
-  };
+    my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
+    no strict 'refs';
+    $OPENTEMPFLAGS |= $bit if eval {
+      # Make sure that redefined die handlers do not cause problems
+      # eg CGI::Carp
+      local $SIG{__DIE__} = sub {};
+      local $SIG{__WARN__} = sub {};
+      $bit = &$func();
+      1;
+    };
   }
 }
 
@@ -258,7 +258,7 @@ unless ($^O eq 'MacOS') {
 #                  default is 0.
 #   "unlink_on_close" => indicates that, if possible,  the OS should remove
 #                        the file as soon as it is closed. Usually indicates
-#                        use of the O_TEMPORARY flag to sysopen. 
+#                        use of the O_TEMPORARY flag to sysopen.
 #                        Usually irrelevant on unix
 
 # Optionally a reference to a scalar can be passed into the function
@@ -400,7 +400,7 @@ sub _gettemp {
 
   }
 
-  # Check that the parent directories exist 
+  # Check that the parent directories exist
   # Do this even for the case where we are simply returning a name
   # not a file -- no point returning a name that includes a directory
   # that does not exist or is not writable
@@ -473,7 +473,7 @@ sub _gettemp {
 
 	# Reset umask
 	umask($umask) if defined $umask;
-	
+
 	# Opened successfully - return file handle and name
 	return ($fh, $path);
 
@@ -489,7 +489,7 @@ sub _gettemp {
 	}
 
 	# Loop round for another try
-	
+
       }
     } elsif ($options{"mkdir"}) {
 
@@ -590,10 +590,10 @@ sub _randchar {
 }
 
 # Internal routine to replace the XXXX... with random characters
-# This has to be done by _gettemp() every time it fails to 
+# This has to be done by _gettemp() every time it fails to
 # open a temp file/dir
 
-# Arguments:  $template (the template with XXX), 
+# Arguments:  $template (the template with XXX),
 #             $ignore   (number of characters at end to ignore)
 
 # Returns:    modified template
@@ -689,7 +689,7 @@ sub _is_safe {
 }
 
 # Internal routine to check whether a directory is safe
-# for temp files. Safer than _is_safe since it checks for 
+# for temp files. Safer than _is_safe since it checks for
 # the possibility of chown giveaway and if that is a possibility
 # checks each directory in the path to see if it is safe (with _is_safe)
 
@@ -941,20 +941,20 @@ is specified.
 Return the filename and filehandle as before except that the file is
 automatically removed when the program exits. Default is for the file
 to be removed if a file handle is requested and to be kept if the
-filename is requested. In a scalar context (where no filename is 
+filename is requested. In a scalar context (where no filename is
 returned) the file is always deleted either on exit or when it is closed.
 
 If the template is not specified, a template is always
 automatically generated. This temporary file is placed in tmpdir()
-(L<File::Spec>) unless a directory is specified explicitly with the 
+(L<File::Spec>) unless a directory is specified explicitly with the
 DIR option.
 
   $fh = tempfile( $template, DIR => $dir );
 
 If called in scalar context, only the filehandle is returned
-and the file will automatically be deleted when closed (see 
+and the file will automatically be deleted when closed (see
 the description of tmpfile() elsewhere in this document).
-This is the preferred mode of operation, as if you only 
+This is the preferred mode of operation, as if you only
 have a filehandle, you can never create a race condition
 by fumbling with the filename. On systems that can not unlink
 an open file or can not mark a file as temporary when it is opened
@@ -966,7 +966,7 @@ to setting UNLINK to 1). The C<UNLINK> flag is ignored if present.
 
 This will return the filename based on the template but
 will not open this file.  Cannot be used in conjunction with
-UNLINK set to true. Default is to always open the file 
+UNLINK set to true. Default is to always open the file
 to protect from possible race conditions. A warning is issued
 if warnings are turned on. Consider using the tmpnam()
 and mktemp() functions described elsewhere in this document
@@ -1045,7 +1045,7 @@ sub tempfile {
   # On unix this is irrelevant and can be worked out after the file is
   # opened (simply by unlinking the open filehandle). On Windows or VMS
   # we have to indicate temporary-ness when we open the file. In general
-  # we only want a true temporary file if we are returning just the 
+  # we only want a true temporary file if we are returning just the
   # filehandle - if the user wants the filename they probably do not
   # want the file to disappear as soon as they close it.
   # For this reason, tie unlink_on_close to the return context regardless
@@ -1135,7 +1135,7 @@ nor a directory are supplied.
 
   $tempdir = tempdir( $template, CLEANUP => 1);
 
-Create a temporary directory using the supplied template, but 
+Create a temporary directory using the supplied template, but
 attempt to remove it (and all files inside it) when the program
 exits. Note that an attempt will be made to remove all files from
 the directory even if they were not created by this module (otherwise
@@ -1246,7 +1246,7 @@ sub tempdir  {
 
 =head1 MKTEMP FUNCTIONS
 
-The following functions are Perl implementations of the 
+The following functions are Perl implementations of the
 mktemp() family of temp file generation system calls.
 
 =over 4
@@ -1414,7 +1414,7 @@ sub mktemp {
 =head1 POSIX FUNCTIONS
 
 This section describes the re-implementation of the tmpnam()
-and tmpfile() functions described in L<POSIX> 
+and tmpfile() functions described in L<POSIX>
 using the mkstemp() from this module.
 
 Unlike the L<POSIX|POSIX> implementations, the directory used
@@ -1471,7 +1471,7 @@ sub tmpnam {
 
 =item B<tmpfile>
 
-In scalar context, returns the filehandle of a temporary file.
+Returns the filehandle of a temporary file.
 
   $fh = tmpfile();
 
@@ -1506,7 +1506,7 @@ These functions are provided for backwards compatibility
 with common tempfile generation C library functions.
 
 They are not exported and must be addressed using the full package
-name. 
+name.
 
 =over 4
 
@@ -1514,14 +1514,14 @@ name.
 
 Return the name of a temporary file in the specified directory
 using a prefix. The file is guaranteed not to exist at the time
-the function was called, but such guarantees are good for one 
+the function was called, but such guarantees are good for one
 clock tick only.  Always use the proper form of C<sysopen>
 with C<O_CREAT | O_EXCL> if you must open such a filename.
 
   $filename = File::Temp::tempnam( $dir, $prefix );
 
 Equivalent to running mktemp() with $dir/$prefixXXXXXXXX
-(using unix file convention as an example) 
+(using unix file convention as an example)
 
 Because this function uses mktemp(), it can suffer from race conditions.
 
@@ -1713,11 +1713,11 @@ for sticky bit.
 In addition to the MEDIUM security checks, also check for the
 possibility of ``chown() giveaway'' using the L<POSIX|POSIX>
 sysconf() function. If this is a possibility, each directory in the
-path is checked in turn for safeness, recursively walking back to the 
+path is checked in turn for safeness, recursively walking back to the
 root directory.
 
 For platforms that do not support the L<POSIX|POSIX>
-C<_PC_CHOWN_RESTRICTED> symbol (for example, Windows NT) it is 
+C<_PC_CHOWN_RESTRICTED> symbol (for example, Windows NT) it is
 assumed that ``chown() giveaway'' is possible and the recursive test
 is performed.
 
@@ -1730,7 +1730,7 @@ The level can be changed as follows:
 The level constants are not exported by the module.
 
 Currently, you must be running at least perl v5.6.0 in order to
-run with MEDIUM or HIGH security. This is simply because the 
+run with MEDIUM or HIGH security. This is simply because the
 safety tests use functions from L<Fcntl|Fcntl> that are not
 available in older versions of perl. The problem is that the version
 number for Fcntl is the same in perl 5.6.0 and in 5.005_03 even though
@@ -1747,7 +1747,7 @@ If you really need to see whether the change has been accepted
 simply examine the return value of C<safe_level>.
 
   $newlevel = File::Temp->safe_level( File::Temp::HIGH );
-  die "Could not change to high security" 
+  die "Could not change to high security"
       if $newlevel != File::Temp::HIGH;
 
 =cut
@@ -1757,7 +1757,7 @@ simply examine the return value of C<safe_level>.
   my $LEVEL = STANDARD;
   sub safe_level {
     my $self = shift;
-    if (@_) { 
+    if (@_) {
       my $level = shift;
       if (($level != STANDARD) && ($level != MEDIUM) && ($level != HIGH)) {
 	carp "safe_level: Specified level ($level) not STANDARD, MEDIUM or HIGH - ignoring\n" if $^W;
@@ -1779,8 +1779,8 @@ simply examine the return value of C<safe_level>.
 =item TopSystemUID
 
 This is the highest UID on the current system that refers to a root
-UID. This is used to make sure that the temporary directory is 
-owned by a system UID (C<root>, C<bin>, C<sys> etc) rather than 
+UID. This is used to make sure that the temporary directory is
+owned by a system UID (C<root>, C<bin>, C<sys> etc) rather than
 simply by root.
 
 This is required since on many unix systems C</tmp> is not owned
@@ -1853,7 +1853,7 @@ operating system and to help with portability.
 
 L<POSIX/tmpnam>, L<POSIX/tmpfile>, L<File::Spec>, L<File::Path>
 
-See L<IO::File> and L<File::MkTemp> for different implementations of 
+See L<IO::File> and L<File::MkTemp> for different implementations of
 temporary file handling.
 
 =head1 AUTHOR
@@ -1865,7 +1865,7 @@ Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
-Original Perl implementation loosely based on the OpenBSD C code for 
+Original Perl implementation loosely based on the OpenBSD C code for
 mkstemp(). Thanks to Tom Christiansen for suggesting that this module
 should be written and providing ideas for code improvements and
 security enhancements.
