@@ -9,7 +9,8 @@ File::Temp - return name and handle of a temporary file safely
 =head1 PORTABILITY
 
 This module is designed to be portable across operating systems
-and it currently supports Unix, VMS, DOS, OS/2 and Windows. When
+and it currently supports Unix, VMS, DOS, OS/2, Windows and
+Mac OS (Classic). When
 porting to a new OS there are generally three main issues
 that have to be solved:
 
@@ -166,7 +167,7 @@ Exporter::export_tags('POSIX','mktemp');
 
 # Version number 
 
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 # This is a list of characters that can be used in random filenames
 
@@ -197,7 +198,8 @@ use constant HIGH     => 2;
 
 my $OPENFLAGS = O_CREAT | O_EXCL | O_RDWR;
 
-for my $oflag (qw/ FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT /) {
+unless ($^O eq 'MacOS') {
+  for my $oflag (qw/ FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT /) {
   my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
   no strict 'refs';
   $OPENFLAGS |= $bit if eval {
@@ -208,6 +210,7 @@ for my $oflag (qw/ FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT /) {
     $bit = &$func();
     1;
   };
+  }
 }
 
 # On some systems the O_TEMPORARY flag can be used to tell the OS
@@ -218,7 +221,8 @@ for my $oflag (qw/ FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT /) {
 # this by using a second open flags variable
 
 my $OPENTEMPFLAGS = $OPENFLAGS;
-for my $oflag (qw/ TEMPORARY /) {
+unless ($^O eq 'MacOS') {
+  for my $oflag (qw/ TEMPORARY /) {
   my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
   no strict 'refs';
   $OPENTEMPFLAGS |= $bit if eval {
@@ -229,6 +233,7 @@ for my $oflag (qw/ TEMPORARY /) {
     $bit = &$func();
     1;
   };
+  }
 }
 
 # INTERNAL ROUTINES - not to be used outside of package
@@ -361,8 +366,8 @@ sub _gettemp {
     # Split the directory and put it back together again
     my @dirs = File::Spec->splitdir($directories);
 
-    # If @dirs only has one entry that means we are in the current
-    # directory
+    # If @dirs only has one entry (i.e. the directory template) that means
+    # we are in the current directory
     if ($#dirs == 0) {
       $parent = File::Spec->curdir;
     } else {
@@ -467,14 +472,14 @@ sub _gettemp {
       if ( $open_success ) {
 
 	# Reset umask
-	umask($umask);
+	umask($umask) if defined $umask;
 	
 	# Opened successfully - return file handle and name
 	return ($fh, $path);
 
       } else {
 	# Reset umask
-	umask($umask);
+	umask($umask) if defined $umask;
 
 	# Error opening file - abort with error
 	# if the reason was anything but EEXIST
@@ -498,13 +503,13 @@ sub _gettemp {
       if (mkdir( $path, 0700)) {
 	# created okay
 	# Reset umask
-	umask($umask);
+	umask($umask) if defined $umask;
 
 	return undef, $path;
       } else {
 
 	# Reset umask
-	umask($umask);
+	umask($umask) if defined $umask;
 
 	# Abort with error if the reason for failure was anything
 	# except EEXIST
@@ -731,7 +736,7 @@ sub _is_verysafe {
   # Split directory into components - assume no file
   my ($volume, $directories, undef) = File::Spec->splitpath( $path, 1);
 
-  # Slightly less efficient than having a a function in File::Spec
+  # Slightly less efficient than having a function in File::Spec
   # to chop off the end of a directory or even a function that
   # can handle ../ in a directory tree
   # Sometimes splitdir() returns a blank at the end
@@ -769,7 +774,7 @@ sub _is_verysafe {
 
 sub _can_unlink_opened_file {
 
-  if ($^O eq 'MSWin32' || $^O eq 'os2' || $^O eq 'VMS' || $^O eq 'dos') {
+  if ($^O eq 'MSWin32' || $^O eq 'os2' || $^O eq 'VMS' || $^O eq 'dos' || $^O eq 'MacOS') {
     return 0;
   } else {
     return 1;
@@ -793,7 +798,7 @@ sub _can_do_level {
   return 1 if $level == STANDARD;
 
   # Currently, the systems that can do HIGH or MEDIUM are identical
-  if ( $^O eq 'MSWin32' || $^O eq 'os2' || $^O eq 'cygwin' || $^O eq 'dos') {
+  if ( $^O eq 'MSWin32' || $^O eq 'os2' || $^O eq 'cygwin' || $^O eq 'dos' || $^O eq 'MacOS') {
     return 0;
   } else {
     return 1;
@@ -1118,7 +1123,7 @@ prepending the supplied directory.
 
   $tempdir = tempdir ( $template, TMPDIR => 1 );
 
-Using the supplied template, creat the temporary directory in 
+Using the supplied template, create the temporary directory in
 a standard location for temporary files. Equivalent to doing
 
   $tempdir = tempdir ( $template, DIR => File::Spec->tmpdir);
@@ -1212,6 +1217,10 @@ sub tempdir  {
   if ($^O eq 'VMS') {  # dir names can end in delimiters
     $template =~ m/([\.\]:>]+)$/;
     $suffixlen = length($1);
+  }
+  if ( ($^O eq 'MacOS') && (substr($template, -1) eq ':') ) {
+    # dir name has a trailing ':'
+    ++$suffixlen;
   }
 
   my $errstr;
@@ -1352,6 +1361,10 @@ sub mkdtemp {
   if ($^O eq 'VMS') {  # dir names can end in delimiters
     $template =~ m/([\.\]:>]+)$/;
     $suffixlen = length($1);
+  }
+  if ( ($^O eq 'MacOS') && (substr($template, -1) eq ':') ) {
+    # dir name has a trailing ':'
+    ++$suffixlen;
   }
   my ($junk, $tmpdir, $errstr);
   croak "Error creating temp directory from template $template\: $errstr"
