@@ -98,14 +98,19 @@ Porting notes are provided at the start of Temp.pm.
 
 AUTHOR
 
-Tim Jenness <t.jenness@jach.hawaii.edu>
+Tim Jenness <tjenness@cpan.org>
 
-Copyright (C) 1999 - 2001 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999 - 2003 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.13:
+      - Documentation tweaks from Slaven Rezic and Jeffrey Friedl
+      - MacOS patches from Chris Nandor
+      - Test tweak from Andy Dougherty
 
 V0.12:
       - Fix problem with Fcntl warnings on CGI and CGI::Carp 
