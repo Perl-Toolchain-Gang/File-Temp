@@ -2,7 +2,7 @@
 # Test for File::Temp - OO interface
 
 use strict;
-use Test::More tests => 18;
+use Test::More tests => 23;
 use File::Spec;
 
 # Will need to check that all files were unlinked correctly
@@ -99,8 +99,21 @@ ok( -f "$fh", "File $fh exists?" );
 ok( close( $fh ), "Close file $fh" );
 push( @still_there, "$fh"); # check at END
 
+# Now create a temp file that will remain when the object
+# goes out of scope because of $KEEP_ALL
+$fh = new File::Temp( TEMPLATE => 'permXXXXXXX', UNLINK => 1);
+
+print "# TEMPFILE: Created $fh\n";
+ok( -f "$fh", "File $fh exists?" );
+ok( close( $fh ), "Close file $fh" );
+push( @still_there, "$fh"); # check at END
+$File::Temp::KEEP_ALL = 1;
+
 # Make sure destructors run
 undef $fh;
+
+# allow end blocks to run
+$File::Temp::KEEP_ALL = 0;
 
 # Now END block will execute to test the removal of directories
 print "# End of tests. Execute END blocks\n";

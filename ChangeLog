@@ -1,5 +1,8 @@
 2005-02-21  Tim Jenness  <tjenness@cpan.org>
 
+	* Temp.pm: Add $KEEP_ALL to allow the temporary files to be
+	retained whilst debugging.
+	
 	* Temp.pm (top_system_uid): Add interix patch from Todd Vierling
 
 	* Temp.pm (_gettemp): Pod patch from Steven Lembark

@@ -147,9 +147,10 @@ use overload '""' => "STRINGIFY";
 
 
 # use 'our' on v5.6.0
-use vars qw($VERSION @EXPORT_OK %EXPORT_TAGS $DEBUG);
+use vars qw($VERSION @EXPORT_OK %EXPORT_TAGS $DEBUG $KEEP_ALL);
 
 $DEBUG = 0;
+$KEEP_ALL = 0;
 
 # We are exporting functions
 
@@ -630,6 +631,7 @@ sub _replace_XX {
     $path =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS ) ) ]/ge;
   }
 
+  print "Chose path: $path\n";
   return $path;
 }
 
@@ -846,25 +848,26 @@ sub _can_do_level {
 
   # Set up an end block to use these arrays
   END {
-    # Files
-    foreach my $file (@files_to_unlink) {
-      # close the filehandle without checking its state
-      # in order to make real sure that this is closed
-      # if its already closed then I dont care about the answer
-      # probably a better way to do this
-      close($file->[0]);  # file handle is [0]
+    if (!$KEEP_ALL) {
+      # Files
+      foreach my $file (@files_to_unlink) {
+	# close the filehandle without checking its state
+	# in order to make real sure that this is closed
+	# if its already closed then I dont care about the answer
+	# probably a better way to do this
+	close($file->[0]);  # file handle is [0]
 
-      if (-f $file->[1]) {  # file name is [1]
-	unlink $file->[1] or warn "Error removing ".$file->[1];
+	if (-f $file->[1]) {  # file name is [1]
+	  unlink $file->[1] or warn "Error removing ".$file->[1];
+	}
+      }
+      # Dirs
+      foreach my $dir (@dirs_to_unlink) {
+	if (-d $dir) {
+	  rmtree($dir, $DEBUG, 0);
+	}
       }
     }
-    # Dirs
-    foreach my $dir (@dirs_to_unlink) {
-      if (-d $dir) {
-	rmtree($dir, $DEBUG, 0);
-      }
-    }
-
   }
 
   # This is the sub called to register a file for deferred unlinking
@@ -1019,11 +1022,13 @@ if UNLINK is not specified).
 
 No error is given if the unlink fails.
 
+If the global variable $KEEP_ALL is true, the file will not be removed.
+
 =cut
 
 sub DESTROY {
   my $self = shift;
-  if (${*$self}{UNLINK}) {
+  if (${*$self}{UNLINK} && !$KEEP_ALL) {
     print "# --------->   Unlinking $self\n" if $DEBUG;
 
     # The unlink1 may fail if the file has been closed
@@ -1082,7 +1087,8 @@ Return the filename and filehandle as before except that the file is
 automatically removed when the program exits. Default is for the file
 to be removed if a file handle is requested and to be kept if the
 filename is requested. In a scalar context (where no filename is
-returned) the file is always deleted either on exit or when it is closed.
+returned) the file is always deleted either on exit or when it is closed
+(unless $KEEP_ALL is true).
 
 If the template is not specified, a template is always
 automatically generated. This temporary file is placed in tmpdir()
@@ -1728,6 +1734,8 @@ Finally, on NFS file systems the link count of the file handle does
 not always go to zero immediately after unlinking. Currently, this
 command is expected to fail on NFS disks.
 
+This function is disabled if the global variable $KEEP_ALL is true.
+
 =cut
 
 sub unlink0 {
@@ -1739,6 +1747,9 @@ sub unlink0 {
   my ($fh, $path) = @_;
 
   cmpstat($fh, $path) or return 0;
+
+  # return early (Without unlink) if we have been instructed to retain files.
+  return 1 if $KEEP_ALL;
 
   # attempt remove the file (does not work on some platforms)
   if (_can_unlink_opened_file()) {
@@ -1877,6 +1888,8 @@ Usually called from the object destructor when using the OO interface.
 
 Not exported by default.
 
+This function is disabled if the global variable $KEEP_ALL is true.
+
 =cut
 
 sub unlink1 {
@@ -1890,6 +1903,9 @@ sub unlink1 {
 
   # Close the file
   close( $fh ) or return 0;
+
+  # return early (without unlink) if we have been instructed to retain files.
+  return 1 if $KEEP_ALL;
 
   # remove the file
   return unlink($path);
@@ -2032,6 +2048,25 @@ The value is only relevant when C<safe_level> is set to MEDIUM or higher.
     return $TopSystemUID;
   }
 }
+
+=item B<KEEP_ALL>
+
+Controls whether temporary files and directories should be retained
+regardless of any instructions in the program to remove them
+automatically.  This is useful for debugging but should not be used in
+production code.
+
+  $File::Temp::KEEP_ALL = 1;
+
+Default is for files to be removed as requested by the caller.
+
+=item B<$DEBUG>
+
+Controls whether debugging messages should be enabled.
+
+  $File::Temp::DEBUG = 1;
+
+Default is for debugging mode to be disabled.
 
 =back
 
