@@ -25,7 +25,7 @@ print "MKSTEMP: FH is $fh File is $template fileno=".fileno($fh)."\n";
 ok( (-e $template) );
 
 # Autoflush
-$fh->autoflush(1);
+$fh->autoflush(1) if $] >= 5.006; 
 
 # Try printing something to the file
 my $string = "woohoo\n";
@@ -65,6 +65,7 @@ print "MKSTEMPS: File is $template -> $fname fileno=".fileno($fh)."\n";
 ok( (-e $fname) );
 
 ok( unlink0($fh, $fname) ); 
+
 
 # MKDTEMP
 # Temp directory
