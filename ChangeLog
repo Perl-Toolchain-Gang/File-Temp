@@ -1,3 +1,17 @@
+2000-05-15  Tim Jenness  <timj@jach.hawaii.edu>
+
+        * Release V0.08 to CPAN
+	
+	* t/mktemp.t: Skip the test for unlink0 if it fails since in most
+	cases this indicates an NFS problem.
+
+	* Temp.pm (_can_do_level): Add check to make sure an OS can handle 
+	the required safe level
+	(safe_level): Check the level can be supported before allowing it
+	to change 
+	(END): Change order of cleanup so that files are removed ahead of
+	temp dirs (since files may be in the temp dirs) 
+
 2000-05-08  Tim Jenness  <timj@jach.hawaii.edu>
 
 	* Temp.pm: Reorganize END block 
