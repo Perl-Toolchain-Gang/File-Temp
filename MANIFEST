@@ -1,5 +1,9 @@
-Temp.pm
-Makefile.PL
-test.pl
-README
 MANIFEST
+Makefile.PL
+README
+Temp.pm
+t/mktemp.t
+t/posix.t
+t/tempfile.t
+t/security.t
+ChangeLog
