@@ -34,13 +34,13 @@ push(@files, $tempfile);
 # TEMPDIR test
 # Create temp directory in current dir
 my $template = 'tmpdirXXXXXX';
-print "TEmplate: $template\n";
+print "# TEmplate: $template\n";
 my $tempdir = tempdir( $template ,
 		       DIR => File::Spec->curdir,
 		       CLEANUP => 1,
 		     );
 
-print "TEMPDIR: $tempdir\n";
+print "# TEMPDIR: $tempdir\n";
 
 ok( (-d $tempdir) );
 push(@dirs, $tempdir);
@@ -52,7 +52,7 @@ push(@dirs, $tempdir);
 			    SUFFIX => '.dat',
 			   );
 
-print "TEMPFILE: Created $tempfile\n";
+print "# TEMPFILE: Created $tempfile\n";
 
 ok( (-f $tempfile));
 push(@files, $tempfile);
@@ -67,7 +67,7 @@ push(@files, $tempfile);
 ok( (-f $tempfile ));
 push(@files, $tempfile);
 
-print "TEMPFILE: Created $tempfile\n";
+print "# TEMPFILE: Created $tempfile\n";
 
 # and another (with template)
 
@@ -77,7 +77,7 @@ print "TEMPFILE: Created $tempfile\n";
 			    SUFFIX => '.dat',
 			   );
 
-print "TEMPFILE: Created $tempfile\n";
+print "# TEMPFILE: Created $tempfile\n";
 
 ok( (-f $tempfile) );
 push(@files, $tempfile);

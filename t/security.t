@@ -28,13 +28,13 @@ if ($skipplat) {
 
 }
 
-print "We will be skipping some tests : $skip\n";
+print "# We will be skipping some tests : $skip\n" if $skip;
 
 # start off with basic checking
 
 File::Temp->safe_level( File::Temp::STANDARD );
 
-print "Testing with STANDARD security...\n";
+print "# Testing with STANDARD security...\n";
 
 &test_security(0);
 
@@ -43,7 +43,7 @@ print "Testing with STANDARD security...\n";
 File::Temp->safe_level( File::Temp::MEDIUM )
   unless $skip;
 
-print "Testing with MEDIUM security...\n";
+print "# Testing with MEDIUM security...\n";
 
 # Now we need to start skipping tests
 &test_security($skip);
@@ -53,7 +53,7 @@ print "Testing with MEDIUM security...\n";
 File::Temp->safe_level( File::Temp::HIGH )
   unless $skip;
 
-print "Testing with HIGH security...\n";
+print "# Testing with HIGH security...\n";
 
 &test_security($skip);
 
@@ -97,7 +97,7 @@ sub test_security {
 				  DIR => File::Spec->curdir,
 				  UNLINK => 1,
 				);
-  print "Fname1 = $fname1\n";
+  print "# Fname1 = $fname1\n";
   ok( ( -e $fname1) );
 
   # Explicitly 
