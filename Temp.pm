@@ -215,7 +215,7 @@ use constant HIGH     => 2;
 my $OPENFLAGS = O_CREAT | O_EXCL | O_RDWR;
 
 unless ($^O eq 'MacOS') {
-  for my $oflag (qw/ FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT /) {
+  for my $oflag (qw/ NOFOLLOW BINARY LARGEFILE EXLOCK NOINHERIT /) {
     my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
     no strict 'refs';
     $OPENFLAGS |= $bit if eval {

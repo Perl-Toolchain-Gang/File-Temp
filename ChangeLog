@@ -3,6 +3,9 @@
 	* Temp.pm: Add $KEEP_ALL to allow the temporary files to be
 	retained whilst debugging (suggestion from Ed Avis [and others]).
 
+	* Temp.pm: Temp files should have been opened O_NOFOLLOW rather
+	than O_FOLLOW! (thanks to Marc Tardif)
+
 	* Temp.pm: Add cleanup() function so that temp files that would be
 	removed by an END block can be removed by a daemon. (RT wishlist
 	item #6928 by Robert Rothenberg)
