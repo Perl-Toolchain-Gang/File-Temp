@@ -1465,6 +1465,10 @@ In scalar context, returns the filehandle of a temporary file.
 The file is removed when the filehandle is closed or when the program
 exits. No access to the filename is provided.
 
+If the temporary file can not be created undef is returned.
+Currently this command will probably not work when the temporary
+directory is on an NFS file system.
+
 =cut
 
 sub tmpfile {
@@ -1473,7 +1477,9 @@ sub tmpfile {
   my ($fh, $file) = tmpnam();
 
   # Make sure file is removed when filehandle is closed
-  unlink0($fh, $file) or croak "Unable to unlink temporary file: $!";
+  # This will fail on NFS
+  unlink0($fh, $file)
+    or return undef;
 
   return $fh;
 
@@ -1644,6 +1650,8 @@ sub unlink0 {
     # Make sure that the link count is zero
     # - Cygwin provides deferred unlinking, however,
     #   on Win9x the link count remains 1
+    # On NFS the link count may still be 1 but we cant know that
+    # we are on NFS
     return ( $fh[3] == 0 or $^O eq 'cygwin' ? 1 : 0);
 
   } else {
