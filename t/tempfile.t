@@ -34,7 +34,7 @@ push(@files, $tempfile);
 # TEMPDIR test
 # Create temp directory in current dir
 my $template = 'tmpdirXXXXXX';
-print "# TEmplate: $template\n";
+print "# Template: $template\n";
 my $tempdir = tempdir( $template ,
 		       DIR => File::Spec->curdir,
 		       CLEANUP => 1,
