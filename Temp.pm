@@ -322,18 +322,11 @@ sub _gettemp {
     # Default set
     $openflags = O_CREAT | O_EXCL | O_RDWR;
 
-    # Add the remainder as available
-    $openflags |= Fcntl::O_FOLLOW()
-      if eval { Fcntl::O_FOLLOW(); 1 };
-
-    $openflags |= Fcntl::O_BINARY()
-      if eval { Fcntl::O_BINARY(); 1 };
-
-    $openflags |= Fcntl::O_LARGEFILE()
-      if eval { Fcntl::O_LARGEFILE(); 1 };
-
-    $openflags |= Fcntl::O_EXLOCK()
-        if eval { Fcntl::O_EXLOCK(); 1 };
+    for my $oflag (qw/FOLLOW BINARY LARGEFILE EXLOCK NOINHERIT TEMPORARY/) {
+        my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
+        no strict 'refs';
+        $openflags |= $bit if eval { $bit = &$func(); 1 };
+    }
 
   }
   

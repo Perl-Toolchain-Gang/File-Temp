@@ -3,12 +3,18 @@
 	* Temp.pm (_deferred_unlink): Add new internal routine to centralise the
 	configuring of END blocks. This also fixes a bug where only the
 	first file was being unlinked in the END block (due to scoping).
+
 	(_can_unlink_opened_file): Rename from _can_unlink. Will now
 	return false if running on Windows.
+
 	(_is_verysafe): If _PC_CHOWN_RESTRICTED is not available assume
 	that "chown giveaway" is possible anyway.
+
 	(unlink0): If can not unlink an open file, simply defer removal
 	until later.
+
+	(_gettemp): Add O_NOINHERIT and O_TEMPORARY flags to sysopen if
+	they are available (Thanks to Tom Christiansen for this)
 
 	* t/mktemp.t: Add test
 
