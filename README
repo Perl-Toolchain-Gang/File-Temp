@@ -1,12 +1,12 @@
 File::Temp - provides functions for generating temporary files
 
-This is the first public release of File::Temp. This module can be used to
+This is release V0.07 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
 
 It could be considered to be in a late alpha state since it has only been
-tested on two operating systems.
+tested on three operating systems.
 
 Please let me know if it fails on other operating systems.
 
@@ -23,21 +23,27 @@ release.
 
 REQUIREMENTS
 
-Requires perl 5.6
+Requires perl 5.005 or newer.
+Perl 5.6.0 will give access to extra security checks.
 
 Written completely in Perl. XS is not required.
 
-File::Spec greater than 0.7 is required.
-Fcntl from perl5.5.670 or higher.
-This is standard on Perl 5.6
+File::Spec greater than or equal to 0.8 is required.
+Fcntl from perl5.5.670 or higher [but will work without it].
+The above two modules are standard on Perl 5.6
 
 PLATFORMS
 
-Tested with perl5.5.670 on RedHat Linux 6.1, Solaris 2.6 and Windows NT 4.
+Tested on the following platforms:
+
+ RedHat Linux 6.1, perl 5.6.0
+ RedHat Linux 6.1, perl 5.005_03
+
+ Windows NT 4, perl 5.6.0
 
 Still needs work on non-Unix platforms to adjust test severity (for example
-syickyness test does not work on NT, and neither does unlink on an open
-file (I believe).
+stickyness test does not work on NT, and neither does unlink on an open
+file). MEDIUM and HIGH security checks have only been tested on Unix.
 
 AUTHOR
 
@@ -48,3 +54,28 @@ Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
+CHANGES IN THIS RELEASE
+
+V0.07:
+      - Add support for perl 5.005. On perl 5.005 the HIGH and
+        MEDIUM security levels are not supported due to changes in 
+        the Fcntl module.
+
+      - A benchmark has been added to the misc directory to compare
+        IO::File->new_tmpfile, File::Temp and a simple creation wrapper
+        around POSIX::tmpnam. On my Linux system File::Temp::tempfile()
+        is an order of magnitude slower than the other two......
+
+V0.06:
+      - Add a test suite
+      - Fix unlinking during the END blocks (was only removing the
+        first file generated)
+      - unlink0 can now be run on WinNT - the unlink of the file
+        is now deferred to an END block since can not unlink an
+        open file on WinNT
+      - If the POSIX _PC_CHOWN_RESTRICTED symbol is not available
+        it is assumed that "chown giveaway" is allowed.
+
+
+V0.05: 
+      - First release to CPAN
