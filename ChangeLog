@@ -4,7 +4,8 @@
 	retained whilst debugging.
 
 	* Temp.pm: Force chmod on file before unlinking it. This can be a
-	problem on windows (see RT bug #6935)
+	problem on windows (see RT bug #6935). tempdir() has been fixed by
+	Slaven's earlier patch to change the rmtree arguments.
 
 	* Temp.pm (top_system_uid): Add interix patch from Todd Vierling
 
