@@ -14,9 +14,18 @@ use File::Temp qw/ tempfile unlink0 /;
 ok(1);
 
 # The high security tests must currently be skipped on Windows
-my $skip = ( $^O eq 'MSWin32' ? 1 : 0 );
-if ($skip) {
+my $skipplat = ( $^O eq 'MSWin32' ? 1 : 0 );
+
+# Can not run high security tests in perls before 5.6.0
+my $skipperl  = ($] < 5.006 ? 1 : 0 );
+
+# Determine whether we need to skip things and why
+my $skip = 0;
+if ($skipplat) {
   $skip = "Skip Not supported on this platform";
+} elsif ($skipperl) {
+  $skip = "Skip Perl version must be v5.6.0 for these tests";
+
 }
 
 print "We will be skipping some tests : $skip\n";
@@ -31,7 +40,8 @@ print "Testing with STANDARD security...\n";
 
 # Try medium
 
-File::Temp->safe_level( File::Temp::MEDIUM );
+File::Temp->safe_level( File::Temp::MEDIUM )
+  unless $skip;
 
 print "Testing with MEDIUM security...\n";
 
@@ -40,7 +50,8 @@ print "Testing with MEDIUM security...\n";
 
 # Try HIGH
 
-File::Temp->safe_level( File::Temp::HIGH );
+File::Temp->safe_level( File::Temp::HIGH )
+  unless $skip;
 
 print "Testing with HIGH security...\n";
 
