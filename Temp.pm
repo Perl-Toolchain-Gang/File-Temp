@@ -340,7 +340,7 @@ sub _gettemp {
 
       # Try to make sure this will be marked close-on-exec
       # XXX: Win32 doesn't respect this, nor the proper fcntl,
-      #      but may have O_NOINHERIT.  This is not in Fcntl.pm, though.
+      #      but may have O_NOINHERIT. This may or may not be in Fcntl.
       local $^F = 2; 
 
       # Store callers umask
