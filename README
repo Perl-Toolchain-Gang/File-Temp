@@ -1,6 +1,6 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.12 of File::Temp. This module can be used to
+This is release V0.13 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
@@ -19,7 +19,7 @@ INSTALLATION
 
 TEST FAILURES
 
-Test failures from lib/ftmp-security saying "system possibly insecure"
+Test failures from lib/security saying "system possibly insecure"
 
 Firstly, test failures from the ftmp-security are not necessarily
 serious or indicative of a real security threat.  That being said,
