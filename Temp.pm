@@ -2063,6 +2063,17 @@ fail when the temp file is not local. Additionally, be aware that
 the performance of I/O operations over NFS will not be as good as for
 a local disk.
 
+=head2 Forking
+
+In some cases files created by File::Temp are removed from within an
+END block. This can lead to problems for long running processes where
+it is advised to use the object interface (files will then be deleted
+when the objects go out of scope) and also when a child perl process
+exits the END block will be triggered such that any temporary files
+created before the fork will be removed by the child. Currently the
+best advice is to use the C<POSIX::_exit()> function in the child such
+that END blocks will not be triggered.
+
 =head1 HISTORY
 
 Originally began life in May 1999 as an XS interface to the system

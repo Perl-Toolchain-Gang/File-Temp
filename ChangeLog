@@ -2,6 +2,7 @@
 
 	* Temp.pm (top_system_uid): Add interix patch from Todd Vierling
 	(_gettemp): Pod patch from Steven Lembark
+	(pod): Add note on forking (prompted by Daniel Macks)
 
 	* t/tempfile.t: Add test for write proteceted temp file (thanks to
 	Slaven Rezic)
