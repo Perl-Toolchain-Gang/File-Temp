@@ -423,7 +423,7 @@ sub _gettemp {
     ${$options{ErrStr}} = "Parent directory ($parent) is not a directory";
     return ();
   }
-  unless (-w _) {
+  unless (-w $parent) {
     ${$options{ErrStr}} = "Parent directory ($parent) is not writable\n";
       return ();
   }
@@ -686,13 +686,13 @@ sub _is_safe {
   if (($info[2] & &Fcntl::S_IWGRP) ||   # Is group writable?
       ($info[2] & &Fcntl::S_IWOTH) ) {  # Is world writable?
     # Must be a directory
-    unless (-d _) {
+    unless (-d $path) {
       $$err_ref = "Path ($path) is not a directory"
       if ref($err_ref);
       return 0;
     }
     # Must have sticky bit set
-    unless (-k _) {
+    unless (-k $path) {
       $$err_ref = "Sticky bit not set on $path when dir is group|world writable"
 	if ref($err_ref);
       return 0;
@@ -1825,7 +1825,7 @@ sub cmpstat {
   }
 
   # this is no longer a file, but may be a directory, or worse
-  unless (-f _) {
+  unless (-f $path) {
     confess "panic: $path is no longer a file: SB=@fh";
   }
 

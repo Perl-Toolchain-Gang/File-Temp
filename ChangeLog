@@ -1,8 +1,13 @@
 2005-02-21  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (top_system_uid): Add interix patch from Todd Vierling
-	(_gettemp): Pod patch from Steven Lembark
-	(pod): Add note on forking (prompted by Daniel Macks)
+
+	* Temp.pm (_gettemp): Pod patch from Steven Lembark
+
+	* Temp.pm: Add note on forking (prompted by Daniel Macks)
+
+	* Temp.pm (cmpstat): Roman Vasicek reported problems with the _
+	filehandle. Play it safe and remove that handle.
 
 	* t/tempfile.t: Add test for write proteceted temp file (thanks to
 	Slaven Rezic)
