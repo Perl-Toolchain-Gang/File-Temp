@@ -644,15 +644,41 @@ sub _is_verysafe {
 # platform for files that are currently open.
 # Returns true if we can, false otherwise.
 
-# Currently WinNT can not unlink an opened file
+# Currently WinNT and OS/2 can not unlink an opened file
 
 sub _can_unlink_opened_file {
 
-  
-  $^O ne 'MSWin32' ? 1 : 0;
+  if ($^O eq 'MSWin32' || $^O eq 'os2') {
+    return 0;
+  } else {
+    return 1;
+  }
 
 }
 
+# internal routine to decide which security levels are allowed
+# see safe_level() for more information on this
+
+# Controls whether the supplied security level is allowed
+
+#   $cando = _can_do_level( $level )
+
+sub _can_do_level {
+
+  # Get security level
+  my $level = shift;
+
+  # Always have to be able to do STANDARD
+  return 1 if $level == STANDARD;
+
+  # Currently, the systems that can do HIGH or MEDIUM are identical
+  if ( $^O eq 'MSWin32' ) {
+    return 0;
+  } else {
+    return 1;
+  }
+
+}
 
 # This routine sets up a deferred unlinking of a specified
 # filename and filehandle. It is used in the following cases:
@@ -680,12 +706,6 @@ sub _can_unlink_opened_file {
 
   # Set up an end block to use these arrays
   END {
-    # Dirs
-    foreach my $dir (@dirs_to_unlink) {
-      if (-d $dir) {
-	rmtree($dir, $DEBUG, 1);
-      }
-    }
     # Files
     foreach my $file (@files_to_unlink) {
       # close the filehandle without checking its state
@@ -697,8 +717,14 @@ sub _can_unlink_opened_file {
       if (-f $file->[1]) {  # file name is [1]
 	unlink $file->[1] or warn "Error removing ".$file->[1];
       }
-      
     }
+    # Dirs
+    foreach my $dir (@dirs_to_unlink) {
+      if (-d $dir) {
+	rmtree($dir, $DEBUG, 1);
+      }
+    }
+
 
   }
 
@@ -1352,11 +1378,11 @@ occasions this is not required.
 
 On some platforms, for example Windows NT, it is not possible to
 unlink an open file (the file must be closed first). On those
-platforms, the actual unlinking is deferred until the program ends
-and good status is returned. A check is still performed to make sure that
-the filehandle and filename are pointing to the same thing (but not at the time 
-the end block is executed since the deferred removal may not have access to
-the filehandle). 
+platforms, the actual unlinking is deferred until the program ends and
+good status is returned. A check is still performed to make sure that
+the filehandle and filename are pointing to the same thing (but not at
+the time the end block is executed since the deferred removal may not
+have access to the filehandle).
 
 Additionally, on Windows NT not all the fields returned by stat() can
 be compared. For example, the C<dev> and C<rdev> fields seem to be different
@@ -1365,6 +1391,10 @@ does not always agree, with C<stat(FH)> being more accurate than
 C<stat(filename)>, presumably because of caching issues even when
 using autoflush (this is usually overcome by waiting a while after
 writing to the tempfile before attempting to C<unlink0> it).
+
+Finally, on NFS file systems the link count of the file handle does
+not always go to zero immediately after unlinking. Currently, this
+command is expected to fail on NFS disks.
 
 =cut
 
@@ -1500,7 +1530,21 @@ run with MEDIUM or HIGH security. This is simply because the
 safety tests use functions from L<Fcntl|Fcntl> that are not
 available in older versions of perl. The problem is that the version
 number for Fcntl is the same in perl 5.6.0 and in 5.005_03 even though
-they are different versions.....
+they are different versions.
+
+On systems that do not support the HIGH or MEDIUM safety levels
+(for example Win NT or OS/2) any attempt to change the level will
+be ignored. The decision to ignore rather than raise an exception
+allows portable programs to be written with high security in mind
+for the systems that can support this without those programs failing
+on systems where the extra tests are irrelevant.
+
+If you really need to see whether the change has been accepted
+simply examine the return value of C<safe_level>.
+
+  $newlevel = File::Temp->safe_level( File::Temp::HIGH );
+  die "Could not change to high security" 
+      if $newlevel != File::Temp::HIGH;
 
 =cut
 
@@ -1514,11 +1558,14 @@ they are different versions.....
       if (($level != STANDARD) && ($level != MEDIUM) && ($level != HIGH)) {
 	carp "safe_level: Specified level ($level) not STANDARD, MEDIUM or HIGH - ignoring\n";
       } else {
+	# Dont allow this on perl 5.005 or earlier
 	if ($] < 5.006 && $level != STANDARD) {
 	  # Cant do MEDIUM or HIGH checks
 	  croak "Currently requires perl 5.006 or newer to do the safe checks";
 	}
-        $LEVEL = $level; 
+	# Check that we are allowed to change level
+	# Silently ignore if we can not.
+        $LEVEL = $level if _can_do_level($level);
       }
     }
     return $LEVEL;
