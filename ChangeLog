@@ -1,3 +1,12 @@
+2000-11-24  Tim Jenness  <timj@jach.hawaii.edu>
+
+	* Temp.pm: Incorporate fixes up to bleedperl 7825. Cross platform
+	fixes.
+
+	* t/security.t: Incorporate fixes from bleedperl 7825 - adds more
+	cross platform support and more skips on the basis that this is
+	not testing your system security, just the module.
+
 2000-08-16  Tim Jenness  <timj@jach.hawaii.edu>
 
 	* Temp.pm (_gettemp): Dont use VMS::Stdio if we want the file
