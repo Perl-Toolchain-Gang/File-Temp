@@ -1,5 +1,7 @@
 2005-02-21  Tim Jenness  <tjenness@cpan.org>
 
+	* Temp.pm (top_system_uid): Add interix patch from Todd Vierling
+
 	* t/tempfile.t: Add test for write proteceted temp file (thanks to
 	Slaven Rezic)
 

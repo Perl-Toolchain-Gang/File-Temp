@@ -2012,6 +2012,7 @@ The value is only relevant when C<safe_level> is set to MEDIUM or higher.
 
 {
   my $TopSystemUID = 10;
+  $TopSystemUID = 197108 if $^O eq 'interix'; # "Administrator"
   sub top_system_uid {
     my $self = shift;
     if (@_) {
