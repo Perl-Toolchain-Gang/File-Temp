@@ -95,12 +95,12 @@ filehandle of a temporary file.  The tempdir() function can
 be used to create a temporary directory.
 
 The security aspect of temporary file creation is emphasized such that
-a filehandle and filename are returned together.  This helps guarantee that 
-a race condition can not occur where the temporary file is created by another process 
-between checking for the existence of the file and its
-opening.  Additional security levels are provided to check, for 
-example, that the sticky bit is set on world writable directories.
-See L<"safe_level"> for more information.
+a filehandle and filename are returned together.  This helps guarantee
+that a race condition can not occur where the temporary file is
+created by another process between checking for the existence of the
+file and its opening.  Additional security levels are provided to
+check, for example, that the sticky bit is set on world writable
+directories.  See L<"safe_level"> for more information.
 
 For compatibility with popular C library functions, Perl implementations of
 the mkstemp() family of functions are provided. These are, mkstemp(),
@@ -124,7 +124,7 @@ use Carp;
 use File::Spec 0.8;
 use File::Path qw/ rmtree /;
 use Fcntl 1.03;
-use Errno qw( EEXIST ENOENT ENOTDIR EINVAL );
+use Errno;
 require VMS::Stdio if $^O eq 'VMS';
 
 # Need the Symbol package if we are running older perl
@@ -340,6 +340,7 @@ sub _gettemp {
 
       if ($^O eq 'VMS') {  # need volume to avoid relative dir spec
         $parent = File::Spec->catdir($volume, @dirs[0..$#dirs-1]);
+        $parent = 'sys$disk:[]' if $parent eq '';
       } else {
 
 	# Put it back together without the last one
@@ -442,7 +443,7 @@ sub _gettemp {
 
 	# Error opening file - abort with error
 	# if the reason was anything but EEXIST
-	unless ($! == EEXIST) {
+	unless ($!{EEXIST}) {
 	  carp "File::Temp: Could not create temp file $path: $!";
 	  return ();
 	}
@@ -472,7 +473,7 @@ sub _gettemp {
 
 	# Abort with error if the reason for failure was anything
 	# except EEXIST
-	unless ($! == EEXIST) {
+	unless ($!{EEXIST}) {
 	  carp "File::Temp: Could not create directory $path: $!";
 	  return ();
 	}
@@ -608,8 +609,12 @@ sub _is_safe {
   # Check to see whether owner is neither superuser (or a system uid) nor me
   # Use the real uid from the $< variable
   # UID is in [4]
-  if ( $info[4] > File::Temp->top_system_uid() && $info[4] != $<) {
-    carp "Directory owned neither by root nor the current user";
+  if ($info[4] > File::Temp->top_system_uid() && $info[4] != $<) {
+
+    Carp::cluck(sprintf "uid=$info[4] topuid=%s \$<=$< path='$path'",
+		File::Temp->top_system_uid());
+
+    carp "Directory owned neither by root nor the current user.";
     return 0;
   }
 
@@ -732,7 +737,7 @@ sub _can_do_level {
   return 1 if $level == STANDARD;
 
   # Currently, the systems that can do HIGH or MEDIUM are identical
-  if ( $^O eq 'MSWin32' || $^O eq 'os2' || $^O eq 'cygwin') {
+  if ( $^O eq 'MSWin32' || $^O eq 'os2' || $^O eq 'cygwin' || $^O eq 'dos') {
     return 0;
   } else {
     return 1;
@@ -1103,7 +1108,7 @@ sub tempdir  {
       # Prepend the supplied directory or temp dir
       if ($options{"DIR"}) {
 
-	$template = File::Spec->catfile($options{"DIR"}, $template);
+        $template = File::Spec->catdir($options{"DIR"}, $template);
 
       } elsif ($options{TMPDIR}) {
 
@@ -1526,10 +1531,10 @@ sub unlink0 {
     @okstat = (1,2,3,4,5,7,8,9,10);
   } elsif ($^O eq 'os2') {
     @okstat = (0, 2..$#fh);
-  } elsif ($^O eq 'dos') {
-    @okstat = (2,3,4,5,7,8,9,10);
   } elsif ($^O eq 'VMS') { # device and file ID are sufficient
     @okstat = (0, 1);
+  } elsif ($^O eq 'dos') {
+     @okstat = (0,2..7,11..$#fh);
   }
 
   # Now compare each entry explicitly by number
