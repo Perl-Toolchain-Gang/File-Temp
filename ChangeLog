@@ -1,7 +1,7 @@
 2005-02-21  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: Add $KEEP_ALL to allow the temporary files to be
-	retained whilst debugging.
+	retained whilst debugging (suggestion from Ed Avis [and others]).
 
 	* Temp.pm: Force chmod on file before unlinking it. This can be a
 	problem on windows (see RT bug #6935). tempdir() has been fixed by
@@ -9,7 +9,8 @@
 
 	* Temp.pm (top_system_uid): Add interix patch from Todd Vierling
 
-	* Temp.pm (_gettemp): Pod patch from Steven Lembark
+	* Temp.pm (_gettemp): Pod patch from Steven Lembark clarifying the
+	error message associated with two few XXXXs
 
 	* Temp.pm: Add note on forking and make sure that END blocks only
 	remove temporary files created by the current process ID (prompted
