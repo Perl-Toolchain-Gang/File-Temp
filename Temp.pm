@@ -1129,11 +1129,15 @@ is specified.
   ($fh, $filename) = tempfile($template, UNLINK => 1);
 
 Return the filename and filehandle as before except that the file is
-automatically removed when the program exits. Default is for the file
-to be removed if a file handle is requested and to be kept if the
-filename is requested. In a scalar context (where no filename is
-returned) the file is always deleted either on exit or when it is closed
-(unless $KEEP_ALL is true when the temp file is created).
+automatically removed when the program exits (dependent on
+$KEEP_ALL). Default is for the file to be removed if a file handle is
+requested and to be kept if the filename is requested. In a scalar
+context (where no filename is returned) the file is always deleted
+either (depending on the operating system) on exit or when it is
+closed (unless $KEEP_ALL is true when the temp file is created).
+
+Use the object-oriented interface if fine-grained control of when
+a file is removed is required.
 
 If the template is not specified, a template is always
 automatically generated. This temporary file is placed in tmpdir()
