@@ -1,4 +1,18 @@
-2000-04-27  Tim Jenness  <timj@jach.hawaii.edu>
+2000-04-27  Tim Jenness  <t.jenness@jach.hawaii.edu>
+
+	* t/posix.t: Add explicit autoflush on filehandle
+
+	* t/mktemp.t: Add explicit autoflush on filehandle
+
+	* Temp.pm: (unlink0): Disallow HIGH and MEDIUM tests if running
+	perl 5.005 or earlier.
+
+	* t/security.t: Specify perl version to allow for tests
+
+        * Add support for perl 5.005 (remove 'our' and auto-vivifying file 
+	handles). VERSION NUMBER NOW 0.07
+
+	* README: Update in preparation for V0.06 
 
 	* Temp.pm (_deferred_unlink): Add new internal routine to centralise the
 	configuring of END blocks. This also fixes a bug where only the
@@ -24,6 +38,6 @@
 
 	* t/tempfile.t: Add test
 
-2000-03-14  Tim Jenness  <timj@jach.hawaii.edu>
+2000-03-14  Tim Jenness  <t.jenness@jach.hawaii.edu>
 
 	* Release v0.05 to CPAN
