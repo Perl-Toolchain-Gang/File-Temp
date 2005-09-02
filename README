@@ -125,6 +125,10 @@ terms as Perl itself.
 
 CHANGES IN THIS RELEASE
 
+V0.17
+      + Sebastien Aperghis-Tramoni reports that File::Temp works
+        with perl 5.004.
+
 V0.16
       - Remove leftover debugging statement!
 V0.15

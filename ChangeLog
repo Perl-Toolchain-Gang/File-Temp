@@ -1,3 +1,8 @@
+2005-09-01  Tim Jenness  <tjenness@cpan.org>
+
+	* Temp.pm: Sebastien Aperghis-Tramoni indicates that File::Temp
+	works with perl 5.004 so change the minimum perl version.
+
 2005-02-22  Tim Jenness  <timj@jach.hawaii.edu>
 
 	--- RELEASE V0.16 ---
