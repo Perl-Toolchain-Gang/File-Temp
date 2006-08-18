@@ -1,9 +1,16 @@
+2006-08-18  Tim Jenness  <timj@apele.jach.hawaii.edu>
+
+	* Temp.pm: pre-emptively load Carp::Heavy. If we don't when we run out of file
+	handles and attempt to call croak() we get an error message telling
+	us that Carp::Heavy won't load rather than an error telling us we
+	have run out of file handles. (pointed out by bjoern_at_hoehrmann.de RT #14151)
+
 2005-09-01  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: Sebastien Aperghis-Tramoni indicates that File::Temp
-	works with perl 5.004 so change the minimum perl version.
+	works with perl 5.004 so change the minimum perl version. (RT #14149)
 
-	* Temp.pm: Use effective uid rather than real uid (Alexey Tourbin)
+	* Temp.pm: Use effective uid rather than real uid (Alexey Tourbin RT #14218)
 
 2005-02-22  Tim Jenness  <timj@jach.hawaii.edu>
 

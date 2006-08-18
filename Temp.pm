@@ -138,6 +138,13 @@ use Fcntl 1.03;
 use Errno;
 require VMS::Stdio if $^O eq 'VMS';
 
+# pre-emptively load Carp::Heavy. If we don't when we run out of file
+# handles and attempt to call croak() we get an error message telling
+# us that Carp::Heavy won't load rather than an error telling us we
+# have run out of file handles. We either preload croak() or we
+# switch the calls to croak from _gettemp() to use die.
+require Carp::Heavy;
+
 # Need the Symbol package if we are running older perl
 require Symbol if $] < 5.006;
 
@@ -1807,6 +1814,10 @@ command is expected to fail on NFS disks.
 This function is disabled if the global variable $KEEP_ALL is true
 and an unlink on open file is supported. If the unlink is to be deferred
 to the END block, the file is still registered for removal.
+
+This function should not be called if you are using the object oriented
+interface since the it will interfere with the object destructor deleting
+the file.
 
 =cut
 
