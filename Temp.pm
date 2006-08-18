@@ -62,7 +62,10 @@ Object interface:
   require File::Temp;
   use File::Temp ();
 
-  $fh = new File::Temp($template);
+  $fh = new File::Temp();
+  $fname = $fh->filename;
+
+  $fh = new File::Temp(TEMPLATE => $template);
   $fname = $fh->filename;
 
   $tmp = new File::Temp( UNLINK => 0, SUFFIX => '.dat' );
