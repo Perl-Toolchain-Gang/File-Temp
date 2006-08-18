@@ -1,6 +1,6 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.16 of File::Temp. This module can be used to
+This is release V0.17 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
@@ -73,7 +73,7 @@ about the various security aspects.
 
 REQUIREMENTS
 
-Requires perl 5.005 or newer.
+Requires perl 5.004 or newer.
 Perl 5.6.0 will give access to extra security checks.
 
 Written completely in Perl. XS is not required.
@@ -85,6 +85,11 @@ The above two modules are standard on Perl 5.6
 PLATFORMS
 
 Tested on the following platforms:
+
+ MacOSX 10.4.9, perl 5.8.7
+ Linux WBEL 4, perl 5.8.7
+
+Earlier versions were tested on:
 
  SUSe Linux 9.1, perl 5.8.3
  Redhat Linux 9, perl 5.8.0
@@ -118,7 +123,7 @@ AUTHOR
 
 Tim Jenness <tjenness@cpan.org>
 
-Copyright (C) 1999 - 2005 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999 - 2006 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
@@ -126,11 +131,21 @@ terms as Perl itself.
 CHANGES IN THIS RELEASE
 
 V0.17
+      + Now inherits from IO::Seekable (Ricky Myers and Toby Corkindale)
+
+      + Pre-emptive load of Carp::Heavy so that File::Temp can report
+        errors when it has run out of file handles (RT #14151)
+
       + Sebastien Aperghis-Tramoni reports that File::Temp works
-        with perl 5.004.
+        with perl 5.004. (RT #14149)
 
       + Use effective uid for security check rather than real uid
-      (Alexey Tourbin)
+      (Alexey Tourbin) (RT #14218)
+
+      + Fix Object contructor in SYNOPSIS (Peter Moerch)
+
+      + Documentation updated to note that croak() is called on error
+         and that srand should be called after a fork. "e.g." is no longer used.
 
 V0.16
       - Remove leftover debugging statement!
