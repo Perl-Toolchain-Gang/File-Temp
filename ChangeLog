@@ -1,5 +1,9 @@
 2006-08-18  Tim Jenness  <tjenness@cpan.org>
 
+	* Temp.pm: Also inherit from IO::Seekable so that seek and tell
+	methods can work on filehandles (thanks to Rick Myers and Toby Corkindale).
+
+	* t/seekable.t: Add test script from Rick Myers.
 	
 	* Temp.pm: Add note about forking and resetting the random number generator
 	to prevent multiple clashes of temp file names. (pointed out by Brent Cowgill)

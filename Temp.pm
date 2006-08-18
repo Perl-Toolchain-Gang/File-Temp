@@ -61,6 +61,7 @@ Object interface:
 
   require File::Temp;
   use File::Temp ();
+  use File::Temp qw/ :seekable /;
 
   $fh = new File::Temp();
   $fname = $fh->filename;
@@ -71,6 +72,7 @@ Object interface:
   $tmp = new File::Temp( UNLINK => 0, SUFFIX => '.dat' );
   print $tmp "Some data\n";
   print "Filename is $tmp\n";
+  $tmp->seek( 0, SEEK_END );
 
 The following interfaces are provided for compatibility with
 existing APIs. They should not be used in new code.
@@ -152,7 +154,7 @@ require Carp::Heavy;
 require Symbol if $] < 5.006;
 
 ### For the OO interface
-use base qw/ IO::Handle /;
+use base qw/ IO::Handle IO::Seekable /;
 use overload '""' => "STRINGIFY";
 
 
@@ -179,6 +181,9 @@ use base qw/Exporter/;
 	      mkdtemp
 	      unlink0
 	      cleanup
+	      SEEK_SET
+              SEEK_CUR
+              SEEK_END
 		};
 
 # Groups of functions for export
@@ -186,10 +191,11 @@ use base qw/Exporter/;
 %EXPORT_TAGS = (
 		'POSIX' => [qw/ tmpnam tmpfile /],
 		'mktemp' => [qw/ mktemp mkstemp mkstemps mkdtemp/],
+		'seekable' => [qw/ SEEK_SET SEEK_CUR SEEK_END /],
 	       );
 
 # add contents of these tags to @EXPORT
-Exporter::export_tags('POSIX','mktemp');
+Exporter::export_tags('POSIX','mktemp','seekable');
 
 # Version number
 
@@ -979,7 +985,8 @@ object is no longer required.
 Note that there is no method to obtain the filehandle from the
 C<File::Temp> object. The object itself acts as a filehandle. Also,
 the object is configured such that it stringifies to the name of the
-temporary file.
+temporary file. The object isa C<IO::Handle> and isa C<IO::Seekable>
+so all those methods are available.
 
 =over 4
 
@@ -2273,7 +2280,7 @@ different implementations of temporary file handling.
 
 Tim Jenness E<lt>tjenness@cpan.orgE<gt>
 
-Copyright (C) 1999-2005 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999-2006 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
