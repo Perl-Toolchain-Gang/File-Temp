@@ -5,6 +5,10 @@
 	us that Carp::Heavy won't load rather than an error telling us we
 	have run out of file handles. (pointed out by bjoern_at_hoehrmann.de RT #14151)
 
+	* Temp.pm: Update documentation to note that croak() will be
+	called by tempfile() and File::Temp->new if a problem occurs (thanks to Steve
+	Hay for pointing this out).
+
 2005-09-01  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: Sebastien Aperghis-Tramoni indicates that File::Temp

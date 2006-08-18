@@ -1002,6 +1002,8 @@ is not supported (the file is always opened).
 
 Arguments are case insensitive.
 
+Can call croak() if an error occurs.
+
 =cut
 
 sub new {
@@ -1196,6 +1198,8 @@ if opening the file is not required.
 
 Options can be combined as required.
 
+Will croak() if there is an error.
+
 =cut
 
 sub tempfile {
@@ -1367,6 +1371,8 @@ the rmtree() function from the L<File::Path|File::Path> module.
 Of course, if the template is not specified, the temporary directory
 will be created in tmpdir() and will also be removed at program exit.
 
+Will croak() if there is an error.
+
 =cut
 
 # '
@@ -1487,6 +1493,8 @@ The template may be any filename with some number of X's appended
 to it, for example F</tmp/temp.XXXX>. The trailing X's are replaced
 with unique alphanumeric combinations.
 
+Will croak() if there is an error.
+
 =cut
 
 
@@ -1528,6 +1536,8 @@ would generate a file similar to F<testhGji_w.dat>.
 
 Returns just the filehandle alone when called in scalar context.
 
+Will croak() if there is an error.
+
 =cut
 
 sub mkstemps {
@@ -1566,9 +1576,10 @@ X's that are replaced by the routine.
   $tmpdir_name = mkdtemp($template);
 
 Returns the name of the temporary directory created.
-Returns undef on failure.
 
 Directory must be removed by the caller.
+
+Will croak() if there is an error.
 
 =cut
 
@@ -1610,6 +1621,8 @@ that the file will not be opened by someone else.
   $unopened_file = mktemp($template);
 
 Template is the same as that required by mkstemp().
+
+Will croak() if there is an error.
 
 =cut
 
@@ -1671,6 +1684,8 @@ race conditions.
 See L<File::Spec/tmpdir> for information on the choice of temporary
 directory for a particular operating system.
 
+Will croak() if there is an error.
+
 =cut
 
 sub tmpnam {
@@ -1704,6 +1719,8 @@ exits. No access to the filename is provided.
 If the temporary file can not be created undef is returned.
 Currently this command will probably not work when the temporary
 directory is on an NFS file system.
+
+Will croak() if there is an error.
 
 =cut
 
@@ -1748,6 +1765,8 @@ Equivalent to running mktemp() with $dir/$prefixXXXXXXXX
 
 Because this function uses mktemp(), it can suffer from race conditions.
 
+Will croak() if there is an error.
+
 =cut
 
 sub tempnam {
@@ -1788,8 +1807,9 @@ same as the file whose descriptor you hold.
   unlink0($fh, $path)
      or die "Error unlinking file $path safely";
 
-Returns false on error. The filehandle is not closed since on some
-occasions this is not required.
+Returns false on error but croaks() if there is a security
+anomaly. The filehandle is not closed since on some occasions this is
+not required.
 
 On some platforms, for example Windows NT, it is not possible to
 unlink an open file (the file must be closed first). On those
@@ -1872,9 +1892,9 @@ fields returned by stat() are compared).
      or die "Error comparing handle with file";
 
 Returns false if the stat information differs or if the link count is
-greater than 1.
+greater than 1. Calls croak if there is a security anomaly.
 
-On certain platofms, eg Windows, not all the fields returned by stat()
+On certain platforms, eg Windows, not all the fields returned by stat()
 can be compared. For example, the C<dev> and C<rdev> fields seem to be
 different in Windows.  Also, it seems that the size of the file
 returned by stat() does not always agree, with C<stat(FH)> being more
@@ -1973,6 +1993,9 @@ Usually called from the object destructor when using the OO interface.
 Not exported by default.
 
 This function is disabled if the global variable $KEEP_ALL is true.
+
+Can call croak() if there is a security anomaly during the stat()
+comparison.
 
 =cut
 
