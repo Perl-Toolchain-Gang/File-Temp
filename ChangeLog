@@ -1,5 +1,9 @@
 2006-08-18  Tim Jenness  <tjenness@cpan.org>
 
+	
+	* Temp.pm: Add note about forking and resetting the random number generator
+	to prevent multiple clashes of temp file names. (pointed out by Brent Cowgill)
+
 	* Temp.pm: pre-emptively load Carp::Heavy. If we don't when we run out of file
 	handles and attempt to call croak() we get an error message telling
 	us that Carp::Heavy won't load rather than an error telling us we

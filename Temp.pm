@@ -2241,6 +2241,12 @@ to only remove those temp files created by a particular process ID. This
 means that a child will not attempt to remove temp files created by the
 parent process.
 
+If you are forking many processes in parallel that are all creating
+temporary files, you may need to reset the random number seed using
+srand(EXPR) in each child else all the children will attempt to walk
+through the same set of random file names and may well cause
+themselves to give up if they exceed the number of retry attempts.
+
 =head2 BINMODE
 
 The file returned by File::Temp will have been opened in binary mode
