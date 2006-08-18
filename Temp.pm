@@ -679,11 +679,11 @@ sub _is_safe {
   return 1 if $^O eq 'VMS';  # owner delete control at file level
 
   # Check to see whether owner is neither superuser (or a system uid) nor me
-  # Use the real uid from the $< variable
+  # Use the effective uid from the $> variable
   # UID is in [4]
-  if ($info[4] > File::Temp->top_system_uid() && $info[4] != $<) {
+  if ($info[4] > File::Temp->top_system_uid() && $info[4] != $>) {
 
-    Carp::cluck(sprintf "uid=$info[4] topuid=%s \$<=$< path='$path'",
+    Carp::cluck(sprintf "uid=$info[4] topuid=%s euid=$< path='$path'",
 		File::Temp->top_system_uid());
 
     $$err_ref = "Directory owned neither by root nor the current user"

@@ -3,6 +3,8 @@
 	* Temp.pm: Sebastien Aperghis-Tramoni indicates that File::Temp
 	works with perl 5.004 so change the minimum perl version.
 
+	* Temp.pm: Use effective uid rather than real uid (Alexey Tourbin)
+
 2005-02-22  Tim Jenness  <timj@jach.hawaii.edu>
 
 	--- RELEASE V0.16 ---
