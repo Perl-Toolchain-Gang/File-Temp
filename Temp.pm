@@ -230,7 +230,7 @@ unless ($^O eq 'MacOS') {
     no strict 'refs';
     $OPENFLAGS |= $bit if eval {
       # Make sure that redefined die handlers do not cause problems
-      # eg CGI::Carp
+      # e.g. CGI::Carp
       local $SIG{__DIE__} = sub {};
       local $SIG{__WARN__} = sub {};
       $bit = &$func();
@@ -253,7 +253,7 @@ unless ($^O eq 'MacOS') {
     no strict 'refs';
     $OPENTEMPFLAGS |= $bit if eval {
       # Make sure that redefined die handlers do not cause problems
-      # eg CGI::Carp
+      # e.g. CGI::Carp
       local $SIG{__DIE__} = sub {};
       local $SIG{__WARN__} = sub {};
       $bit = &$func();
@@ -356,7 +356,7 @@ sub _gettemp {
   # Substr starts from 0
   my $start = length($template) - 1 - $options{"suffixlen"};
 
-  # Check that we have at least MINX x X (eg 'XXXX") at the end of the string
+  # Check that we have at least MINX x X (e.g. 'XXXX") at the end of the string
   # (taking suffixlen into account). Any fewer is insecure.
 
   # Do it using substr - no reason to use a pattern match since
@@ -1897,7 +1897,7 @@ fields returned by stat() are compared).
 Returns false if the stat information differs or if the link count is
 greater than 1. Calls croak if there is a security anomaly.
 
-On certain platforms, eg Windows, not all the fields returned by stat()
+On certain platforms, for example Windows, not all the fields returned by stat()
 can be compared. For example, the C<dev> and C<rdev> fields seem to be
 different in Windows.  Also, it seems that the size of the file
 returned by stat() does not always agree, with C<stat(FH)> being more
