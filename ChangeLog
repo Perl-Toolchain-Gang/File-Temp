@@ -1,4 +1,4 @@
-2006-08-18  Tim Jenness  <timj@apele.jach.hawaii.edu>
+2006-08-18  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: pre-emptively load Carp::Heavy. If we don't when we run out of file
 	handles and attempt to call croak() we get an error message telling
@@ -22,7 +22,7 @@
 
 	* Temp.pm: Use effective uid rather than real uid (Alexey Tourbin RT #14218)
 
-2005-02-22  Tim Jenness  <timj@jach.hawaii.edu>
+2005-02-22  Tim Jenness  <tjenness@cpan.org>
 
 	--- RELEASE V0.16 ---
 	
@@ -93,11 +93,11 @@
 	* Makefile.PL: Add INSTALLDIRS switch on perl version so that the
 	module installs into the correct place for perl 5.6.1 and newer.
 
-2002-08-28  Tim Jenness  <timj@jach.hawaii.edu>
+2002-08-28  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: Synch with perl 5.8.0 v0.13 MacOS fixes (Chris Nandor)
 
-2001-02-22  Tim Jenness  <timj@jach.hawaii.edu>
+2001-02-22  Tim Jenness  <tjenness@cpan.org>
 
 	--- RELEASE V0.12 ---
 	
@@ -108,14 +108,14 @@
 	* Temp.pm (tmpfile): tmpfile returns undef on failure rather than
 	croaking.
 
-2001-02-21  Timothy Jenness  <t.jenness@jach.hawaii.edu>
+2001-02-21  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: 
 	      -Add fix for CGI::Carp 
                   [Thanks to John Labovitz <johnl@valiha.inside.sealabs.com>]
               - Use error string to propogate reason rather than a carp
 
-2000-11-24  Tim Jenness  <timj@jach.hawaii.edu>
+2000-11-24  Tim Jenness  <tjenness@cpan.org>
 
         --- RELEASE V0.11 ----
 
@@ -134,33 +134,33 @@
 	cross platform support and more skips on the basis that this is
 	not testing your system security, just the module.
 
-2000-08-16  Tim Jenness  <timj@jach.hawaii.edu>
+2000-08-16  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (_gettemp): Dont use VMS::Stdio if we want the file
 	to remain after closing.
 
-2000-08-15  Tim Jenness  <timj@jach.hawaii.edu>
+2000-08-15  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (_can_do_level): cygwin patch
 
-2000-08-14  Tim Jenness  <timj@jach.hawaii.edu>
+2000-08-14  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: Add OPENTEMPFLAGS to support UNLINK=>0
 		More tweaks to VMS support (now uses VMS::Stdio)
 
-2000-07-26  Tim Jenness  <timj@jach.hawaii.edu>
+2000-07-26  Tim Jenness  <tjenness@cpan.org>
 
 	* Release V0.09 to CPAN
 	
 	* README: Update for V0.09
 
-2000-07-25  Tim Jenness  <timj@jach.hawaii.edu>
+2000-07-25  Tim Jenness  <tjenness@cpan.org>
 
 	* t/security.t: OS/2 can not do the security tests.
 
 	* Temp.pm: Add Support for VMS and OS/2 
 
-2000-05-15  Tim Jenness  <timj@jach.hawaii.edu>
+2000-05-15  Tim Jenness  <tjenness@cpan.org>
 
         * Release V0.08 to CPAN
 	
@@ -174,7 +174,7 @@
 	(END): Change order of cleanup so that files are removed ahead of
 	temp dirs (since files may be in the temp dirs) 
 
-2000-05-08  Tim Jenness  <timj@jach.hawaii.edu>
+2000-05-08  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: Reorganize END block 
 
@@ -190,14 +190,14 @@
 
 	* t/security.t: Add # to print output
 
-2000-04-28  Tim Jenness  <timj@jach.hawaii.edu>
+2000-04-28  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: Calculate OPENFLAGS outside of subroutine. This
 	improves speed of the commands by nearly a factor of 3.
 	(_replace_XX): Inline the character replacement code rather than
 	using _randchar subroutine. Improves performance by an additional 8%.
 
-2000-04-27  Tim Jenness  <t.jenness@jach.hawaii.edu>
+2000-04-27  Tim Jenness  <tjenness@cpan.org>
 
 	* t/posix.t: Add explicit autoflush on filehandle
 
@@ -237,6 +237,6 @@
 
 	* t/tempfile.t: Add test
 
-2000-03-14  Tim Jenness  <t.jenness@jach.hawaii.edu>
+2000-03-14  Tim Jenness  <tjenness@cpan.org>
 
 	* Release v0.05 to CPAN
