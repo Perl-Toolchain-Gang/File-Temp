@@ -1,0 +1,18 @@
+# http://module-build.sourceforge.net/META-spec.html
+#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
+name:         File-Temp
+version_from: Temp.pm
+installdirs:  perl
+license: perl
+requires:
+    Fcntl:                         1.03
+    File::Path:                    0
+    File::Spec:                    0.8
+build_requires:
+    Test::More:                    0
+    File::Path:                    0
+    File::Spec:                    0.8
+    FileHandle:                    0
+
+distribution_type: module
+generated_by: ExtUtils::MakeMaker version 6.17

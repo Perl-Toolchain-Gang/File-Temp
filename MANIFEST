@@ -11,3 +11,4 @@ t/seekable.t
 ChangeLog
 misc/benchmark.pl
 misc/results.txt
+META.yml                                 Module meta-data (added by MakeMaker)
