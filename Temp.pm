@@ -155,8 +155,7 @@ require Symbol if $] < 5.006;
 
 ### For the OO interface
 use base qw/ IO::Handle IO::Seekable /;
-use overload '""' => "STRINGIFY";
-use overload 'cmp' => \&filename_cmp;
+use overload '""' => "STRINGIFY", fallback => 1;
 
 # use 'our' on v5.6.0
 use vars qw($VERSION @EXPORT_OK %EXPORT_TAGS $DEBUG $KEEP_ALL);
@@ -1055,15 +1054,6 @@ sub filename {
 sub STRINGIFY {
   my $self = shift;
   return $self->filename;
-}
-
-sub filename_cmp {
-    my ($self, $other, $reversed) = @_;
-    if ($reversed) {
-       return "$other" cmp "$self";
-    } else {
-       return "$self" cmp "$other";
-    }
 }
 
 =item B<unlink_on_destroy>
