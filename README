@@ -1,6 +1,6 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.17 of File::Temp. This module can be used to
+This is release V0.18 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
@@ -123,12 +123,19 @@ AUTHOR
 
 Tim Jenness <tjenness@cpan.org>
 
-Copyright (C) 1999 - 2006 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999 - 2007 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.18
+      + overload extended to allow compare of object filename directly
+        (Rafael Garcia-Suarez)
+
+      + remove umask modification code (potentially thread unsage)
+        (Peter Dintelmann, Gisle Aas)
 
 V0.17
       + Now inherits from IO::Seekable (Ricky Myers and Toby Corkindale)

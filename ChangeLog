@@ -1,5 +1,7 @@
 2007-01-21 Tim Jenness <tjenness@cpan.org>
 
+	--- RELEASE 0.18 CPAN ---
+	
 	* Temp.pm: Provide "cmp" overloading so File::Temp object can
 	be compared to filename directly. (Rafael Garcia-Suarez)
 	
