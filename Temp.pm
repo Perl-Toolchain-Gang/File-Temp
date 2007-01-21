@@ -497,6 +497,9 @@ sub _gettemp {
       }
       if ( $open_success ) {
 
+	# in case of odd umask force rw
+	chmod(0600, $path);
+
 	# Opened successfully - return file handle and name
 	return ($fh, $path);
 
