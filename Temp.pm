@@ -156,7 +156,7 @@ require Symbol if $] < 5.006;
 ### For the OO interface
 use base qw/ IO::Handle IO::Seekable /;
 use overload '""' => "STRINGIFY";
-
+use overload 'cmp' => \&filename_cmp;
 
 # use 'our' on v5.6.0
 use vars qw($VERSION @EXPORT_OK %EXPORT_TAGS $DEBUG $KEEP_ALL);
@@ -964,8 +964,9 @@ object is no longer required.
 Note that there is no method to obtain the filehandle from the
 C<File::Temp> object. The object itself acts as a filehandle. Also,
 the object is configured such that it stringifies to the name of the
-temporary file. The object isa C<IO::Handle> and isa C<IO::Seekable>
-so all those methods are available.
+temporary file, and can be compared to a filename directly. The object
+isa C<IO::Handle> and isa C<IO::Seekable> so all those methods are
+available.
 
 =over 4
 
@@ -1054,6 +1055,15 @@ sub filename {
 sub STRINGIFY {
   my $self = shift;
   return $self->filename;
+}
+
+sub filename_cmp {
+    my ($self, $other, $reversed) = @_;
+    if ($reversed) {
+       return "$other" cmp "$self";
+    } else {
+       return "$self" cmp "$other";
+    }
 }
 
 =item B<unlink_on_destroy>

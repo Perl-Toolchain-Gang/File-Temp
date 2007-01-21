@@ -1,5 +1,8 @@
 2007-01-21 Tim Jenness <tjenness@cpan.org>
 
+	* Temp.pm: Provide "cmp" overloading so File::Temp object can
+	be compared to filename directly. (Rafael Garcia-Suarez)
+	
 	* Temp.pm: Remove umask control (doesn't seem to have any effect
 	on sysopen() anyway) (thanks to Peter Dintelmann, Gisle Aas)
 
