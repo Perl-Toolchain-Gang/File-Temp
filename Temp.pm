@@ -2259,7 +2259,7 @@ different implementations of temporary file handling.
 
 Tim Jenness E<lt>tjenness@cpan.orgE<gt>
 
-Copyright (C) 1999-2006 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999-2007 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
