@@ -483,12 +483,6 @@ sub _gettemp {
       #      but may have O_NOINHERIT. This may or may not be in Fcntl.
       local $^F = 2;
 
-      # Store callers umask
-      my $umask = umask();
-
-      # Set a known umask
-      umask(066);
-
       # Attempt to open the file
       my $open_success = undef;
       if ( $^O eq 'VMS' and $options{"unlink_on_close"} && !$KEEP_ALL) {
@@ -503,15 +497,10 @@ sub _gettemp {
       }
       if ( $open_success ) {
 
-	# Reset umask
-	umask($umask) if defined $umask;
-
 	# Opened successfully - return file handle and name
 	return ($fh, $path);
 
       } else {
-	# Reset umask
-	umask($umask) if defined $umask;
 
 	# Error opening file - abort with error
 	# if the reason was anything but EEXIST
@@ -525,23 +514,13 @@ sub _gettemp {
       }
     } elsif ($options{"mkdir"}) {
 
-      # Store callers umask
-      my $umask = umask();
-
-      # Set a known umask
-      umask(066);
-
       # Open the temp directory
       if (mkdir( $path, 0700)) {
-	# created okay
-	# Reset umask
-	umask($umask) if defined $umask;
+	# in case of odd umask
+	chmod(0700, $path);
 
 	return undef, $path;
       } else {
-
-	# Reset umask
-	umask($umask) if defined $umask;
 
 	# Abort with error if the reason for failure was anything
 	# except EEXIST
