@@ -637,10 +637,7 @@ sub _replace_XX {
 # force a file to be readonly when written to certain temp locations
 sub _force_writable {
   my $file = shift;
-  my $umask = umask();
-  umask(066);
   chmod 0600, $file;
-  umask($umask) if defined $umask;
 }
 
 
