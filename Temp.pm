@@ -140,6 +140,7 @@ use Carp;
 use File::Spec 0.8;
 use File::Path qw/ rmtree /;
 use Fcntl 1.03;
+use IO::Seekable; # For SEEK_*
 use Errno;
 require VMS::Stdio if $^O eq 'VMS';
 
