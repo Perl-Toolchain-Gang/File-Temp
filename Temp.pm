@@ -2045,11 +2045,10 @@ Options are:
 
 =item STANDARD
 
-Do the basic security measures to ensure the directory exists and
-is writable, that the umask() is fixed before opening of the file,
-that temporary files are opened only if they do not already exist, and
-that possible race conditions are avoided.  Finally the L<unlink0|"unlink0">
-function is used to remove files safely.
+Do the basic security measures to ensure the directory exists and is
+writable, that temporary files are opened only if they do not already
+exist, and that possible race conditions are avoided.  Finally the
+L<unlink0|"unlink0"> function is used to remove files safely.
 
 =item MEDIUM
 
