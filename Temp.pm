@@ -2253,7 +2253,7 @@ as a standard part of perl from v5.6.1.
 
 L<POSIX/tmpnam>, L<POSIX/tmpfile>, L<File::Spec>, L<File::Path>
 
-See L<IO::File> and L<File::MkTemp>, L<Apachae::TempFile> for
+See L<IO::File> and L<File::MkTemp>, L<Apache::TempFile> for
 different implementations of temporary file handling.
 
 =head1 AUTHOR
