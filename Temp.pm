@@ -199,7 +199,7 @@ Exporter::export_tags('POSIX','mktemp','seekable');
 
 # Version number
 
-$VERSION = '0.18';
+$VERSION = '0.18_01';
 
 # This is a list of characters that can be used in random filenames
 
@@ -599,7 +599,7 @@ sub _gettemp {
 
 sub _randchar {
 
-  $CHARS[ int( rand( $#CHARS ) ) ];
+  $CHARS[ int( rand( $#CHARS + 1 ) ) ];
 
 }
 
@@ -625,9 +625,9 @@ sub _replace_XX {
   # Don't want to always use substr when not required though.
 
   if ($ignore) {
-    substr($path, 0, - $ignore) =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS ) ) ]/ge;
+    substr($path, 0, - $ignore) =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS + 1 ) ) ]/ge;
   } else {
-    $path =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS ) ) ]/ge;
+    $path =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS + 1 ) ) ]/ge;
   }
   return $path;
 }

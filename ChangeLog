@@ -1,3 +1,8 @@
+2007-10-29  Light Of My Life  <tjenness@cpan.org>
+
+	* Temp.pm: Fix range of random character determination such that the last character
+	in the list (_) will appear occassionally. (Thanks to Peter Dintelmann)
+
 2007-01-21 Tim Jenness <tjenness@cpan.org>
 
 	--- RELEASE 0.18 CPAN ---
