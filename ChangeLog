@@ -5,6 +5,9 @@
 
 	* Temp.pm: Clarify error message when parent directory does not exist (thanks to
 	Peter Dintelmann)
+
+	* Temp.pm: Carp::Heavy does not exist on older perls (eg 5.005) so wrap the require
+	in an eval (Thanks to Slaven Rezic and Robin Barker)
 	
 2007-01-21 Tim Jenness <tjenness@cpan.org>
 

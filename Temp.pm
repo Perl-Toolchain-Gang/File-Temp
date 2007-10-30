@@ -149,7 +149,7 @@ require VMS::Stdio if $^O eq 'VMS';
 # us that Carp::Heavy won't load rather than an error telling us we
 # have run out of file handles. We either preload croak() or we
 # switch the calls to croak from _gettemp() to use die.
-require Carp::Heavy;
+eval { require Carp::Heavy; };
 
 # Need the Symbol package if we are running older perl
 require Symbol if $] < 5.006;
@@ -199,7 +199,7 @@ Exporter::export_tags('POSIX','mktemp','seekable');
 
 # Version number
 
-$VERSION = '0.18_02';
+$VERSION = '0.18_03';
 
 # This is a list of characters that can be used in random filenames
 
