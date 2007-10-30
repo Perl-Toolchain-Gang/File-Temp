@@ -199,7 +199,7 @@ Exporter::export_tags('POSIX','mktemp','seekable');
 
 # Version number
 
-$VERSION = '0.18_01';
+$VERSION = '0.18_02';
 
 # This is a list of characters that can be used in random filenames
 
@@ -437,6 +437,10 @@ sub _gettemp {
   # not a file -- no point returning a name that includes a directory
   # that does not exist or is not writable
 
+  unless (-e $parent) {
+    ${$options{ErrStr}} = "Parent directory ($parent) does not exist";
+    return ();
+  }
   unless (-d $parent) {
     ${$options{ErrStr}} = "Parent directory ($parent) is not a directory";
     return ();
