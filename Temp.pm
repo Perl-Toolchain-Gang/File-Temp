@@ -603,7 +603,7 @@ sub _gettemp {
 
 sub _randchar {
 
-  $CHARS[ int( rand( $#CHARS + 1 ) ) ];
+  $CHARS[ int( rand( @CHARS ) ) ];
 
 }
 
@@ -629,9 +629,9 @@ sub _replace_XX {
   # Don't want to always use substr when not required though.
 
   if ($ignore) {
-    substr($path, 0, - $ignore) =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS + 1 ) ) ]/ge;
+    substr($path, 0, - $ignore) =~ s/X(?=X*\z)/$CHARS[ int( rand( @CHARS ) ) ]/ge;
   } else {
-    $path =~ s/X(?=X*\z)/$CHARS[ int( rand( $#CHARS + 1 ) ) ]/ge;
+    $path =~ s/X(?=X*\z)/$CHARS[ int( rand( @CHARS ) ) ]/ge;
   }
   return $path;
 }
