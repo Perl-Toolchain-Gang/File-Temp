@@ -7,7 +7,9 @@
 	Peter Dintelmann)
 
 	* Temp.pm: Carp::Heavy does not exist on older perls (eg 5.005) so wrap the require
-	in an eval (Thanks to Slaven Rezic and Robin Barker)
+	in an eval (Thanks to Jesse Vincent, Slaven Rezic and Robin Barker)
+
+	* Temp.pm: Replace "new File::Temp" with "File::Temp->new" at the behest of H. Merijn Brand
 	
 2007-01-21 Tim Jenness <tjenness@cpan.org>
 

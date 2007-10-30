@@ -63,13 +63,13 @@ Object interface:
   use File::Temp ();
   use File::Temp qw/ :seekable /;
 
-  $fh = new File::Temp();
+  $fh = File::Temp->new();
   $fname = $fh->filename;
 
-  $fh = new File::Temp(TEMPLATE => $template);
+  $fh = File::Temp->new(TEMPLATE => $template);
   $fname = $fh->filename;
 
-  $tmp = new File::Temp( UNLINK => 0, SUFFIX => '.dat' );
+  $tmp = File::Temp->new( UNLINK => 0, SUFFIX => '.dat' );
   print $tmp "Some data\n";
   print "Filename is $tmp\n";
   $tmp->seek( 0, SEEK_END );
@@ -978,7 +978,7 @@ available.
 
 Create a temporary file object.
 
-  my $tmp = new File::Temp();
+  my $tmp = File::Temp->new();
 
 by default the object is constructed as if C<tempfile>
 was called without options, but with the additional behaviour
@@ -990,7 +990,7 @@ Supported arguments are the same as for C<tempfile>: UNLINK
 template is specified using the TEMPLATE option. The OPEN option
 is not supported (the file is always opened).
 
- $tmp = new File::Temp( TEMPLATE => 'tempXXXXX',
+ $tmp = File::Temp->new( TEMPLATE => 'tempXXXXX',
                         DIR => 'mydir',
                         SUFFIX => '.dat');
 
@@ -2263,6 +2263,7 @@ different implementations of temporary file handling.
 
 Tim Jenness E<lt>tjenness@cpan.orgE<gt>
 
+Copyright (C) 2007 Tim Jenness.
 Copyright (C) 1999-2007 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
