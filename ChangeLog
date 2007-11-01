@@ -1,4 +1,8 @@
-2007-10-31  Light Of My Life  <tjenness@cpan.org>
+2007-10-31  Tim Jenness  <tjenness@cpan.org>
+
+	* Temp.pm (tempfile): Add TMPDIR flag to simplify 
+	    tempfile(template, DIR => File::Spec->tmpdir) and to remove confusion
+	for tempdir interface. (thanks to Brendan O'Dea)
 
 	* META.yml: Update to v1.0 spec YAML spec. (thanks to Alexandr Ciornii)
 

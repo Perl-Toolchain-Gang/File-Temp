@@ -1152,6 +1152,12 @@ But see the WARNING at the end.
 Translates the template as before except that a directory name
 is specified.
 
+  ($fh, $filename) = tempfile($template, TMPDIR => 1);
+
+Equivalent to specifying a DIR of "File::Spec->tmpdir", writing the file
+into the same temporary directory as would be used if no template was
+specified at all.
+
   ($fh, $filename) = tempfile($template, UNLINK => 1);
 
 Return the filename and filehandle as before except that the file is
@@ -1170,7 +1176,7 @@ automatically generated. This temporary file is placed in tmpdir()
 (L<File::Spec>) unless a directory is specified explicitly with the
 DIR option.
 
-  $fh = tempfile( $template, DIR => $dir );
+  $fh = tempfile( DIR => $dir );
 
 If called in scalar context, only the filehandle is returned and the
 file will automatically be deleted when closed on operating systems
@@ -1206,11 +1212,12 @@ sub tempfile {
 
   # Default options
   my %options = (
-		 "DIR"    => undef,  # Directory prefix
+		"DIR"    => undef,  # Directory prefix
                 "SUFFIX" => '',     # Template suffix
                 "UNLINK" => 0,      # Do not unlink file on exit
                 "OPEN"   => 1,      # Open file
-		);
+		"TMPDIR" => 0,     # Place tempfile in tempdir if template specified
+	       );
 
   # Check to see whether we have an odd or even number of arguments
   my $template = (scalar(@_) % 2 == 1 ? shift(@_) : undef);
@@ -1241,9 +1248,14 @@ sub tempfile {
   # First generate a template if not defined and prefix the directory
   # If no template must prefix the temp directory
   if (defined $template) {
+    # End up with current directory if neither DIR not TMPDIR are set
     if ($options{"DIR"}) {
 
       $template = File::Spec->catfile($options{"DIR"}, $template);
+
+    } elsif ($options{TMPDIR}) {
+
+      $template = File::Spec->catfile(File::Spec->tmpdir, $template );
 
     }
 
