@@ -256,6 +256,7 @@ my $OPENTEMPFLAGS = $OPENFLAGS;
 unless ($^O eq 'MacOS') {
   for my $oflag (qw/ TEMPORARY /) {
     my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
+    local($@);
     no strict 'refs';
     $OPENTEMPFLAGS |= $bit if eval {
       # Make sure that redefined die handlers do not cause problems
@@ -738,6 +739,7 @@ sub _is_verysafe {
 
   # Should Get the value of _PC_CHOWN_RESTRICTED if it is defined
   # and If it is not there do the extensive test
+  local($@);
   my $chown_restricted;
   $chown_restricted = &POSIX::_PC_CHOWN_RESTRICTED()
     if eval { &POSIX::_PC_CHOWN_RESTRICTED(); 1};
