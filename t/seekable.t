@@ -21,7 +21,11 @@ isa_ok( $tmp, 'IO::Handle' );
 isa_ok( $tmp, 'IO::Seekable' );
 
 # make sure the seek method is available...
-ok( File::Temp->can('seek'), 'tmp can seek' );
+# Note that we need a reasonably modern IO::Seekable
+SKIP: {
+  skip "IO::Seekable is too old", 1 if IO::Seekable->VERSION <= 1.06;
+  ok( File::Temp->can('seek'), 'tmp can seek' );
+}
 
 # make sure IO::Handle methods are still there...
 ok( File::Temp->can('print'), 'tmp can print' );

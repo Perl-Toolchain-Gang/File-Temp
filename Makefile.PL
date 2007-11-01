@@ -18,4 +18,6 @@ WriteMakefile(
   ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
         (ABSTRACT_FROM => 'Temp.pm',
          AUTHOR     => 'Tim Jenness <tjenness@cpan.org>') : ()),
+	      ($ExtUtils::MakeMaker::VERSION gt '6.30'?
+	       ('LICENSE'                => 'perl', ) : ()),
 );

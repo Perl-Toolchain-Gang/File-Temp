@@ -199,7 +199,7 @@ Exporter::export_tags('POSIX','mktemp','seekable');
 
 # Version number
 
-$VERSION = '0.18_03';
+$VERSION = '0.18_04';
 
 # This is a list of characters that can be used in random filenames
 
@@ -627,11 +627,12 @@ sub _replace_XX {
   # and suffixlen=0 returns nothing if used in the substr directly
   # Alternatively, could simply set $ignore to length($path)-1
   # Don't want to always use substr when not required though.
+  my $end = ( $] >= 5.006 ? "\\z" : "\\Z" );
 
   if ($ignore) {
-    substr($path, 0, - $ignore) =~ s/X(?=X*\z)/$CHARS[ int( rand( @CHARS ) ) ]/ge;
+    substr($path, 0, - $ignore) =~ s/X(?=X*$end)/$CHARS[ int( rand( @CHARS ) ) ]/ge;
   } else {
-    $path =~ s/X(?=X*\z)/$CHARS[ int( rand( @CHARS ) ) ]/ge;
+    $path =~ s/X(?=X*$end)/$CHARS[ int( rand( @CHARS ) ) ]/ge;
   }
   return $path;
 }
