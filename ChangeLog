@@ -1,5 +1,7 @@
 2007-10-31  Light Of My Life  <tjenness@cpan.org>
 
+	* META.yml: Update to v1.0 spec YAML spec. (thanks to Alexandr Ciornii)
+
 	* Temp.pm: Localize $@ when using eval to prevent leakage (prompted by Zefram)
 	
 	* Makefile.PL: Support LICENSE in newer ExtUtils::MakeMaker implementations
