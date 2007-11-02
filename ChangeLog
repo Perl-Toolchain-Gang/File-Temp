@@ -3,6 +3,9 @@
 	* Temp.pm (_is_safe): Correct cluck message to match uid check
 	(thanks to Alexey Tourbin RT #14218)
 
+	* Temp.pm: Add note on use of binmode to modify encoding. (prompted
+	by Wolfgang Husmann)
+	
 2007-10-31  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (tempfile): Add TMPDIR flag to simplify 
@@ -14,7 +17,7 @@
 	* Temp.pm: Localize $@ when using eval to prevent leakage (prompted by Zefram)
 	
 	* Makefile.PL: Support LICENSE in newer ExtUtils::MakeMaker implementations
-	(thanks to Alexandr Ciornii)
+	(thanks to Alexandr Ciornii RT #23524)
 
 2007-10-31  Tim Jenness  <tjenness@cpan.org>
 

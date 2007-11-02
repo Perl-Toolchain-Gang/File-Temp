@@ -52,7 +52,9 @@ The C<_can_do_level> method should be modified accordingly.
 
   ($fh, $filename) = tempfile( $template, DIR => $dir);
   ($fh, $filename) = tempfile( $template, SUFFIX => '.dat');
+  ($fh, $filename) = tempfile( $template, TMPDIR => 1 );
 
+  binmode( $fh, ":utf8" );
 
   $dir = tempdir( CLEANUP => 1 );
   ($fh, $filename) = tempfile( DIR => $dir );
@@ -2255,8 +2257,11 @@ themselves to give up if they exceed the number of retry attempts.
 =head2 BINMODE
 
 The file returned by File::Temp will have been opened in binary mode
-if such a mode is available. If that is not correct, use the binmode()
+if such a mode is available. If that is not correct, use the C<binmode()>
 function to change the mode of the filehandle.
+
+Note that you can modify the encoding of a file opened by File::Temp
+also by using C<binmode()>.
 
 =head1 HISTORY
 
