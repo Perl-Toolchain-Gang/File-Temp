@@ -684,7 +684,7 @@ sub _is_safe {
   # UID is in [4]
   if ($info[4] > File::Temp->top_system_uid() && $info[4] != $>) {
 
-    Carp::cluck(sprintf "uid=$info[4] topuid=%s euid=$< path='$path'",
+    Carp::cluck(sprintf "uid=$info[4] topuid=%s euid=$> path='$path'",
 		File::Temp->top_system_uid());
 
     $$err_ref = "Directory owned neither by root nor the current user"

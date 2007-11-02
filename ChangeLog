@@ -1,3 +1,8 @@
+2007-11-01  Tim Jenness  <tjenness@cpan.org>
+
+	* Temp.pm (_is_safe): Correct cluck message to match uid check
+	(thanks to Alexey Tourbin RT #14218)
+
 2007-10-31  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (tempfile): Add TMPDIR flag to simplify 
