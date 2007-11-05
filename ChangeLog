@@ -10,9 +10,9 @@
 
 	* Temp.pm (tempfile): Add TMPDIR flag to simplify 
 	    tempfile(template, DIR => File::Spec->tmpdir) and to remove confusion
-	for tempdir interface. (thanks to Brendan O'Dea)
+	for tempdir interface. (thanks to Brendan O'Dea - debian bug #351373)
 
-	* META.yml: Update to v1.0 spec YAML spec. (thanks to Alexandr Ciornii)
+	* META.yml: Update to v1.0 spec YAML spec. (thanks to Alexandr Ciornii RT# 23524)
 
 	* Temp.pm: Localize $@ when using eval to prevent leakage (prompted by Zefram)
 	
@@ -22,24 +22,25 @@
 2007-10-31  Tim Jenness  <tjenness@cpan.org>
 
 	* t/seekable.t: Skip seek test on older IO::Seekable versions.
-	(thanks to Sebastien Aperghis-Tramoni)
+	(thanks to Sebastien Aperghis-Tramoni RT #23524)
 	
 	* Temp.pm: Allow XXX replacement to run on perl 5.005 and 5.004.
-	(thanks to Sebastien Aperghis-Tramoni)
+	(thanks to Sebastien Aperghis-Tramoni RT #23524)
 
 2007-10-29  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm: Fix range of random character determination such that the last character
-	in the list (_) will appear occassionally. (Thanks to Peter Dintelmann)
+	in the list (_) will appear occassionally. (Thanks to Peter Dintelmann perl RT# 41345)
 
 	* Temp.pm: Clarify error message when parent directory does not exist (thanks to
-	Peter Dintelmann)
+	Peter Dintelmann perl RT # 41346)
 
 	* Temp.pm: Carp::Heavy does not exist on older perls (eg 5.005) so wrap the require
 	in an eval (Thanks to Sebastien Aperghis-Tramoni, Jesse Vincent, Slaven Rezic
-	and Robin Barker)
+	and Robin Barker RT #26841)
 
-	* Temp.pm: Replace "new File::Temp" with "File::Temp->new" at the behest of H. Merijn Brand
+	* Temp.pm: Replace "new File::Temp" with "File::Temp->new" at the behest of H. Merijn 
+	Brand
 	
 2007-01-21 Tim Jenness <tjenness@cpan.org>
 
