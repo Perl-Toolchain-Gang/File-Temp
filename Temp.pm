@@ -599,22 +599,6 @@ sub _gettemp {
 
 }
 
-# Internal routine to return a random character from the
-# character list. Does not do an srand() since rand()
-# will do one automatically
-
-# No arguments. Return value is the random character
-
-# No longer called since _replace_XX runs a few percent faster if
-# I inline the code. This is important if we are creating thousands of
-# temporary files.
-
-sub _randchar {
-
-  $CHARS[ int( rand( @CHARS ) ) ];
-
-}
-
 # Internal routine to replace the XXXX... with random characters
 # This has to be done by _gettemp() every time it fails to
 # open a temp file/dir

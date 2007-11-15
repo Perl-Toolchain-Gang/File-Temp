@@ -1,3 +1,7 @@
+2007-11-15  Tim Jenness  <tjenness@cpan.org>
+
+	* Temp.pm (_randchar): Remove _randchar function (no longer used) 
+
 2007-11-14  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (new): Track pid used when file created and make sure
