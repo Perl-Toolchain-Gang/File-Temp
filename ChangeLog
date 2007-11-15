@@ -53,6 +53,8 @@
 	(thanks to Peter Dintelmann, Gisle Aas)
 
 	* t/cmp.t: New test file
+
+	* Temp.pm: Export SEEK_* constants (Matt Lawrence RT #22052)
 	
 2006-08-18  Tim Jenness  <tjenness@cpan.org>
 

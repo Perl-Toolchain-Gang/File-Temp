@@ -132,6 +132,8 @@ but should be used with caution since they return only a filename
 that was valid when function was called, so cannot guarantee
 that the file will not exist by the time the caller opens the filename.
 
+Filehandles returned by these functions support the seekable methods.
+
 =cut
 
 # 5.6.0 gives us S_IWOTH, S_IWGRP, our and auto-vivifying filehandls

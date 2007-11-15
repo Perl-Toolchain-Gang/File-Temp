@@ -6,7 +6,7 @@
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 BEGIN { use_ok('File::Temp') };
 
 #########################
@@ -34,3 +34,7 @@ ok( File::Temp->can('print'), 'tmp can print' );
 $c = scalar @File::Temp::EXPORT;
 $l = join ' ', @File::Temp::EXPORT;
 ok( $c == 9, "really exporting $c: $l" );
+
+ok(defined eval { SEEK_SET() }, 'SEEK_SET defined by File::Temp') or diag $@;
+ok(defined eval { SEEK_END() }, 'SEEK_END defined by File::Temp') or diag $@;
+ok(defined eval { SEEK_CUR() }, 'SEEK_CUR defined by File::Temp') or diag $@;
