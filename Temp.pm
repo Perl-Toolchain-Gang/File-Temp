@@ -1331,7 +1331,15 @@ sub tempfile {
 
 =item B<tempdir>
 
-This is the recommended interface for creation of temporary directories.
+This is the recommended interface for creation of temporary
+directories.  By default the directory will not be removed on exit
+(that is, it won't be temporary; this behaviour can not be changed
+because of issues with backwards compatibility). To enable removal
+either use the CLEANUP option which will trigger removal on program
+exit, or consider using the C<File::Tempdir> object interface which
+will allow the directory to be cleaned up when the object goes out of
+scope.
+
 The behaviour of the function depends on the arguments:
 
   $tempdir = tempdir();

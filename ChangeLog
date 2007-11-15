@@ -1,5 +1,9 @@
 2007-11-15  Tim Jenness  <tjenness@cpan.org>
 
+	* Temp.pm (tempdir): Add a note to the tempdir documentation to clarify that the default
+	is for the directory not to be temporary and that use of File::Tempdir may be required (thanks
+	to David Golden's annotation on CPAN).
+	
 	* Temp.pm (_randchar): Remove _randchar function (no longer used) 
 
 	* Temp.pm: Add note  about File::Tempdir module
