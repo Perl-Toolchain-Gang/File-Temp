@@ -2,6 +2,8 @@
 
 	* Temp.pm (_randchar): Remove _randchar function (no longer used) 
 
+	* Temp.pm: Add note  about File::Tempdir module
+	
 2007-11-14  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (new): Track pid used when file created and make sure

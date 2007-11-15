@@ -2277,6 +2277,9 @@ L<POSIX/tmpnam>, L<POSIX/tmpfile>, L<File::Spec>, L<File::Path>
 See L<IO::File> and L<File::MkTemp>, L<Apache::TempFile> for
 different implementations of temporary file handling.
 
+See L<File::Tempdir> for an object-oriented wrapper for the C<tempdir>
+function.
+
 =head1 AUTHOR
 
 Tim Jenness E<lt>tjenness@cpan.orgE<gt>
