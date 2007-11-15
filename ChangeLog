@@ -1,3 +1,10 @@
+2007-11-14  Tim Jenness  <tjenness@cpan.org>
+
+	* Temp.pm (new): Track pid used when file created and make sure
+	object destructor deletes the file only when the current pid
+	matches the original pid (RT#11067 again - thanks to Grousse)
+	Added new test (fork.t) to test this behaviour.
+	
 2007-11-01  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (_is_safe): Correct cluck message to match uid check

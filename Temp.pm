@@ -273,6 +273,9 @@ unless ($^O eq 'MacOS') {
   }
 }
 
+# Private hash tracking which files have been created by each process id via the OO interface
+my %FILES_CREATED_BY_OBJECT;
+
 # INTERNAL ROUTINES - not to be used outside of package
 
 # Generic routine for getting a temporary filename
@@ -1035,6 +1038,9 @@ sub new {
   # Store the filename in the scalar slot
   ${*$fh} = $path;
 
+  # Cache the filename by pid so that the destructor can decide whether to remove it
+  $FILES_CREATED_BY_OBJECT{$$}{$path} = 1;
+
   # Store unlink information in hash slot (plus other constructor info)
   %{*$fh} = %args;
 
@@ -1096,6 +1102,9 @@ if UNLINK is not specified).
 
 No error is given if the unlink fails.
 
+If the object has been passed to a child process during a fork, the file will be deleted
+when the object goes out of scope in the parent.
+
 If the global variable $KEEP_ALL is true, the file will not be removed.
 
 =cut
@@ -1104,6 +1113,9 @@ sub DESTROY {
   my $self = shift;
   if (${*$self}{UNLINK} && !$KEEP_ALL) {
     print "# --------->   Unlinking $self\n" if $DEBUG;
+
+    # only delete if this process created it
+    return unless exists $FILES_CREATED_BY_OBJECT{$$}{$self->filename};
 
     # The unlink1 may fail if the file has been closed
     # by the caller. This leaves us with the decision
