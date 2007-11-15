@@ -4,6 +4,8 @@
 	object destructor deletes the file only when the current pid
 	matches the original pid (RT#11067 again - thanks to Grousse)
 	Added new test (fork.t) to test this behaviour.
+
+	* t/seekable.t: Add tests to verify fix for RT#22052
 	
 2007-11-01  Tim Jenness  <tjenness@cpan.org>
 
