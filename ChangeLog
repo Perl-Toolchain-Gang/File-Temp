@@ -1,8 +1,14 @@
+2007-11-16  Tim Jenness  <tjenness@cpan.org>
+
+	* Temp.pm (newdir): Add object oriented interface to "tempdir". Use
+	File::Temp->newdir()
+
 2007-11-15  Tim Jenness  <tjenness@cpan.org>
 
-	* Temp.pm (tempdir): Add a note to the tempdir documentation to clarify that the default
-	is for the directory not to be temporary and that use of File::Tempdir may be required (thanks
-	to David Golden's annotation on CPAN).
+	* Temp.pm (tempdir): Add a note to the tempdir documentation to
+	clarify that the default is for the directory not to be temporary
+	and that use of an OO approach may be required (thanks to David
+	Golden's annotation on CPAN).
 	
 	* Temp.pm (_randchar): Remove _randchar function (no longer used) 
 

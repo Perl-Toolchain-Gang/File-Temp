@@ -203,7 +203,7 @@ Exporter::export_tags('POSIX','mktemp','seekable');
 
 # Version number
 
-$VERSION = '0.18_04';
+$VERSION = '0.18_05';
 
 # This is a list of characters that can be used in random filenames
 
@@ -1037,9 +1037,48 @@ sub new {
   return $fh;
 }
 
+=item B<newdir>
+
+Create a temporary directory using an object oriented interface.
+
+  $dir = File::Temp->newdir();
+
+By default the directory is deleted when the object goes out of scope.
+
+Supports the same options as the C<tempdir> function. Note that directories
+created with this method default to CLEANUP => 1.
+
+  $dir = File::Temp->newdir( $template, %options );
+
+=cut
+
+sub newdir {
+  my $self = shift;
+
+  # need to handle args as in tempdir because we have to force CLEANUP
+  # default without passing CLEANUP to tempdir
+  my $template = (scalar(@_) % 2 == 1 ? shift(@_) : undef );
+  my %options = @_;
+  my $cleanup = (exists $options{CLEANUP} ? $options{CLEANUP} : 1 );
+
+  delete $options{CLEANUP};
+
+  my $tempdir;
+  if (defined $template) {
+    $tempdir = tempdir( $template, %options );
+  } else {
+    $tempdir = tempdir( %options );
+  }
+  return bless { DIRNAME => $tempdir,
+		 CLEANUP => $cleanup,
+		 LAUNCHPID => $$,
+	       }, "File::Temp::Dir";
+}
+
 =item B<filename>
 
-Return the name of the temporary file associated with this object.
+Return the name of the temporary file associated with this object
+(if the object was created using the "new" constructor).
 
   $filename = $tmp->filename;
 
@@ -1057,6 +1096,15 @@ sub STRINGIFY {
   my $self = shift;
   return $self->filename;
 }
+
+=item B<dirname>
+
+Return the name of the temporary directory associated with this
+object (if the object was created using the "newdir" constructor).
+
+  $dirname = $tmpdir->dirname;
+
+This method is called automatically when the object is used in string context.
 
 =item B<unlink_on_destroy>
 
@@ -1086,10 +1134,15 @@ if UNLINK is not specified).
 
 No error is given if the unlink fails.
 
-If the object has been passed to a child process during a fork, the file will be deleted
-when the object goes out of scope in the parent.
+If the object has been passed to a child process during a fork, the
+file will be deleted when the object goes out of scope in the parent.
 
-If the global variable $KEEP_ALL is true, the file will not be removed.
+For a temporary directory object the directory will be removed
+unless the CLEANUP argument was used in the constructor (and set to
+false) or C<unlink_on_destroy> was modified after creation.
+
+If the global variable $KEEP_ALL is true, the file or directory
+will not be removed.
 
 =cut
 
@@ -1336,7 +1389,7 @@ directories.  By default the directory will not be removed on exit
 (that is, it won't be temporary; this behaviour can not be changed
 because of issues with backwards compatibility). To enable removal
 either use the CLEANUP option which will trigger removal on program
-exit, or consider using the C<File::Tempdir> object interface which
+exit, or consider using the "newdir" method in the object interface which
 will allow the directory to be cleaned up when the object goes out of
 scope.
 
@@ -2285,8 +2338,8 @@ L<POSIX/tmpnam>, L<POSIX/tmpfile>, L<File::Spec>, L<File::Path>
 See L<IO::File> and L<File::MkTemp>, L<Apache::TempFile> for
 different implementations of temporary file handling.
 
-See L<File::Tempdir> for an object-oriented wrapper for the C<tempdir>
-function.
+See L<File::Tempdir> for an alternative object-oriented wrapper for
+the C<tempdir> function.
 
 =head1 AUTHOR
 
@@ -2304,5 +2357,47 @@ should be written and providing ideas for code improvements and
 security enhancements.
 
 =cut
+
+package File::Temp::Dir;
+
+use File::Path qw/ rmtree /;
+use strict;
+use overload '""' => "STRINGIFY", fallback => 1;
+
+# private class specifically to support tempdir objects
+# created by File::Temp->newdir
+
+# ostensibly the same method interface as File::Temp but without
+# inheriting all the IO::Seekable methods and other cruft
+
+# Read-only - returns the name of the temp directory
+
+sub dirname {
+  my $self = shift;
+  return $self->{DIRNAME};
+}
+
+sub STRINGIFY {
+  my $self = shift;
+  return $self->dirname;
+}
+
+sub unlink_on_destroy {
+  my $self = shift;
+  if (@_) {
+    $self->{CLEANUP} = shift;
+  }
+  return $self->{CLEANUP};
+}
+
+sub DESTROY {
+  my $self = shift;
+  if ($self->unlink_on_destroy && 
+      $$ == $self->{LAUNCHPID} && !$File::Temp::KEEP_ALL) {
+    rmtree($self->{DIRNAME}, $File::Temp::DEBUG, 0)
+      if -d $self->{DIRNAME};
+  }
+}
+
 
 1;
