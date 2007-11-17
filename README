@@ -1,6 +1,6 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.18 of File::Temp. This module can be used to
+This is release V0.19 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
@@ -12,8 +12,8 @@ the program exits (via an END block), this differs from the Unix
 implementation where files can be deleted when the file is closed.
 
 The object-oriented implementation can get around this problem by
-making use of the object destructor to delete the file and is the
-recommended interface.
+making use of the object destructor to delete the file or directory
+and is the recommended interface.
 
 Please let me know if it fails on other operating systems.
 
@@ -86,8 +86,8 @@ PLATFORMS
 
 Tested on the following platforms:
 
- MacOSX 10.4.9, perl 5.8.7
- Linux WBEL 4, perl 5.8.7
+ MacOSX 10.4.9 and 10.5.1, perl 5.8.7
+ Linux WBEL 5, perl 5.8.7
 
 Earlier versions were tested on:
 
@@ -129,6 +129,30 @@ software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.19
+      + Add "newdir" constructor to create a temporary directory
+        that will be deleted automatically when the object goes out
+        of scope.
+
+      + tempdir now accepts a TEMPDIR flag for symmetry with tempfile
+        (debian bug #351373)
+
+      + Hopefully really fixed problems with forked processes removing
+        temp files and directories created by parent (V0.18 was still broken
+        in OO interface) (RT #11067)
+
+      + "_" should now be available as a character from the random character
+	generator (RT #41345)
+
+      + Now works again with perl 5.004 (RT#26841 RT#23524)
+
+      + Error message clarified when parent directory does not exist (RT#41346)
+
+      + Fix error message in uid check (RT #14218)
+
+      + Add note concerning binmode to modify encoding of handle returned by tempfile
+        (Wolfgang Husmann)
 
 V0.18
       + overload extended to allow compare of object filename directly
