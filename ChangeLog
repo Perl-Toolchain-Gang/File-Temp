@@ -1,5 +1,7 @@
 2007-11-19  Tim Jenness  <tjenness@cpan.org>
 
+	----- Release V0.19 CPAN -----
+	
 	* Temp.pm (tempfile): Add EXLOCK option which can be used to disable O_EXLOCK
 
 	* t/lock.t: Test ability to disable O_EXLOCK
