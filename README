@@ -133,10 +133,13 @@ CHANGES IN THIS RELEASE
 V0.19
       + Add "newdir" constructor to create a temporary directory
         that will be deleted automatically when the object goes out
-        of scope.
+        of scope. (RT #15733)
 
       + tempdir now accepts a TEMPDIR flag for symmetry with tempfile
         (debian bug #351373)
+
+      + Use of exclusive lock can now be disabled by using EXLOCK => 0
+        in constructor or tempfile() call. (RT #22702 and #28397)
 
       + Hopefully really fixed problems with forked processes removing
         temp files and directories created by parent (V0.18 was still broken

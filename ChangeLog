@@ -1,3 +1,9 @@
+2007-11-19  Tim Jenness  <tjenness@cpan.org>
+
+	* Temp.pm (tempfile): Add EXLOCK option which can be used to disable O_EXLOCK
+
+	* t/lock.t: Test ability to disable O_EXLOCK
+	
 2007-11-16  Tim Jenness  <tjenness@cpan.org>
 
 	* Temp.pm (newdir): Add object oriented interface to "tempdir". Use

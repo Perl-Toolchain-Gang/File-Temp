@@ -233,9 +233,10 @@ use constant HIGH     => 2;
 # us an optimisation when many temporary files are requested
 
 my $OPENFLAGS = O_CREAT | O_EXCL | O_RDWR;
+my $LOCKFLAG;
 
 unless ($^O eq 'MacOS') {
-  for my $oflag (qw/ NOFOLLOW BINARY LARGEFILE EXLOCK NOINHERIT /) {
+  for my $oflag (qw/ NOFOLLOW BINARY LARGEFILE NOINHERIT /) {
     my ($bit, $func) = (0, "Fcntl::O_" . $oflag);
     no strict 'refs';
     $OPENFLAGS |= $bit if eval {
@@ -247,6 +248,12 @@ unless ($^O eq 'MacOS') {
       1;
     };
   }
+  # Special case O_EXLOCK
+  $LOCKFLAG = eval {
+    local $SIG{__DIE__} = sub {};
+    local $SIG{__WARN__} = sub {};
+    &Fcntl::O_EXLOCK();
+  };
 }
 
 # On some systems the O_TEMPORARY flag can be used to tell the OS
@@ -300,6 +307,7 @@ my %FILES_CREATED_BY_OBJECT;
 #                        the file as soon as it is closed. Usually indicates
 #                        use of the O_TEMPORARY flag to sysopen.
 #                        Usually irrelevant on unix
+#   "use_exlock" => Indicates that O_EXLOCK should be used. Default is true.
 
 # Optionally a reference to a scalar can be passed into the function
 # On error this will be used to store the reason for the error
@@ -336,6 +344,7 @@ sub _gettemp {
 		 "mkdir" => 0,
 		 "suffixlen" => 0,
 		 "unlink_on_close" => 0,
+		 "use_exlock" => 1,
 		 "ErrStr" => \$tempErrStr,
 		);
 
@@ -505,6 +514,7 @@ sub _gettemp {
 	my $flags = ( ($options{"unlink_on_close"} && !$KEEP_ALL) ?
 		      $OPENTEMPFLAGS :
 		      $OPENFLAGS );
+	$flags |= $LOCKFLAG if (defined $LOCKFLAG && $options{use_exlock});
 	$open_success = sysopen($fh, $path, $flags, 0600);
       }
       if ( $open_success ) {
@@ -980,7 +990,7 @@ that the temporary file is removed by the object destructor
 if UNLINK is set to true (the default).
 
 Supported arguments are the same as for C<tempfile>: UNLINK
-(defaulting to true), DIR and SUFFIX. Additionally, the filename
+(defaulting to true), DIR, EXLOCK and SUFFIX. Additionally, the filename
 template is specified using the TEMPLATE option. The OPEN option
 is not supported (the file is always opened).
 
@@ -1252,6 +1262,16 @@ if warnings are turned on. Consider using the tmpnam()
 and mktemp() functions described elsewhere in this document
 if opening the file is not required.
 
+If the operating system supports it (for example BSD derived systems),
+the filehandle will be opened with O_EXLOCK (open with exclusive file
+lock). This can sometimes cause problems if the intention is to pass the
+filename to another system (such as DBD::SQLite) whilst ensuring that the
+tempfile is not reused. In this situation the "EXLOCK" option can be passed
+to tempfile. By default EXLOCK will be true (this retains compatibility with
+earlier releases).
+
+  ($fh, $filename) = tempfile($template, EXLOCK => 0);
+
 Options can be combined as required.
 
 Will croak() if there is an error.
@@ -1270,6 +1290,7 @@ sub tempfile {
                 "UNLINK" => 0,      # Do not unlink file on exit
                 "OPEN"   => 1,      # Open file
 		"TMPDIR" => 0,     # Place tempfile in tempdir if template specified
+		"EXLOCK" => 1,      # Open file with O_EXLOCK
 	       );
 
   # Check to see whether we have an odd or even number of arguments
@@ -1350,6 +1371,7 @@ sub tempfile {
                                     "unlink_on_close" => $unlink_on_close,
 				    "suffixlen" => length($options{'SUFFIX'}),
 				    "ErrStr" => \$errstr,
+				    "use_exlock" => $options{EXLOCK},
 				   ) );
 
   # Set up an exit handler that can do whatever is right for the
