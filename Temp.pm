@@ -1262,13 +1262,13 @@ if warnings are turned on. Consider using the tmpnam()
 and mktemp() functions described elsewhere in this document
 if opening the file is not required.
 
-If the operating system supports it (for example BSD derived systems),
-the filehandle will be opened with O_EXLOCK (open with exclusive file
-lock). This can sometimes cause problems if the intention is to pass the
-filename to another system (such as DBD::SQLite) whilst ensuring that the
-tempfile is not reused. In this situation the "EXLOCK" option can be passed
-to tempfile. By default EXLOCK will be true (this retains compatibility with
-earlier releases).
+If the operating system supports it (for example BSD derived systems), the 
+filehandle will be opened with O_EXLOCK (open with exclusive file lock). 
+This can sometimes cause problems if the intention is to pass the filename 
+to another system that expects to take an exclusive lock itself (such as 
+DBD::SQLite) whilst ensuring that the tempfile is not reused. In this 
+situation the "EXLOCK" option can be passed to tempfile. By default EXLOCK 
+will be true (this retains compatibility with earlier releases).
 
   ($fh, $filename) = tempfile($template, EXLOCK => 0);
 
