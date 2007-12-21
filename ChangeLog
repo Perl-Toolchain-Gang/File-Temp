@@ -1,3 +1,8 @@
+2007-12-20  Tim Jenness  <tjenness@cpan.org>
+
+	* t/lock.t: Fix logic problem with BEGIN block that was causing grief on some
+	systems (thanks to Steve Peters for patch).
+
 2007-11-19  Tim Jenness  <tjenness@cpan.org>
 
 	----- Release V0.19 CPAN -----
