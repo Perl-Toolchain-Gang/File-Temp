@@ -871,7 +871,9 @@ sub _can_do_level {
 
   # Set up an end block to use these arrays
   END {
+    local($., $@, $!, $^E, $?);
     cleanup();
+    }
   }
 
   # Cleanup function. Always triggered on END but can be invoked
@@ -1157,6 +1159,7 @@ will not be removed.
 =cut
 
 sub DESTROY {
+  local($., $@, $!, $^E, $?);
   my $self = shift;
   if (${*$self}{UNLINK} && !$KEEP_ALL) {
     print "# --------->   Unlinking $self\n" if $DEBUG;
