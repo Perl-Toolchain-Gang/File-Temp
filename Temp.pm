@@ -873,7 +873,6 @@ sub _can_do_level {
   END {
     local($., $@, $!, $^E, $?);
     cleanup();
-    }
   }
 
   # Cleanup function. Always triggered on END but can be invoked
