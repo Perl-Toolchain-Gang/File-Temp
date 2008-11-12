@@ -203,7 +203,7 @@ Exporter::export_tags('POSIX','mktemp','seekable');
 
 # Version number
 
-$VERSION = '0.20';
+$VERSION = '0.21';
 
 # This is a list of characters that can be used in random filenames
 
@@ -462,7 +462,12 @@ sub _gettemp {
     ${$options{ErrStr}} = "Parent directory ($parent) is not a directory";
     return ();
   }
-  unless (-w $parent) {
+  if ( $^O eq 'cygwin' ) {
+      # No-op special case. Under Windows Cygwin (FAT32) the directory
+      # permissions cannot be trusted. Directories are always
+      # writable.
+  } elsif (not -w $parent) {
+
     ${$options{ErrStr}} = "Parent directory ($parent) is not writable\n";
       return ();
   }
@@ -1017,8 +1022,8 @@ sub new {
   my $unlink = (exists $args{UNLINK} ? $args{UNLINK} : 1 );
   delete $args{UNLINK};
 
-  # template (store it in an error so that it will
-  # disappear from the arg list of tempfile
+  # template (store it in an array so that it will
+  # disappear from the arg list of tempfile)
   my @template = ( exists $args{TEMPLATE} ? $args{TEMPLATE} : () );
   delete $args{TEMPLATE};
 

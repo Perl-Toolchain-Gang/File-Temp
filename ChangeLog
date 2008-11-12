@@ -1,3 +1,12 @@
+2008-11-12  Tim Jenness  <timj@poma.jach.hawaii.edu>
+
+	* Temp.pm: Integrate patches from bleadperl for cygwin. (thanks to 
+	Jari Aalto)
+
+2008-03-15 Tim Jenness <tjenness@cpan.org>
+
+	* Temp.pm: Localize special variables in END blocks and destructors.
+	
 2007-12-20  Tim Jenness  <tjenness@cpan.org>
 
 	---- Release V0.20 CPAN ----
