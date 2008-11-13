@@ -2411,6 +2411,7 @@ sub unlink_on_destroy {
 
 sub DESTROY {
   my $self = shift;
+  local($., $@, $!, $^E, $?);
   if ($self->unlink_on_destroy && 
       $$ == $self->{LAUNCHPID} && !$File::Temp::KEEP_ALL) {
     rmtree($self->{DIRNAME}, $File::Temp::DEBUG, 0)
