@@ -3,6 +3,9 @@
 	* Temp.pm: Integrate patches from bleadperl for cygwin. (thanks to 
 	Jari Aalto)
 
+	* Temp.pm: seekable test was failing on perl 5.6.0 so we now skip the 
+	specific test. (thanks to Zefram)
+	
 2008-03-15 Tim Jenness <tjenness@cpan.org>
 
 	* Temp.pm: Localize special variables in END blocks and destructors.
