@@ -462,16 +462,6 @@ sub _gettemp {
     ${$options{ErrStr}} = "Parent directory ($parent) is not a directory";
     return ();
   }
-  if ( $^O eq 'cygwin' ) {
-      # No-op special case. Under Windows Cygwin (FAT32) the directory
-      # permissions cannot be trusted. Directories are always
-      # writable.
-  } elsif (not -w $parent) {
-
-    ${$options{ErrStr}} = "Parent directory ($parent) is not writable\n";
-      return ();
-  }
-
 
   # Check the stickiness of the directory and chown giveaway if required
   # If the directory is world writable the sticky bit
