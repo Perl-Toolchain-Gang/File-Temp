@@ -894,7 +894,12 @@ sub _can_do_level {
 		  @{ $dirs_to_unlink{$$} } : () );
       foreach my $dir (@dirs) {
 	if (-d $dir) {
-	  rmtree($dir, $DEBUG, 0);
+      # Some versions of rmtree will abort if you attempt to remove
+      # the directory you are sitting in. We protect that and turn it
+      # into a warning. We do this because this occurs during
+      # cleanup and so can not be caught by the user.
+      eval { rmtree($dir, $DEBUG, 0); };
+      warn $@ if ($@ && $^W);
 	}
       }
 
@@ -2332,6 +2337,12 @@ srand(EXPR) in each child else all the children will attempt to walk
 through the same set of random file names and may well cause
 themselves to give up if they exceed the number of retry attempts.
 
+=head2 Directory removal
+
+Note that if you have chdir'ed into the temporary directory and it is
+subsequently cleaned up (either in the END block or as part of object
+destruction), then you will get a warning from File::Path::rmtree().
+
 =head2 BINMODE
 
 The file returned by File::Temp will have been opened in binary mode
@@ -2414,8 +2425,14 @@ sub DESTROY {
   local($., $@, $!, $^E, $?);
   if ($self->unlink_on_destroy && 
       $$ == $self->{LAUNCHPID} && !$File::Temp::KEEP_ALL) {
-    rmtree($self->{DIRNAME}, $File::Temp::DEBUG, 0)
-      if -d $self->{DIRNAME};
+    if (-d $self->{DIRNAME}) {
+      # Some versions of rmtree will abort if you attempt to remove
+      # the directory you are sitting in. We protect that and turn it
+      # into a warning. We do this because this occurs during object
+      # destruction and so can not be caught by the user.
+      eval { rmtree($self->{DIRNAME}, $File::Temp::DEBUG, 0); };
+      warn $@ if ($@ && $^W);
+    }
   }
 }
 

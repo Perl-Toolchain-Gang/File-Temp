@@ -1,15 +1,21 @@
 2008-11-12  Tim Jenness  <timj@poma.jach.hawaii.edu>
 
+	---- Release V0.21 CPAN ----
+	
 	* Temp.pm: Integrate patches from bleadperl for cygwin. (thanks to 
 	Jari Aalto)
 
-	* Temp.pm: seekable test was failing on perl 5.6.0 so we now skip the 
-	specific test. (thanks to Zefram)
+	* t/seekable.t: seekable test was failing on perl 5.6.0 so we now
+	skip the specific test. (thanks to Zefram)
 
 	* Temp.pm: Remove the test on the parent directory to see if a file
 	can be written. This will be found out anyway as soon as the file open
 	is attempted. AFS systems may fail a -w test but still allow a file to
 	be created. (thanks to Christopher Ellison)
+
+	* Temp.pm: Put an eval around rmtree. Some versions of rmtree croak
+	if you attempt to remove a directory that you are inside. (debian bug
+	479317).
 	
 2008-03-15 Tim Jenness <tjenness@cpan.org>
 
