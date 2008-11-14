@@ -1,9 +1,13 @@
 2008-11-12  Tim Jenness  <timj@poma.jach.hawaii.edu>
 
 	---- Release V0.21 CPAN ----
+
+	* Temp.pm: Clean out $FILES_CREATED_BY_OBJECT when the destructor
+	runs. Otherwise memory does not get returned. Really bad idea for 
+	daemons. (Thanks to Maxime Therreault RT #37621)
 	
 	* Temp.pm: Integrate patches from bleadperl for cygwin. (thanks to 
-	Jari Aalto)
+	Jari Aalto RT #36376)
 
 	* t/seekable.t: seekable test was failing on perl 5.6.0 so we now
 	skip the specific test. (thanks to Zefram)
@@ -15,7 +19,7 @@
 
 	* Temp.pm: Put an eval around rmtree. Some versions of rmtree croak
 	if you attempt to remove a directory that you are inside. (debian bug
-	479317).
+	479317 and RT #35779).
 	
 2008-03-15 Tim Jenness <tjenness@cpan.org>
 

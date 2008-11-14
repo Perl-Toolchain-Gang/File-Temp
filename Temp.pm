@@ -1161,11 +1161,22 @@ will not be removed.
 sub DESTROY {
   local($., $@, $!, $^E, $?);
   my $self = shift;
+
+  # Make sure we always remove the file from the global hash
+  # on destruction. This prevents the hash from growing uncontrollably
+  # and post-destruction there is no reason to know about the file.
+  my $file = $self->filename;
+  my $was_created_by_proc;
+  if (exists $FILES_CREATED_BY_OBJECT{$$}{$file}) {
+    $was_created_by_proc = 1;
+    delete $FILES_CREATED_BY_OBJECT{$$}{$file};
+  }
+
   if (${*$self}{UNLINK} && !$KEEP_ALL) {
     print "# --------->   Unlinking $self\n" if $DEBUG;
 
     # only delete if this process created it
-    return unless exists $FILES_CREATED_BY_OBJECT{$$}{$self->filename};
+    return unless $was_created_by_proc;
 
     # The unlink1 may fail if the file has been closed
     # by the caller. This leaves us with the decision
@@ -1173,9 +1184,9 @@ sub DESTROY {
     # do an unlink without test. Seems to be silly
     # to do this when we are trying to be careful
     # about security
-    _force_writable( $self->filename ); # for windows
-    unlink1( $self, $self->filename )
-      or unlink($self->filename);
+    _force_writable( $file ); # for windows
+    unlink1( $self, $file )
+      or unlink($file);
   }
 }
 
