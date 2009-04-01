@@ -2352,10 +2352,12 @@ conditions.  It's far more secure to use the filehandle alone and
 dispense with the filename altogether.
 
 If you need to pass the handle to something that expects a filename
-then, on a unix system, use C<"/dev/fd/" . fileno($fh)> for arbitrary
-programs, or more generally C<< "+<=&" . fileno($fh) >> for Perl
-programs.  You will have to clear the close-on-exec bit on that file
-descriptor before passing it to another process.
+then on a unix system you can use C<"/dev/fd/" . fileno($fh)> for
+arbitrary programs. Perl code that uses the 2-argument version of
+C<< open >> can be passed C<< "+<=&" . fileno($fh) >>. Otherwise you
+will need to pass the filename. You will have to clear the
+close-on-exec bit on that file descriptor before passing it to another
+process.
 
     use Fcntl qw/F_SETFD F_GETFD/;
     fcntl($tmpfh, F_SETFD, 0)
