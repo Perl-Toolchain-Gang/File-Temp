@@ -11,7 +11,7 @@ use File::Temp;
 
 # OO interface
 
-my $file = File::Temp->new(CLEANUP=>1);
+my $file = File::Temp->new();
 
 myok( 1, -f $file->filename, "OO File exists" );
 
@@ -47,7 +47,7 @@ myok( 4, -f $file->filename(), "OO File exists in parent" );
 
 # non-OO interface
 
-my ($fh, $filename) = File::Temp::tempfile( CLEANUP => 1 );
+my ($fh, $filename) = File::Temp::tempfile( UNLINK => 1 );
 
 myok( 5, -f $filename, "non-OO File exists" );
 
