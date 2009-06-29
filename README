@@ -123,12 +123,15 @@ AUTHOR
 
 Tim Jenness <tjenness@cpan.org>
 
-Copyright (C) 1999 - 2008 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999 - 2009 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.22
+      + Portability fixes in t/fork.t provided by perl5-porters.
 
 V0.21
       + Clean out $FILES_CREATED_BY_OBJECT when the destructor runs. Otherwise
