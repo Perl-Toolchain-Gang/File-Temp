@@ -868,12 +868,17 @@ sub _can_do_level {
   # Set up an end block to use these arrays
   END {
     local($., $@, $!, $^E, $?);
-    cleanup();
+    cleanup(at_exit => 1);
   }
 
-  # Cleanup function. Always triggered on END but can be invoked
-  # manually.
+  # Cleanup function. Always triggered on END (with at_exit => 1) but
+  # can be invoked manually.
   sub cleanup {
+    my %h = @_;
+    my $at_exit = delete $h{at_exit};
+    $at_exit = 0 if not defined $at_exit;
+    { my @k = sort keys %h; die "unrecognized parameters: @k" if @k }
+
     if (!$KEEP_ALL) {
       # Files
       my @files = (exists $files_to_unlink{$$} ?
@@ -893,15 +898,34 @@ sub _can_do_level {
       # Dirs
       my @dirs = (exists $dirs_to_unlink{$$} ?
                   @{ $dirs_to_unlink{$$} } : () );
+      my ($cwd, $cwd_to_remove);
       foreach my $dir (@dirs) {
         if (-d $dir) {
           # Some versions of rmtree will abort if you attempt to remove
-          # the directory you are sitting in. We protect that and turn it
-          # into a warning. We do this because this occurs during
-          # cleanup and so can not be caught by the user.
+          # the directory you are sitting in. For automatic cleanup
+          # at program exit, we avoid this by chdir()ing out of the way
+          # first. If not at program exit, it's best not to mess with the
+          # current directory, so just let it fail with a warning.
+          if ($at_exit) {
+            $cwd = File::Spec->rel2abs(File::Spec->curdir) if not defined $cwd;
+            my $abs = File::Spec->rel2abs($dir);
+            if ($abs eq $cwd) {
+              $cwd_to_remove = $dir;
+              next;
+            }
+          }
           eval { rmtree($dir, $DEBUG, 0); };
           warn $@ if ($@ && $^W);
         }
+      }
+
+      if (defined $cwd_to_remove) {
+        # We do need to clean up the current directory, and everything
+        # else is done, so get out of there and remove it.
+        my $root = File::Spec->rootdir;
+        chdir $root or die "cannot chdir to $root: $!";
+        eval { rmtree($cwd_to_remove, $DEBUG, 0); };
+        warn $@ if ($@ && $^W);
       }
 
       # clear the arrays
@@ -1149,9 +1173,12 @@ No error is given if the unlink fails.
 If the object has been passed to a child process during a fork, the
 file will be deleted when the object goes out of scope in the parent.
 
-For a temporary directory object the directory will be removed
-unless the CLEANUP argument was used in the constructor (and set to
-false) or C<unlink_on_destroy> was modified after creation.
+For a temporary directory object the directory will be removed unless
+the CLEANUP argument was used in the constructor (and set to false) or
+C<unlink_on_destroy> was modified after creation.  Note that if a temp
+directory is your current directory, it cannot be removed - a warning
+will be given in this case.  C<chdir()> out of the directory before
+letting the object go out of scope.
 
 If the global variable $KEEP_ALL is true, the file or directory
 will not be removed.
@@ -2134,6 +2161,11 @@ that are registered for removal to be removed. This happens automatically
 when the process exits but can be triggered manually if the caller is sure
 that none of the temp files are required. This method can be registered as
 an Apache callback.
+
+Note that if a temp directory is your current directory, it cannot be
+removed.  C<chdir()> out of the directory first before calling
+C<cleanup()>. (For the cleanup at program exit when the CLEANUP flag
+is set, this happens automatically.)
 
 On OSes where temp files are automatically removed when the temp file
 is closed, calling this function will have no effect other than to remove

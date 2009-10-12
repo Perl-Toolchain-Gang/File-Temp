@@ -3,7 +3,7 @@
 
 use strict;
 use Test;
-BEGIN { plan tests => 22}
+BEGIN { plan tests => 24}
 use File::Spec;
 
 # Will need to check that all files were unlinked correctly
@@ -120,7 +120,7 @@ push(@files, $tempfile);
 print "# TEMPFILE: Created $tempfile\n";
 ok( -f $tempfile );
 ok( close( $fh ) );
-push( @still_there, $tempfile); # check at END
+push( @still_there, File::Spec->rel2abs($tempfile) ); # check at END
 
 # Would like to create a temp file and just retrieve the handle
 # but the test is problematic since:
@@ -144,6 +144,15 @@ if ($fh) {
   skip "Skip Failed probably due to NFS", 1;
   skip "Skip Failed probably due to NFS", 1;
 }
+
+# Create temp directory and chdir to it; it should still be removed on exit.
+$tempdir = tempdir(CLEANUP => 1);
+
+print "# TEMPDIR: $tempdir\n";
+
+ok( (-d $tempdir) );
+chdir $tempdir or die $!;
+push(@dirs, $tempdir);
 
 # Now END block will execute to test the removal of directories
 print "# End of tests. Execute END blocks\n";
