@@ -1,6 +1,6 @@
 File::Temp - provides functions for generating temporary files
 
-This is release V0.22 of File::Temp. This module can be used to
+This is release V0.23 of File::Temp. This module can be used to
 generate temporary files (providing a filename and filehandle) or directories.
 Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
@@ -86,7 +86,7 @@ PLATFORMS
 
 Tested on the following platforms:
 
- MacOSX 10.5.5, perl 5.10.0
+ MacOSX 10.6.5, perl 5.12.2
  Linux CentOS 5.2, perl 5.8.9
 
 Earlier versions were tested on:
@@ -115,20 +115,26 @@ FILE::PATH PROBLEM
 In perl releases prior to perl 5.6.1 File::Temp will fail to remove
 directory paths if taint checking is enabled. The problem is a bug in
 the implementation of File::Path's rmtree function that is fixed in
-version 1.05 of File::Path. You may want to upgrade File::Path if you
-come across this problem (you should be able to simply copy in the new
-implementation of File::Path from a newer perl)..
+version 1.05 of File::Path. The build system now requires v2.06 of
+File::Path or newer.
 
 AUTHOR
 
 Tim Jenness <tjenness@cpan.org>
 
-Copyright (C) 1999 - 2009 Tim Jenness and the UK Particle Physics and
+Copyright (C) 1999 - 2010 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
 CHANGES IN THIS RELEASE
+
+V0.23
+      + Use Module::Build instead of MakeMaker for building
+      + Fix logic in tempfile.t for testing directory removal
+      + tempdir() now returns an absolute path (RT#44924)
+      + END directory clean up can now occur if cwd is the tempdir
+        (patch from Ed Avis RT#45246)
 
 V0.22
       + Portability fixes in t/fork.t provided by perl5-porters.
