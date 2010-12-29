@@ -1405,7 +1405,7 @@ sub tempfile {
 
   # Create the file
   my ($fh, $path, $errstr);
-  croak "Error in tempfile() using $template: $errstr"
+  croak "Error in tempfile() using template $template: $errstr"
     unless (($fh, $path) = _gettemp($template,
                                     "open" => $options{'OPEN'},
                                     "mkdir"=> 0 ,
