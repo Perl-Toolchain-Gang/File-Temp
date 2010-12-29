@@ -5,8 +5,7 @@
 # Test a simple open in the cwd and tmpdir foreach of the
 # security levels
 
-use Test;
-BEGIN { plan tests => 13 }
+use Test::More tests => 13;
 
 use strict;
 use File::Spec;

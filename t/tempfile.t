@@ -2,8 +2,7 @@
 # Test for File::Temp - tempfile function
 
 use strict;
-use Test;
-BEGIN { plan tests => 24}
+use Test::More tests => 24;
 use File::Spec;
 
 # Will need to check that all files were unlinked correctly
