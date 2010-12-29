@@ -2423,7 +2423,7 @@ the C<tempdir> function.
 
 Tim Jenness E<lt>tjenness@cpan.orgE<gt>
 
-Copyright (C) 2007-2009 Tim Jenness.
+Copyright (C) 2007-2010 Tim Jenness.
 Copyright (C) 1999-2007 Tim Jenness and the UK Particle Physics and
 Astronomy Research Council. All Rights Reserved.  This program is free
 software; you can redistribute it and/or modify it under the same
