@@ -1,5 +1,7 @@
 2010-12-28  Tim Jenness  <tjenness@cpan.org>
 
+	* Build.PL: Use Module::Build
+
 	* Temp.pm: tempdir() returns an absolute path (Fixes RT #44924)
 
 	* t/rmtree.t: (new) Test temp dir removal explicitly.

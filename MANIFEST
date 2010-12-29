@@ -1,7 +1,7 @@
 MANIFEST
-Makefile.PL
 README
-Temp.pm
+Build.PL
+lib/File/Temp.pm
 t/mktemp.t
 t/posix.t
 t/tempfile.t
@@ -15,4 +15,3 @@ t/rmtree.t
 ChangeLog
 misc/benchmark.pl
 misc/results.txt
-META.yml                                 Module meta-data (added by MakeMaker)
