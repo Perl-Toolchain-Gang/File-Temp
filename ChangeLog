@@ -1,4 +1,22 @@
-2008-11-12  Tim Jenness  <timj@poma.jach.hawaii.edu>
+2010-12-28  Tim Jenness  <tjenness@cpan.org>
+
+	* Temp.pm: tempdir() returns an absolute path (Fixes RT #44924)
+
+	* t/rmtree.t: (new) Test temp dir removal explicitly.
+
+	* t/tempfile.t: Correctly tests directory removal from chdir.
+
+	* Temp.pm: Clean up temp directory on exit even if it is the
+	current directory. Patch supplied by Ed Avis and fixes RT #45246.
+
+2009-06-28  Tim Jenness <tjenness@cpan.org>
+
+	---- Release V0.22 CPAN ----
+
+	* t/fork.t: Fix portability problems in fork.t and remove left
+	over file (RT #41557)
+
+2008-11-12  Tim Jenness  <tjenness@cpan.org>
 
 	---- Release V0.21 CPAN ----
 
