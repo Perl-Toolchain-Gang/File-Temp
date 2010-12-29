@@ -1594,6 +1594,10 @@ sub tempdir  {
                                          "ErrStr" => \$errstr,
                                         ) );
 
+  # Use absolute path for temp dir in case the caller changes
+  # directory after creating the directory
+  $tempdir = File::Spec->rel2abs( $tempdir );
+
   # Install exit handler; must be dynamic to get lexical
   if ( $options{'CLEANUP'} && -d $tempdir) {
     _deferred_unlink(undef, $tempdir, 1);
