@@ -635,7 +635,7 @@ sub _replace_XX {
 }
 
 # Internal routine to force a temp file to be writable after
-# it is created so that we can unlink it. Windows seems to occassionally
+# it is created so that we can unlink it. Windows seems to occasionally
 # force a file to be readonly when written to certain temp locations
 sub _force_writable {
   my $file = shift;
@@ -750,7 +750,7 @@ sub _is_verysafe {
   }
 
   # To reach this point either, the _PC_CHOWN_RESTRICTED symbol
-  # was not avialable or the symbol was there but chown giveaway
+  # was not available or the symbol was there but chown giveaway
   # is allowed. Either way, we now have to test the entire tree for
   # safety.
 
@@ -841,7 +841,7 @@ sub _can_do_level {
 # Arguments:
 #   _deferred_unlink( $fh, $fname, $isdir );
 #
-#   - filehandle (so that it can be expclicitly closed if open
+#   - filehandle (so that it can be explicitly closed if open
 #   - filename   (the thing we want to remove)
 #   - isdir      (flag to indicate that we are being given a directory)
 #                 [and hence no filehandle]
@@ -2266,7 +2266,7 @@ simply examine the return value of C<safe_level>.
       if (($level != STANDARD) && ($level != MEDIUM) && ($level != HIGH)) {
         carp "safe_level: Specified level ($level) not STANDARD, MEDIUM or HIGH - ignoring\n" if $^W;
       } else {
-        # Dont allow this on perl 5.005 or earlier
+        # Don't allow this on perl 5.005 or earlier
         if ($] < 5.006 && $level != STANDARD) {
           # Cant do MEDIUM or HIGH checks
           croak "Currently requires perl 5.006 or newer to do the safe checks";
