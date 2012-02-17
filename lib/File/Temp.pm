@@ -30,8 +30,9 @@ C<_can_unlink_opened_file> method should be modified.
 Are the return values from C<stat> reliable? By default all the
 return values from C<stat> are compared when unlinking a temporary
 file using the filename and the handle. Operating systems other than
-unix do not always have valid entries in all fields. If C<unlink0> fails
-then the C<stat> comparison should be modified accordingly.
+unix do not always have valid entries in all fields. If utility function
+C<File::Temp::unlink0> fails then the C<stat> comparison should be
+modified accordingly.
 
 =item *
 
@@ -1164,7 +1165,7 @@ sub unlink_on_destroy {
 =item B<DESTROY>
 
 When the object goes out of scope, the destructor is called. This
-destructor will attempt to unlink the file (using C<unlink1>)
+destructor will attempt to unlink the file (using L<unlink1|"unlink1">)
 if the constructor was called with UNLINK set to 1 (the default state
 if UNLINK is not specified).
 
