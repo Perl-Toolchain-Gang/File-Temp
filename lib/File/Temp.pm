@@ -2008,15 +2008,14 @@ sub unlink0 {
     # Make sure that the link count is zero
     # - Cygwin provides deferred unlinking, however,
     #   on Win9x the link count remains 1
-    # On NFS the link count may still be 1 but we cant know that
-    # we are on NFS
-    return ( $fh[3] == 0 or $^O eq 'cygwin' ? 1 : 0);
+    # On NFS the link count may still be 1 but we can't know that
+    # we are on NFS.  Since we can't be sure, we'll defer it
 
-  } else {
-    _deferred_unlink($fh, $path, 0);
-    return 1;
+    return 1 if $fh[3] == 0 || $^O eq 'cygwin';
   }
-
+  # fall-through if we can't unlink now
+  _deferred_unlink($fh, $path, 0);
+  return 1;
 }
 
 =item B<cmpstat>
