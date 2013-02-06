@@ -16,8 +16,8 @@ my $build = Module::Build->new
    version_from => $path,
    abstract_from => $path,
    meta_merge => {
-               resources =>  {repository => "git://github.com/timj/perl-File-Temp.git",
-                              homepage => "http://github.com/timj/perl-File-Temp/tree/master",
+               resources =>  {repository => "git://github.com/Perl-Toolchain-Gang/File-Temp.git",
+                              homepage => "http://github.com/Perl-Toolchain-Gang/File-Temp/tree/master",
                              },
                 },
    requires => {
