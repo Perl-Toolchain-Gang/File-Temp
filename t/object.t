@@ -2,7 +2,7 @@
 # Test for File::Temp - OO interface
 
 use strict;
-use Test::More tests => 32;
+use Test::More tests => 33;
 use File::Spec;
 
 # Will need to check that all files were unlinked correctly
@@ -108,7 +108,16 @@ $fh = new File::Temp( TEMPLATE => 'helloXXXXXXX',
 
 print "# TEMPFILE: Created $fh\n";
 
-ok( (-f "$fh"), "File $fh exists? [from template]" );
+# and with a leading template
+$fh = File::Temp->new( 'helloXXXXXXX',
+		      DIR => $tempdir,
+		      SUFFIX => '.dat',
+		    );
+
+print "# TEMPFILE: Created $fh\n";
+
+ok( (-f "$fh"), "File $fh exists? [from leading template]" );
+like( "$fh", qr/hello/, "saw template" );
 push(@files, "$fh");
 
 

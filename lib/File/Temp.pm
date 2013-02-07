@@ -1043,6 +1043,7 @@ sub new {
   my $class = ref($proto) || $proto;
 
   # read arguments and convert keys to upper case
+  my $leading_template = (scalar(@_) % 2 == 1 ? shift(@_) : '' );
   my %args = @_;
   %args = map { uc($_), $args{$_} } keys %args;
 
@@ -1052,7 +1053,10 @@ sub new {
 
   # template (store it in an array so that it will
   # disappear from the arg list of tempfile)
-  my @template = ( exists $args{TEMPLATE} ? $args{TEMPLATE} : () );
+  my @template = (
+    exists $args{TEMPLATE}  ? $args{TEMPLATE} :
+    $leading_template       ? $leading_template : ()
+  );
   delete $args{TEMPLATE};
 
   # Protect OPEN
