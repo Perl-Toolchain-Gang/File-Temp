@@ -909,8 +909,8 @@ sub _can_do_level {
           # first. If not at program exit, it's best not to mess with the
           # current directory, so just let it fail with a warning.
           if ($at_exit) {
-            $cwd = File::Spec->rel2abs(File::Spec->curdir) if not defined $cwd;
-            my $abs = File::Spec->rel2abs($dir);
+            $cwd = Cwd::abs_path(File::Spec->curdir) if not defined $cwd;
+            my $abs = Cwd::abs_path($dir);
             if ($abs eq $cwd) {
               $cwd_to_remove = $dir;
               next;
@@ -953,6 +953,12 @@ sub _can_do_level {
 
     warn "Setting up deferred removal of $fname\n"
       if $DEBUG;
+
+    # make sure we save the absolute path for later cleanup
+    # OK to untaint because we only ever use this internally
+    # as a file path, never interpolating into the shell
+    $fname = Cwd::abs_path($fname);
+    ($fname) = $fname =~ /^(.*)$/;
 
     # If we have a directory, check that it is a directory
     if ($isdir) {
@@ -1108,8 +1114,8 @@ sub newdir {
     $tempdir = tempdir( %options );
   }
 
-  # get a safe absolute path for cleanup, just like tempdir
-  # would when setting up its own deferred cleanup
+  # get a safe absolute path for cleanup, just like
+  # happens in _deferred_unlink
   my $real_dir = Cwd::abs_path( $tempdir );
   ($real_dir) = $real_dir =~ /^(.*)$/;
 
@@ -1607,13 +1613,6 @@ sub tempdir  {
                                          "suffixlen" => $suffixlen,
                                          "ErrStr" => \$errstr,
                                         ) );
-
-  # Use absolute path for temp dir in case the caller changes
-  # directory after creating the directory
-  $tempdir = Cwd::abs_path( $tempdir );
-  # We already created the directory, so knowing the absolute
-  # path free of symlinks poses no additional risk
-  ($tempdir) = $tempdir =~ /^(.*)$/;
 
   # Install exit handler; must be dynamic to get lexical
   if ( $options{'CLEANUP'} && -d $tempdir) {
