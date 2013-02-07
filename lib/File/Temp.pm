@@ -143,6 +143,7 @@ use 5.004;
 use strict;
 use Carp;
 use File::Spec 0.8;
+use Cwd ();
 use File::Path qw/ rmtree /;
 use Fcntl 1.03;
 use IO::Seekable;               # For SEEK_*
@@ -1602,7 +1603,10 @@ sub tempdir  {
 
   # Use absolute path for temp dir in case the caller changes
   # directory after creating the directory
-  $tempdir = File::Spec->rel2abs( $tempdir );
+  $tempdir = Cwd::abs_path( $tempdir );
+  # We already created the directory, so knowing the absolute
+  # path free of symlinks poses no additional risk
+  ($tempdir) = $tempdir =~ /^(.*)$/;
 
   # Install exit handler; must be dynamic to get lexical
   if ( $options{'CLEANUP'} && -d $tempdir) {
@@ -2397,6 +2401,11 @@ themselves to give up if they exceed the number of retry attempts.
 Note that if you have chdir'ed into the temporary directory and it is
 subsequently cleaned up (either in the END block or as part of object
 destruction), then you will get a warning from File::Path::rmtree().
+
+=head2 Taint mode
+
+If you need to run code under taint mode, updating to the latest
+L<File::Spec> is highly recommended.
 
 =head2 BINMODE
 

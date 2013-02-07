@@ -16,6 +16,7 @@ my (@files, @dirs, @still_there);
 # These are tidied up
 END {
   foreach (@still_there) {
+    ($_) = /(^.*)/; # untaint for testing under taint mode
     ok( -f $_, "File $_ is still present" );
     ok( unlink( $_ ), "Unlink file" );
     ok( !(-f $_), "File is no longer present" );
