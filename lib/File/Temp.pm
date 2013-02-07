@@ -1321,7 +1321,9 @@ Will croak() if there is an error.
 =cut
 
 sub tempfile {
-
+  if ( $_[0] eq 'File::Temp' ) {
+      croak "'tempfile' can't be called as a method";
+  }
   # Can not check for argument count since we can have any
   # number of args
 
@@ -1512,6 +1514,9 @@ Will croak() if there is an error.
 # '
 
 sub tempdir  {
+  if ( $_[0] eq 'File::Temp' ) {
+      croak "'tempdir' can't be called as a method";
+  }
 
   # Can not check for argument count since we can have any
   # number of args

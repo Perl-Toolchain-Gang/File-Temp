@@ -2,7 +2,7 @@
 # Test for File::Temp - OO interface
 
 use strict;
-use Test::More tests => 30;
+use Test::More tests => 32;
 use File::Spec;
 
 # Will need to check that all files were unlinked correctly
@@ -32,6 +32,12 @@ END { foreach (@dirs)  { ok( !(-d $_), "Directory $_ should not be there" ) } }
 # in reverse order and we need to check the files *after* File::Temp
 # removes them
 BEGIN {use_ok( "File::Temp" ); }
+
+# Check for misuse
+eval { File::Temp->tempfile };
+like( $@, qr/can't be called as a method/, "File::Temp->tempfile error" );
+eval { File::Temp->tempdir };
+like( $@, qr/can't be called as a method/, "File::Temp->tempfile error" );
 
 # Tempfile
 # Open tempfile in some directory, unlink at end
