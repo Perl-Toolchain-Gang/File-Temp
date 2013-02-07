@@ -802,7 +802,7 @@ sub _is_verysafe {
 
 sub _can_unlink_opened_file {
 
-  if ($^O eq 'MSWin32' || $^O eq 'os2' || $^O eq 'VMS' || $^O eq 'dos' || $^O eq 'MacOS') {
+  if (grep { $^O eq $_ } qw/MSWin32 os2 VMS dos MacOS haiku/) {
     return 0;
   } else {
     return 1;
