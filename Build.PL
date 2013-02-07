@@ -25,6 +25,9 @@ my $build = Module::Build->new
                 'File::Path' => 2.06,
                 Fcntl => 1.03,
                },
+   configure_requires => {
+                          "Module::Build" => 0.36,
+                         },
    build_requires => {
                       'Test::More' => 0,
                       'Cwd' => 0,
