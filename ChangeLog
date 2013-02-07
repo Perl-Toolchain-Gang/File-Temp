@@ -1,10 +1,10 @@
-2010-12-28  Tim Jenness  <tjenness@cpan.org>
+XXXX-XX-XX  Tim Jenness <tjenness@cpan.org>
 
 	---- Release V0.23 CPAN ----
 
 	* Build.PL: Use Module::Build
 
-	* Temp.pm: tempdir() returns an absolute path (Fixes RT #44924)
+	* Temp.pm: internally holds absolute path for cleanup (Fixes RT #44924)
 
 	* t/rmtree.t: (new) Test temp dir removal explicitly.
 
@@ -12,6 +12,15 @@
 
 	* Temp.pm: Clean up temp directory on exit even if it is the
 	current directory. Patch supplied by Ed Avis and fixes RT #45246.
+
+	* Temp.pm: Defer unlinking tempfiles if initial unlink fails
+	instad of croaking; fixes problems on NFS (RT #82720)
+
+	* Temp.pm: Allow leading template to new() for consistency with
+	newdir()
+
+	* Temp.pm: Calling tempfile or tempdir as a class method now
+	produce a more useful fatal error message
 
 2009-06-28  Tim Jenness <tjenness@cpan.org>
 
