@@ -1,12 +1,11 @@
 
 Development of this module has moved to https://github.com/Perl-Toolchain-Gang/File-Temp
 
-
 File::Temp - provides functions for generating temporary files
 
-This is release V0.23 of File::Temp. This module can be used to
-generate temporary files (providing a filename and filehandle) or directories.
-Possible race conditions are avoided and some security checks are performed
+This is release V0.22_90 of File::Temp. A development release preparing for V0.23.
+This module can be used to generate temporary files (providing a filename and filehandle)
+or directories. Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
 
 It could be considered to be in a late beta state since it has only been
@@ -126,8 +125,7 @@ AUTHOR
 
 Tim Jenness <tjenness@cpan.org>
 
-Copyright (C) 1999 - 2010 Tim Jenness and the UK Particle Physics and
-Astronomy Research Council. All Rights Reserved.  This program is free
+Copyright (C) 1999 - 2013 Tim Jenness. All Rights Reserved. This program is free
 software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
@@ -136,9 +134,18 @@ CHANGES IN THIS RELEASE
 V0.23
       + Use Module::Build instead of MakeMaker for building
       + Fix logic in tempfile.t for testing directory removal
-      + tempdir() now returns an absolute path (RT#44924)
       + END directory clean up can now occur if cwd is the tempdir
         (patch from Ed Avis RT#45246)
+      + internally holds absolute path for cleanup (Fixes RT #44924)
+      + Test temp dir removal explicitly in t/rmtree.t
+      + Defer unlinking tempfiles if initial unlink fails
+        instad of croaking; fixes problems on NFS (RT #82720)
+      + Allow leading template to new() for consistency with
+        newdir()
+      + Calling tempfile or tempdir as a class method now
+        produce a more useful fatal error message
+
+        Thanks to David Golden for supplying many of the above fixes.
 
 V0.22
       + Portability fixes in t/fork.t provided by perl5-porters.
