@@ -4,20 +4,19 @@ use Test::More tests => 1;
 
 use File::Spec;
 use File::Path;
-use autodie;
 use File::Temp;
 
 rmtree "testing";
-mkdir "testing";
+mkdir "testing" or die "mkdir failed: $!";
 chdir "testing";
-mkdir "tmp";
+mkdir "tmp" or die "mkdir failed: $!";
 
 my $tempdirstr;
 {
     my $dir = File::Temp->newdir( DIR => "tmp" );
     $tempdirstr = "$dir";
 
-    mkdir "hide";
+    mkdir "hide" or die "mkdir failed: $!";
     chdir "hide";
 }
 
@@ -32,11 +31,10 @@ rmtree( "testing" );
 exit;
 
 sub dircontent {
-  use autodie;
   my $dir = shift;
   my $tempdirstr = shift;
   my $str = "Contents of $dir (should not contain \"$tempdirstr\"):\n";
-  opendir(my $DH, $dir);
+  opendir(my $DH, $dir) or die "opendir failed; $!";
   my @contents = grep { $_ !~ /^\.+/; } readdir($DH);
   closedir($DH);
   for my $ls (@contents) {
