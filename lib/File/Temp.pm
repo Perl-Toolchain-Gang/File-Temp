@@ -1107,7 +1107,14 @@ sub newdir {
   } else {
     $tempdir = tempdir( %options );
   }
+
+  # get a safe absolute path for cleanup, just like tempdir
+  # would when setting up its own deferred cleanup
+  my $real_dir = Cwd::abs_path( $tempdir );
+  ($real_dir) = $real_dir =~ /^(.*)$/;
+
   return bless { DIRNAME => $tempdir,
+                 REALNAME => $real_dir,
                  CLEANUP => $cleanup,
                  LAUNCHPID => $$,
                }, "File::Temp::Dir";
@@ -2489,12 +2496,12 @@ sub DESTROY {
   local($., $@, $!, $^E, $?);
   if ($self->unlink_on_destroy && 
       $$ == $self->{LAUNCHPID} && !$File::Temp::KEEP_ALL) {
-    if (-d $self->{DIRNAME}) {
+    if (-d $self->{REALNAME}) {
       # Some versions of rmtree will abort if you attempt to remove
       # the directory you are sitting in. We protect that and turn it
       # into a warning. We do this because this occurs during object
       # destruction and so can not be caught by the user.
-      eval { rmtree($self->{DIRNAME}, $File::Temp::DEBUG, 0); };
+      eval { rmtree($self->{REALNAME}, $File::Temp::DEBUG, 0); };
       warn $@ if ($@ && $^W);
     }
   }
