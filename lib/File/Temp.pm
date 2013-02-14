@@ -924,8 +924,9 @@ sub _can_do_level {
       if (defined $cwd_to_remove) {
         # We do need to clean up the current directory, and everything
         # else is done, so get out of there and remove it.
-        my $root = File::Spec->rootdir;
-        chdir $root or die "cannot chdir to $root: $!";
+        chdir $cwd_to_remove or die "cannot chdir to $cwd_to_remove: $!";
+        my $updir = File::Spec->updir;
+        chdir $updir or die "cannot chdir to $updir: $!";
         eval { rmtree($cwd_to_remove, $DEBUG, 0); };
         warn $@ if ($@ && $^W);
       }
