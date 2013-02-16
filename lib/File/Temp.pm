@@ -997,6 +997,24 @@ sub _can_do_level {
 
 }
 
+# normalize argument keys to upper case and do consistent handling
+# of leading template vs TEMPLATE
+sub _parse_args {
+  my $leading_template = (scalar(@_) % 2 == 1 ? shift(@_) : '' );
+  my %args = @_;
+  %args = map { uc($_), $args{$_} } keys %args;
+
+  # template (store it in an array so that it will
+  # disappear from the arg list of tempfile)
+  my @template = (
+    exists $args{TEMPLATE}  ? $args{TEMPLATE} :
+    $leading_template       ? $leading_template : ()
+  );
+  delete $args{TEMPLATE};
+
+  return( \@template, \%args );
+}
+
 =head1 OBJECT-ORIENTED INTERFACE
 
 This is the primary interface for interacting with
@@ -1043,28 +1061,17 @@ sub new {
   my $proto = shift;
   my $class = ref($proto) || $proto;
 
-  # read arguments and convert keys to upper case
-  my $leading_template = (scalar(@_) % 2 == 1 ? shift(@_) : '' );
-  my %args = @_;
-  %args = map { uc($_), $args{$_} } keys %args;
+  my ($maybe_template, $args) = _parse_args(@_);
 
   # see if they are unlinking (defaulting to yes)
-  my $unlink = (exists $args{UNLINK} ? $args{UNLINK} : 1 );
-  delete $args{UNLINK};
-
-  # template (store it in an array so that it will
-  # disappear from the arg list of tempfile)
-  my @template = (
-    exists $args{TEMPLATE}  ? $args{TEMPLATE} :
-    $leading_template       ? $leading_template : ()
-  );
-  delete $args{TEMPLATE};
+  my $unlink = (exists $args->{UNLINK} ? $args->{UNLINK} : 1 );
+  delete $args->{UNLINK};
 
   # Protect OPEN
-  delete $args{OPEN};
+  delete $args->{OPEN};
 
   # Open the file and retain file handle and file name
-  my ($fh, $path) = tempfile( @template, %args );
+  my ($fh, $path) = tempfile( @$maybe_template, %$args );
 
   print "Tmp: $fh - $path\n" if $DEBUG;
 
@@ -1075,7 +1082,7 @@ sub new {
   $FILES_CREATED_BY_OBJECT{$$}{$path} = 1;
 
   # Store unlink information in hash slot (plus other constructor info)
-  %{*$fh} = %args;
+  %{*$fh} = %$args;
 
   # create the object
   bless $fh, $class;
@@ -1099,25 +1106,21 @@ created with this method default to CLEANUP => 1.
 
   $dir = File::Temp->newdir( $template, %options );
 
+A template may be specified either with a leading template or
+with a TEMPLATE argument.
+
 =cut
 
 sub newdir {
   my $self = shift;
 
-  # need to handle args as in tempdir because we have to force CLEANUP
-  # default without passing CLEANUP to tempdir
-  my $template = (scalar(@_) % 2 == 1 ? shift(@_) : undef );
-  my %options = @_;
-  my $cleanup = (exists $options{CLEANUP} ? $options{CLEANUP} : 1 );
+  my ($maybe_template, $args) = _parse_args(@_);
 
-  delete $options{CLEANUP};
+  # handle CLEANUP without passing CLEANUP to tempdir
+  my $cleanup = (exists $args->{CLEANUP} ? $args->{CLEANUP} : 1 );
+  delete $args->{CLEANUP};
 
-  my $tempdir;
-  if (defined $template) {
-    $tempdir = tempdir( $template, %options );
-  } else {
-    $tempdir = tempdir( %options );
-  }
+  my $tempdir = tempdir( @$maybe_template, %$args);
 
   # get a safe absolute path for cleanup, just like
   # happens in _deferred_unlink
@@ -1357,10 +1360,11 @@ sub tempfile {
                 );
 
   # Check to see whether we have an odd or even number of arguments
-  my $template = (scalar(@_) % 2 == 1 ? shift(@_) : undef);
+  my ($maybe_template, $args) = _parse_args(@_);
+  my $template = @$maybe_template ? $maybe_template->[0] : undef;
 
   # Read the options and merge with defaults
-  %options = (%options, @_)  if @_;
+  %options = (%options, %$args);
 
   # First decision is whether or not to open the file
   if (! $options{"OPEN"}) {
@@ -1548,10 +1552,11 @@ sub tempdir  {
                 );
 
   # Check to see whether we have an odd or even number of arguments
-  my $template = (scalar(@_) % 2 == 1 ? shift(@_) : undef );
+  my ($maybe_template, $args) = _parse_args(@_);
+  my $template = @$maybe_template ? $maybe_template->[0] : undef;
 
   # Read the options and merge with defaults
-  %options = (%options, @_)  if @_;
+  %options = (%options, %$args);
 
   # Modify or generate the template
 
