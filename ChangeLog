@@ -25,6 +25,9 @@ XXXX-XX-XX  Tim Jenness <tjenness@cpan.org>
 	* Temp.pm: new/newdir/tempfile/tempdir now all allow either
 	a leading template argument or a TEMPLATE option
 
+        * Temp.pm: Overload numify with refaddr() in same manner as IO::File
+          (closes RT #47397 from Kevin Ryde)
+
 2009-06-28  Tim Jenness <tjenness@cpan.org>
 
 	---- Release V0.22 CPAN ----

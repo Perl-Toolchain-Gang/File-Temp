@@ -3,7 +3,7 @@ Development of this module has moved to https://github.com/Perl-Toolchain-Gang/F
 
 File::Temp - provides functions for generating temporary files
 
-This is release V0.22_90 of File::Temp. A development release preparing for V0.23.
+This is release V0.23 of File::Temp. A development release preparing for V0.23.
 This module can be used to generate temporary files (providing a filename and filehandle)
 or directories. Possible race conditions are avoided and some security checks are performed
 (eg making sure the sticky bit is set on world writeable temp directories).
@@ -144,6 +144,8 @@ V0.23
         newdir()
       + Calling tempfile or tempdir as a class method now
         produce a more useful fatal error message
+      + Overload numify with refaddr() in same manner as IO::File
+        (closes RT #47397 from Kevin Ryde)
 
         Thanks to David Golden for supplying many of the above fixes.
 
