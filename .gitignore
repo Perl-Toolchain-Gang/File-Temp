@@ -1,6 +1,2 @@
-Makefile
-pm_to_blib
-blib
-_build
-Build
-MYMETA.*
+/File-Temp*
+/.build

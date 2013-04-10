@@ -1,8 +1,6 @@
 package File::Temp;
-
-=head1 NAME
-
-File::Temp - return name and handle of a temporary file safely
+# ABSTRACT: return name and handle of a temporary file safely
+# VERSION
 
 =begin __INTERNALS
 
@@ -167,7 +165,7 @@ use overload '""' => "STRINGIFY", '0+' => "NUMIFY",
   fallback => 1;
 
 # use 'our' on v5.6.0
-use vars qw($VERSION @EXPORT_OK %EXPORT_TAGS $DEBUG $KEEP_ALL);
+use vars qw(@EXPORT_OK %EXPORT_TAGS $DEBUG $KEEP_ALL);
 
 $DEBUG = 0;
 $KEEP_ALL = 0;
@@ -204,10 +202,6 @@ use base qw/Exporter/;
 
 # add contents of these tags to @EXPORT
 Exporter::export_tags('POSIX','mktemp','seekable');
-
-# Version number
-
-$VERSION = '0.23';
 
 # This is a list of characters that can be used in random filenames
 
@@ -2456,6 +2450,10 @@ security checking, to ensure the presence of the function regardless of
 operating system and to help with portability. The module was shipped
 as a standard part of perl from v5.6.1.
 
+Thanks to Tom Christiansen for suggesting that this module
+should be written and providing ideas for code improvements and
+security enhancements.
+
 =head1 SEE ALSO
 
 L<POSIX/tmpnam>, L<POSIX/tmpfile>, L<File::Spec>, L<File::Path>
@@ -2465,21 +2463,6 @@ different implementations of temporary file handling.
 
 See L<File::Tempdir> for an alternative object-oriented wrapper for
 the C<tempdir> function.
-
-=head1 AUTHOR
-
-Tim Jenness E<lt>tjenness@cpan.orgE<gt>
-
-Copyright (C) 2007-2010 Tim Jenness.
-Copyright (C) 1999-2007 Tim Jenness and the UK Particle Physics and
-Astronomy Research Council. All Rights Reserved.  This program is free
-software; you can redistribute it and/or modify it under the same
-terms as Perl itself.
-
-Original Perl implementation loosely based on the OpenBSD C code for
-mkstemp(). Thanks to Tom Christiansen for suggesting that this module
-should be written and providing ideas for code improvements and
-security enhancements.
 
 =cut
 
@@ -2533,7 +2516,8 @@ sub DESTROY {
   }
 }
 
-
 1;
+
+=for Pod::Coverage STRINGIFY NUMIFY top_system_uid
 
 # vim: ts=2 sts=2 sw=2 et:
