@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.2301    2013-04-11 16:30:05 Europe/London
+
         * dist.ini: Managed with Dist::Zilla now; generates Makefile.PL
           to avoid circular dependency when using Build.PL
 
