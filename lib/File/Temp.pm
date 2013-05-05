@@ -135,7 +135,7 @@ Filehandles returned by these functions support the seekable methods.
 
 =cut
 
-# 5.6.0 gives us S_IWOTH, S_IWGRP, our and auto-vivifying filehandls
+# 5.6.0 gives us S_IWOTH, S_IWGRP, our and auto-vivifying filehandles
 # People would like a version on 5.004 so give them what they want :-)
 use 5.004;
 use strict;
@@ -884,7 +884,7 @@ sub _can_do_level {
       foreach my $file (@files) {
         # close the filehandle without checking its state
         # in order to make real sure that this is closed
-        # if its already closed then I dont care about the answer
+        # if its already closed then I don't care about the answer
         # probably a better way to do this
         close($file->[0]);      # file handle is [0]
 
