@@ -3,6 +3,8 @@
         * Drop minimum Perl version back to 5.6 (erroneously bumped by dzil)
         * Do not inherit from Exporter (requires Exporter 5.57) (thanks to
           Olivier Mengué)
+        * 'use base ...' => 'use parent ...' as parent is lighter (thanks to
+          Olivier Mengué)
 
 0.2301    2013-04-11 16:30:05 Europe/London
 

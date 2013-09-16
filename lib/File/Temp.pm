@@ -160,7 +160,7 @@ eval { require Carp::Heavy; };
 require Symbol if $] < 5.006;
 
 ### For the OO interface
-use base qw/ IO::Handle IO::Seekable /;
+use parent qw/ IO::Handle IO::Seekable /;
 use overload '""' => "STRINGIFY", '0+' => "NUMIFY",
   fallback => 1;
 

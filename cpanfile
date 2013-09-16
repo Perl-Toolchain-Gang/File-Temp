@@ -2,6 +2,7 @@ requires "Exporter" => "5.57";
 requires "Fcntl" => "1.03";
 requires "File::Path" => "2.06";
 requires "File::Spec" => "0.8";
+requires "parent" => "0.221";
 requires "perl" => "5.006";
 
 on 'test' => sub {
