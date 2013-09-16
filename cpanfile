@@ -1,3 +1,4 @@
+requires "Exporter" => "5.57";
 requires "Fcntl" => "1.03";
 requires "File::Path" => "2.06";
 requires "File::Spec" => "0.8";

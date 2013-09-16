@@ -172,7 +172,7 @@ $KEEP_ALL = 0;
 
 # We are exporting functions
 
-use base qw/Exporter/;
+use Exporter 'import';   # Requires 5.57+
 
 # Export list - to allow fine tuning of export table
 
