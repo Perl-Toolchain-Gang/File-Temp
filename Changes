@@ -13,7 +13,7 @@
         * dist.ini: Managed with Dist::Zilla now; generates Makefile.PL
           to avoid circular dependency when using Build.PL
 
-0.023     2013-03-14 Tim Jenness
+0.23      2013-03-14 Tim Jenness
 
         * Build.PL: Use Module::Build
         * Temp.pm: internally holds absolute path for cleanup (Fixes RT #44924)
