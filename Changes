@@ -295,7 +295,7 @@
           (_replace_XX): Inline the character replacement code rather than
           using _randchar subroutine. Improves performance by an additional 8%.
 
-0.07 2000-04-27  Tim Jenness  <tjenness@cpan.org>
+0.07      2000-04-27  Tim Jenness  <tjenness@cpan.org>
 
         * t/posix.t: Add explicit autoflush on filehandle
         * t/mktemp.t: Add explicit autoflush on filehandle
