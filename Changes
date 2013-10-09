@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+        * Remove compile test and associated dependencies
+
 0.2302    2013-09-26 09:45:35 America/New_York
 
         * Drop minimum Perl version back to 5.6 (erroneously bumped by dzil)
