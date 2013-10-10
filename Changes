@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+        * List all detectable dependencies for completeness. (Test::More had
+          been unintentionally omitted in the last release and many core
+          dependencies had never been listed.)
+
 0.2303    2013-10-09 09:57:21 America/New_York
 
         * Remove compile test and associated dependencies
