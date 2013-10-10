@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.2304    2013-10-10 09:16:27 America/New_York
+
         * List all detectable dependencies for completeness. (Test::More had
           been unintentionally omitted in the last release and many core
           dependencies had never been listed.)
