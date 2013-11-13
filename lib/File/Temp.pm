@@ -75,6 +75,8 @@ Object interface:
   print "Filename is $tmp\n";
   $tmp->seek( 0, SEEK_END );
 
+  $dir = File::Temp->newdir(); # CLEANUP => 1 by default
+
 The following interfaces are provided for compatibility with
 existing APIs. They should not be used in new code.
 
