@@ -3,13 +3,21 @@
 
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
 use File::Spec;
-use threads;
+use File::Temp qw/tempfile tempdir/;
 
-use File::Temp qw/ tempfile tempdir/;
+BEGIN {
+    eval { require threads };
+    if ($@) {
+        plan skip_all => 'Threads not available';
+    }
+    else {
+        plan tests => 2;
 
-ok( 1, "Start test" );
+        # use_ok( "File::Temp" );
+    }
+}
 
 my $tempdir = File::Temp->newdir(
     TEMPLATE => "customXXXXX",
