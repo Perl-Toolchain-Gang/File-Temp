@@ -1,5 +1,5 @@
 #!/usr/local/bin/perl -w
-# Test for File::Temp - tempfile function
+# Test for File::Temp - threads support
 
 use strict;
 use warnings;
@@ -14,8 +14,6 @@ BEGIN {
     }
     else {
         plan tests => 2;
-
-        # use_ok( "File::Temp" );
     }
 }
 
