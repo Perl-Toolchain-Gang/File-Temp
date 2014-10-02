@@ -1,6 +1,7 @@
 package File::Temp;
 # ABSTRACT: return name and handle of a temporary file safely
-# VERSION
+
+our $VERSION = '0.2305';
 
 =begin __INTERNALS
 
