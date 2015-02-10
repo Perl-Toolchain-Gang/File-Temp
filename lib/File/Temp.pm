@@ -1034,6 +1034,8 @@ handles with C<==>.
 
     $fh eq $filename       # as a string
     $fh != \*STDOUT        # as a number
+    
+Available since 0.14.
 
 =over 4
 
@@ -1060,6 +1062,10 @@ is not supported (the file is always opened).
 Arguments are case insensitive.
 
 Can call croak() if an error occurs.
+
+Available since 0.14.
+
+TEMPLATE available since 0.23
 
 =cut
 
@@ -1115,6 +1121,10 @@ created with this method default to CLEANUP => 1.
 A template may be specified either with a leading template or
 with a TEMPLATE argument.
 
+Available since 0.19.
+
+TEMPLATE available since 0.23.
+
 =cut
 
 sub newdir {
@@ -1149,6 +1159,8 @@ Return the name of the temporary file associated with this object
 
 This method is called automatically when the object is used as
 a string.
+
+Current API available since 0.14
 
 =cut
 
@@ -1186,6 +1198,8 @@ The file is removed if this value is true and $KEEP_ALL is not.
  $fh->unlink_on_destroy( 1 );
 
 Default is for the file to be removed.
+
+Current API available since 0.15
 
 =cut
 
@@ -1352,6 +1366,14 @@ will be true (this retains compatibility with earlier releases).
 Options can be combined as required.
 
 Will croak() if there is an error.
+
+Available since 0.05.
+
+UNLINK flag available since 0.10.
+
+TMPDIR flag available since 0.19.
+
+EXLOCK flag available since 0.19.
 
 =cut
 
@@ -1545,6 +1567,8 @@ will be created in tmpdir() and will also be removed at program exit.
 
 Will croak() if there is an error.
 
+Current API available since 0.05.
+
 =cut
 
 # '
@@ -1671,6 +1695,8 @@ with unique alphanumeric combinations.
 
 Will croak() if there is an error.
 
+Current API available since 0.05.
+
 =cut
 
 
@@ -1713,6 +1739,8 @@ would generate a file similar to F<testhGji_w.dat>.
 Returns just the filehandle alone when called in scalar context.
 
 Will croak() if there is an error.
+
+Current API available since 0.05.
 
 =cut
 
@@ -1757,6 +1785,8 @@ Directory must be removed by the caller.
 
 Will croak() if there is an error.
 
+Current API available since 0.05.
+
 =cut
 
 #' # for emacs
@@ -1799,6 +1829,8 @@ that the file will not be opened by someone else.
 Template is the same as that required by mkstemp().
 
 Will croak() if there is an error.
+
+Current API available since 0.05.
 
 =cut
 
@@ -1862,6 +1894,8 @@ directory for a particular operating system.
 
 Will croak() if there is an error.
 
+Current API available since 0.05.
+
 =cut
 
 sub tmpnam {
@@ -1897,6 +1931,10 @@ Currently this command will probably not work when the temporary
 directory is on an NFS file system.
 
 Will croak() if there is an error.
+
+Available since 0.05.
+
+Returning undef if unable to create file added in 0.12.
 
 =cut
 
@@ -1942,6 +1980,8 @@ Equivalent to running mktemp() with $dir/$prefixXXXXXXXX
 Because this function uses mktemp(), it can suffer from race conditions.
 
 Will croak() if there is an error.
+
+Current API available since 0.05.
 
 =cut
 
@@ -2015,6 +2055,10 @@ This function should not be called if you are using the object oriented
 interface since the it will interfere with the object destructor deleting
 the file.
 
+Available Since 0.05.
+
+If can not unlink open file, defer removal until later available since 0.06.
+
 =cut
 
 sub unlink0 {
@@ -2078,6 +2122,8 @@ even when using autoflush (this is usually overcome by waiting a while
 after writing to the tempfile before attempting to C<unlink0> it).
 
 Not exported by default.
+
+Current API available since 0.14.
 
 =cut
 
@@ -2172,6 +2218,8 @@ This function is disabled if the global variable $KEEP_ALL is true.
 Can call croak() if there is a security anomaly during the stat()
 comparison.
 
+Current API available since 0.14.
+
 =cut
 
 sub unlink1 {
@@ -2216,6 +2264,8 @@ temporary directories (which may include temporary files).
   File::Temp::cleanup();
 
 Not exported by default.
+
+Current API available since 0.15.
 
 =back
 
@@ -2291,6 +2341,8 @@ simply examine the return value of C<safe_level>.
   $newlevel = File::Temp->safe_level( File::Temp::HIGH );
   die "Could not change to high security"
       if $newlevel != File::Temp::HIGH;
+      
+Available since 0.05.
 
 =cut
 
@@ -2337,6 +2389,8 @@ UID.
 This value can be adjusted to reduce security checking if required.
 The value is only relevant when C<safe_level> is set to MEDIUM or higher.
 
+Available since 0.05.
+
 =cut
 
 {
@@ -2377,6 +2431,8 @@ Controls whether debugging messages should be enabled.
   $File::Temp::DEBUG = 1;
 
 Default is for debugging mode to be disabled.
+
+Available since 0.15.
 
 =back
 
