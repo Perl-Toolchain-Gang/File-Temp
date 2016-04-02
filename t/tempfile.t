@@ -165,8 +165,9 @@ if ($fh) {
   ok( close($fh), "Close temp file" );
 
 } else {
-  skip "Skip Failed probably due to NFS", 1;
-  skip "Skip Failed probably due to NFS", 1;
+    SKIP: {
+        skip "Skip Failed probably due to NFS", 2;
+    }
 }
 
 # Create temp directory and chdir to it; it should still be removed on exit.

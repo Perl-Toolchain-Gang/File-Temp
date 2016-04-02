@@ -54,7 +54,9 @@ my $status = unlink0($fh, $template);
 if ($status) {
   ok( $status );
 } else {
-  skip("Skip test failed probably due to \$TMPDIR being on NFS",1);
+    SKIP: {
+        skip("Skip test failed probably due to \$TMPDIR being on NFS",1);
+    }
 }
 
 # MKSTEMPS
@@ -77,7 +79,9 @@ $status = unlink0($fh, $fname);
 if ($status) {
   ok($status);
 } else {
-  skip("Skip test failed probably due to cwd being on NFS",1)
+    SKIP: {
+        skip("Skip test failed probably due to cwd being on NFS",1)
+    }
 }
 
 # MKDTEMP
