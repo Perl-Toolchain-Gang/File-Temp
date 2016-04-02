@@ -154,7 +154,7 @@ push( @still_there, File::Spec->rel2abs($tempfile) ); # check at END
 #    on NFS
 # Try to do what we can.
 # Tempfile croaks on error so we need an eval
-$fh = eval { tempfile( 'ftmpXXXXX', DIR => File::Spec->tmpdir ) };
+$fh = eval { tempfile( 'ftmpXXXXX', DIR => File::Temp::_wrap_file_spec_tmpdir() ) };
 
 if ($fh) {
 

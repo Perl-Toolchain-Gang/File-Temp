@@ -1431,7 +1431,7 @@ sub tempfile {
 
     } elsif ($options{TMPDIR}) {
 
-      $template = File::Spec->catfile(File::Spec->tmpdir, $template );
+      $template = File::Spec->catfile(_wrap_file_spec_tmpdir(), $template );
 
     }
 
@@ -1443,7 +1443,7 @@ sub tempfile {
 
     } else {
 
-      $template = File::Spec->catfile(File::Spec->tmpdir, TEMPXXX);
+      $template = File::Spec->catfile(_wrap_file_spec_tmpdir(), TEMPXXX);
 
     }
 
@@ -1504,6 +1504,58 @@ sub tempfile {
   }
 
 
+}
+
+# On Windows under taint mode, File::Spec could suggest "C:\" as a tempdir
+# which might not be writable.  If that is the case, we fallback to a
+# user directory.  See https://rt.cpan.org/Ticket/Display.html?id=60340
+
+{
+  my ($alt_tmpdir, $checked);
+
+  sub _wrap_file_spec_tmpdir {
+    return File::Spec->tmpdir unless $^O eq "MSWin32" && ${^TAINT};
+
+    if ( $checked ) {
+      return $alt_tmpdir ? $alt_tmpdir : File::Spec->tmpdir;
+    }
+
+    # probe what File::Spec gives and find a fallback
+    my $xxpath = _replace_XX( "X" x 10, 0 );
+
+    # First, see if File::Spec->tmpdir is writable
+    my $tmpdir = File::Spec->tmpdir;
+    my $testpath = File::Spec->catdir( $tmpdir, $xxpath );
+    if (mkdir( $testpath, 0700) ) {
+      $checked = 1;
+      rmdir $testpath;
+      return $tmpdir;
+    }
+
+    # Next, see if CSIDL_LOCAL_APPDATA is writable
+    require Win32;
+    my $local_app = File::Spec->catdir(
+      Win32::GetFolderPath( Win32::CSIDL_LOCAL_APPDATA() ), 'Temp'
+    );
+    $testpath = File::Spec->catdir( $local_app, $xxpath );
+    if ( -e $local_app or mkdir( $local_app, 0700 ) ) {
+      if (mkdir( $testpath, 0700) ) {
+        $checked = 1;
+        rmdir $testpath;
+        return $alt_tmpdir = $local_app;
+      }
+    }
+
+    # Can't find something writable
+    croak << "HERE";
+Couldn't find a writable temp directory in taint mode. Tried:
+  $tmpdir
+  $local_app
+
+Try setting and untainting the TMPDIR environment variable.
+HERE
+
+  }
 }
 
 =item B<tempdir>
@@ -1620,7 +1672,7 @@ sub tempdir  {
       } elsif ($options{TMPDIR}) {
 
         # Prepend tmpdir
-        $template = File::Spec->catdir(File::Spec->tmpdir, $template);
+        $template = File::Spec->catdir(_wrap_file_spec_tmpdir(), $template);
 
       }
 
@@ -1634,7 +1686,7 @@ sub tempdir  {
 
     } else {
 
-      $template = File::Spec->catdir(File::Spec->tmpdir, TEMPXXX);
+      $template = File::Spec->catdir(_wrap_file_spec_tmpdir(), TEMPXXX);
 
     }
 
@@ -1901,8 +1953,9 @@ Current API available since 0.05.
 sub tmpnam {
 
   # Retrieve the temporary directory name
-  my $tmpdir = File::Spec->tmpdir;
+  my $tmpdir = _wrap_file_spec_tmpdir();
 
+  # XXX I don't know under what circumstances this occurs, -- xdg 2016-04-02
   croak "Error temporary directory is not writable"
     if $tmpdir eq '';
 
@@ -2490,7 +2543,10 @@ destruction), then you will get a warning from File::Path::rmtree().
 =head2 Taint mode
 
 If you need to run code under taint mode, updating to the latest
-L<File::Spec> is highly recommended.
+L<File::Spec> is highly recommended.  On Windows, if the directory
+given by L<File::Spec::tmpdir> isn't writable, File::Temp will attempt
+to fallback to the user's local application data directory or croak
+with an error.
 
 =head2 BINMODE
 
