@@ -572,7 +572,7 @@ sub _gettemp {
     # 1 X say and the randomness could come up with the same
     # file MAX_TRIES in a row.
 
-    # Store current attempt - in principal this implies that the
+    # Store current attempt - in principle this implies that the
     # 3rd time around the open attempt that the first temp file
     # name could be generated again. Probably should store each
     # attempt and make sure that none are repeated
