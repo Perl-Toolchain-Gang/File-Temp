@@ -168,11 +168,8 @@ use parent 0.221 qw/ IO::Handle IO::Seekable /;
 use overload '""' => "STRINGIFY", '0+' => "NUMIFY",
   fallback => 1;
 
-# use 'our' on v5.6.0
-use vars qw(@EXPORT_OK %EXPORT_TAGS $DEBUG $KEEP_ALL);
-
-$DEBUG = 0;
-$KEEP_ALL = 0;
+our $DEBUG = 0;
+our $KEEP_ALL = 0;
 
 # We are exporting functions
 
@@ -180,7 +177,7 @@ use Exporter 5.57 'import';   # 5.57 lets us import 'import'
 
 # Export list - to allow fine tuning of export table
 
-@EXPORT_OK = qw{
+our @EXPORT_OK = qw{
                  tempfile
                  tempdir
                  tmpnam
@@ -198,7 +195,7 @@ use Exporter 5.57 'import';   # 5.57 lets us import 'import'
 
 # Groups of functions for export
 
-%EXPORT_TAGS = (
+our %EXPORT_TAGS = (
                 'POSIX' => [qw/ tmpnam tmpfile /],
                 'mktemp' => [qw/ mktemp mkstemp mkstemps mkdtemp/],
                 'seekable' => [qw/ SEEK_SET SEEK_CUR SEEK_END /],
