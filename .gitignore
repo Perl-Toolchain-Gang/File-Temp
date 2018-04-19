@@ -1,2 +1,6 @@
-/File-Temp*
-/.build
+/.ackrc
+/.build/
+!/.gitignore
+/.latest
+/File-Temp-*/
+/File-Temp-*.tar.gz

@@ -4,6 +4,7 @@
           (thanks, Brian Mowrey! RT#101518)
         - fix bad use of skip() in tests (RT#95922)
         - Fall back to CSIDL_LOCAL_APPDATA under taint on Windows (RT#60340)
+        - update distribution tooling
 
 0.2304    2013-10-10 13:16:27Z
 
