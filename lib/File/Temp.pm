@@ -1034,6 +1034,8 @@ handles with C<==>.
 
     $fh eq $filename       # as a string
     $fh != \*STDOUT        # as a number
+    
+Available since 0.14.
 
 Available since 0.14.
 
@@ -2394,6 +2396,8 @@ simply examine the return value of C<safe_level>.
   $newlevel = File::Temp->safe_level( File::Temp::HIGH );
   die "Could not change to high security"
       if $newlevel != File::Temp::HIGH;
+      
+Available since 0.05.
 
 Available since 0.05.
 
