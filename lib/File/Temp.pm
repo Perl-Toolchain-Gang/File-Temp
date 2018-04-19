@@ -2584,6 +2584,8 @@ the C<tempdir> function.
 
 package File::Temp::Dir;
 
+our $VERSION = '0.2305';
+
 use File::Path qw/ rmtree /;
 use strict;
 use overload '""' => "STRINGIFY",
