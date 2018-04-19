@@ -1,7 +1,7 @@
 package File::Temp;
 # ABSTRACT: return name and handle of a temporary file safely
 
-our $VERSION = '0.2305';
+our $VERSION = '0.2306';
 
 =begin __INTERNALS
 
@@ -2584,7 +2584,7 @@ the C<tempdir> function.
 
 package File::Temp::Dir;
 
-our $VERSION = '0.2305';
+our $VERSION = '0.2306';
 
 use File::Path qw/ rmtree /;
 use strict;
