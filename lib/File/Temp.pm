@@ -2635,4 +2635,6 @@ sub DESTROY {
 
 =for Pod::Coverage STRINGIFY NUMIFY top_system_uid
 
+=cut
+
 # vim: ts=2 sts=2 sw=2 et:
