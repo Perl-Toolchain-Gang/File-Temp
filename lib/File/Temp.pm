@@ -306,7 +306,7 @@ my %FILES_CREATED_BY_OBJECT;
 #                        the file as soon as it is closed. Usually indicates
 #                        use of the O_TEMPORARY flag to sysopen.
 #                        Usually irrelevant on unix
-#   "use_exlock" => Indicates that O_EXLOCK should be used. Default is true.
+#   "use_exlock" => Indicates that O_EXLOCK should be used. Default is false.
 
 # Optionally a reference to a scalar can be passed into the function
 # On error this will be used to store the reason for the error
@@ -343,7 +343,7 @@ sub _gettemp {
                  "mkdir" => 0,
                  "suffixlen" => 0,
                  "unlink_on_close" => 0,
-                 "use_exlock" => 1,
+                 "use_exlock" => 0,
                  "ErrStr" => \$tempErrStr,
                 );
 
@@ -1350,15 +1350,14 @@ if warnings are turned on. Consider using the tmpnam()
 and mktemp() functions described elsewhere in this document
 if opening the file is not required.
 
-If the operating system supports it (for example BSD derived systems), the 
-filehandle will be opened with O_EXLOCK (open with exclusive file lock). 
-This can sometimes cause problems if the intention is to pass the filename 
-to another system that expects to take an exclusive lock itself (such as 
-DBD::SQLite) whilst ensuring that the tempfile is not reused. In this 
-situation the "EXLOCK" option can be passed to tempfile. By default EXLOCK 
-will be true (this retains compatibility with earlier releases).
+To open the temporary filehandle with O_EXLOCK (open with exclusive
+file lock) use C<< EXLOCK=>1 >>. This is supported only by some
+operating systems (most notably BSD derived systems). By default
+EXLOCK will be false. Former C<File::Temp> versions set EXLOCK to
+true, so to be sure to get an unlocked filehandle also with older
+versions, explicitly set C<< EXLOCK=>0 >>.
 
-  ($fh, $filename) = tempfile($template, EXLOCK => 0);
+  ($fh, $filename) = tempfile($template, EXLOCK => 1);
 
 Options can be combined as required.
 
@@ -1388,7 +1387,7 @@ sub tempfile {
                  "UNLINK" => 0,     # Do not unlink file on exit
                  "OPEN"   => 1,     # Open file
                  "TMPDIR" => 0, # Place tempfile in tempdir if template specified
-                 "EXLOCK" => 1, # Open file with O_EXLOCK
+                 "EXLOCK" => 0, # Open file with O_EXLOCK
                 );
 
   # Check to see whether we have an odd or even number of arguments
