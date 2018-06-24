@@ -8,7 +8,7 @@ File::Temp - return name and handle of a temporary file safely
 
 =head1 VERSION
 
-version 0.2306
+version 0.2307
 
 =head1 SYNOPSIS
 
@@ -354,15 +354,14 @@ if warnings are turned on. Consider using the tmpnam()
 and mktemp() functions described elsewhere in this document
 if opening the file is not required.
 
-If the operating system supports it (for example BSD derived systems), the 
-filehandle will be opened with O_EXLOCK (open with exclusive file lock). 
-This can sometimes cause problems if the intention is to pass the filename 
-to another system that expects to take an exclusive lock itself (such as 
-DBD::SQLite) whilst ensuring that the tempfile is not reused. In this 
-situation the "EXLOCK" option can be passed to tempfile. By default EXLOCK 
-will be true (this retains compatibility with earlier releases).
+To open the temporary filehandle with O_EXLOCK (open with exclusive
+file lock) use C<< EXLOCK=>1 >>. This is supported only by some
+operating systems (most notably BSD derived systems). By default
+EXLOCK will be false. Former C<File::Temp> versions set EXLOCK to
+true, so to be sure to get an unlocked filehandle also with older
+versions, explicitly set C<< EXLOCK=>0 >>.
 
-  ($fh, $filename) = tempfile($template, EXLOCK => 0);
+  ($fh, $filename) = tempfile($template, EXLOCK => 1);
 
 Options can be combined as required.
 
@@ -966,7 +965,7 @@ Tim Jenness <tjenness@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords David Golden Karen Etheridge Olivier Mengue Peter Rabbitson Ben Tilly Kevin Ryde John Acklam Slaven Rezic James E. Keenan Brian Mowrey Dagfinn Ilmari Mannsåker Steinbrunner Ed Avis Guillem Jover
+=for stopwords David Golden Karen Etheridge Slaven Rezic Peter Rabbitson Olivier Mengue Kevin Ryde John Acklam James E. Keenan Brian Mowrey Dagfinn Ilmari Mannsåker Steinbrunner Ed Avis Guillem Jover Ben Tilly
 
 =over 4
 
@@ -980,11 +979,7 @@ Karen Etheridge <ether@cpan.org>
 
 =item *
 
-Olivier Mengue <dolmen@cpan.org>
-
-=item *
-
-David Golden <xdg@xdg.me>
+Slaven Rezic <slaven@rezic.de>
 
 =item *
 
@@ -992,7 +987,11 @@ Peter Rabbitson <ribasushi@cpan.org>
 
 =item *
 
-Ben Tilly <btilly@gmail.com>
+Olivier Mengue <dolmen@cpan.org>
+
+=item *
+
+David Golden <xdg@xdg.me>
 
 =item *
 
@@ -1005,10 +1004,6 @@ Peter John Acklam <pjacklam@online.no>
 =item *
 
 Slaven Rezic <slaven.rezic@idealo.de>
-
-=item *
-
-Slaven Rezic <slaven@rezic.de>
 
 =item *
 
@@ -1033,6 +1028,10 @@ Ed Avis <eda@linux01.wcl.local>
 =item *
 
 Guillem Jover <guillem@hadrons.org>
+
+=item *
+
+Ben Tilly <btilly@gmail.com>
 
 =back
 

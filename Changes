@@ -1,4 +1,4 @@
-{{$NEXT}}
+0.2307    2018-06-24 19:40:29Z (TRIAL RELEASE)
           - change EXLOCK default from true to false; addresses RT#123959.
             Note that this option was always a no-op on non-BSD platforms;
             changing the default to false makes behaviour more predictable and
