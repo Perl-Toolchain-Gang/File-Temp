@@ -8,7 +8,7 @@ File::Temp - return name and handle of a temporary file safely
 
 =head1 VERSION
 
-version 0.2305
+version 0.2306
 
 =head1 SYNOPSIS
 
@@ -949,8 +949,6 @@ the C<tempdir> function.
 
 =for Pod::Coverage STRINGIFY NUMIFY top_system_uid
 
-# vim: ts=2 sts=2 sw=2 et:
-
 =head1 SUPPORT
 
 Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=File-Temp>
@@ -968,7 +966,7 @@ Tim Jenness <tjenness@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords David Golden Karen Etheridge Olivier Mengue Peter Rabbitson John Acklam James E. Keenan Brian Mowrey Steinbrunner Ed Avis Ben Tilly Kevin Ryde
+=for stopwords David Golden Karen Etheridge Olivier Mengue Peter Rabbitson Ben Tilly Kevin Ryde John Acklam Slaven Rezic James E. Keenan Brian Mowrey Dagfinn Ilmari Mannsåker Steinbrunner Ed Avis Guillem Jover
 
 =over 4
 
@@ -982,11 +980,11 @@ Karen Etheridge <ether@cpan.org>
 
 =item *
 
-David Golden <xdg@xdg.me>
+Olivier Mengue <dolmen@cpan.org>
 
 =item *
 
-Olivier Mengue <dolmen@cpan.org>
+David Golden <xdg@xdg.me>
 
 =item *
 
@@ -994,7 +992,23 @@ Peter Rabbitson <ribasushi@cpan.org>
 
 =item *
 
+Ben Tilly <btilly@gmail.com>
+
+=item *
+
+Kevin Ryde <user42@zip.com.au>
+
+=item *
+
 Peter John Acklam <pjacklam@online.no>
+
+=item *
+
+Slaven Rezic <slaven.rezic@idealo.de>
+
+=item *
+
+Slaven Rezic <slaven@rezic.de>
 
 =item *
 
@@ -1006,6 +1020,10 @@ Brian Mowrey <brian@drlabs.org>
 
 =item *
 
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
 David Steinbrunner <dsteinbrunner@pobox.com>
 
 =item *
@@ -1014,11 +1032,7 @@ Ed Avis <eda@linux01.wcl.local>
 
 =item *
 
-Ben Tilly <btilly@gmail.com>
-
-=item *
-
-Kevin Ryde <user42@zip.com.au>
+Guillem Jover <guillem@hadrons.org>
 
 =back
 
