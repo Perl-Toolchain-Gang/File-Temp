@@ -1,4 +1,4 @@
-{{$NEXT}}
+0.2308    2018-07-11 21:06:16Z
           - remove File::Temp::Dir from the PAUSE index (it is not in its own
             .pm file, so it is not 'use'able on its own)
 

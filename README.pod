@@ -8,7 +8,7 @@ File::Temp - return name and handle of a temporary file safely
 
 =head1 VERSION
 
-version 0.2307
+version 0.2308
 
 =head1 SYNOPSIS
 
