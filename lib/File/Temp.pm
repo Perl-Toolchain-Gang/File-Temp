@@ -2578,7 +2578,8 @@ the C<tempdir> function.
 
 =cut
 
-package File::Temp::Dir;
+package ## hide from PAUSE
+  File::Temp::Dir;
 
 our $VERSION = '0.2308';
 

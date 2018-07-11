@@ -1,4 +1,6 @@
 {{$NEXT}}
+          - remove File::Temp::Dir from the PAUSE index (it is not in its own
+            .pm file, so it is not 'use'able on its own)
 
 0.2307    2018-06-24 19:40:29Z (TRIAL RELEASE)
           - change EXLOCK default from true to false; addresses RT#123959.
