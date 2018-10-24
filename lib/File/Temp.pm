@@ -308,6 +308,7 @@ my %FILES_CREATED_BY_OBJECT;
 #                        Usually irrelevant on unix
 #   "use_exlock" => Indicates that O_EXLOCK should be used. Default is false.
 #   "file_permissions" => file permissions for sysopen(). Default is 0600.
+#   "write_only" => Indicates that O_WRONLY should be used. Default is false.
 
 # Optionally a reference to a scalar can be passed into the function
 # On error this will be used to store the reason for the error
@@ -506,13 +507,16 @@ sub _gettemp {
       # Attempt to open the file
       my $open_success = undef;
       if ( $^O eq 'VMS' and $options{"unlink_on_close"} && !$KEEP_ALL) {
+        my $flags = $OPENFLAGS;
+        $flags = ($flags & ~O_RDWR) | O_WRONLY if $options{write_only};
         # make it auto delete on close by setting FAB$V_DLT bit
-        $fh = VMS::Stdio::vmssysopen($path, $OPENFLAGS, $perms, 'fop=dlt');
+        $fh = VMS::Stdio::vmssysopen($path, $flags, $perms, 'fop=dlt');
         $open_success = $fh;
       } else {
         my $flags = ( ($options{"unlink_on_close"} && !$KEEP_ALL) ?
                       $OPENTEMPFLAGS :
                       $OPENFLAGS );
+        $flags = ($flags & ~O_RDWR) | O_WRONLY if $options{write_only};
         $flags |= $LOCKFLAG if (defined $LOCKFLAG && $options{use_exlock});
         $open_success = sysopen($fh, $path, $flags, $perms);
       }
@@ -1053,7 +1057,7 @@ that the temporary file is removed by the object destructor
 if UNLINK is set to true (the default).
 
 Supported arguments are the same as for C<tempfile>: UNLINK
-(defaulting to true), DIR, EXLOCK, PERMS and SUFFIX.
+(defaulting to true), DIR, EXLOCK, PERMS, WRITE_ONLY and SUFFIX.
 Additionally, the filename
 template is specified using the TEMPLATE option. The OPEN option
 is not supported (the file is always opened).
@@ -1370,6 +1374,11 @@ Use C<PERMS> to change this:
 
   ($fh, $filename) = tempfile($template, PERMS => 0666);
 
+Normally, the temporary filehandle is opened for both reading
+and writing.  To open for writing only, use C<WRITE_ONLY>.
+
+  ($fh, $filename) = tempfile($template, WRITE_ONLY => 1);
+
 Options can be combined as required.
 
 Will croak() if there is an error.
@@ -1383,6 +1392,8 @@ TMPDIR flag available since 0.19.
 EXLOCK flag available since 0.19.
 
 PERMS flag available since 0.24.
+
+WRITE_ONLY flag available since 0.24.
 
 =cut
 
@@ -1402,6 +1413,7 @@ sub tempfile {
                  "TMPDIR" => 0,     # Place tempfile in tempdir if template specified
                  "EXLOCK" => 0,     # Open file with O_EXLOCK
                  "PERMS"  => undef, # File permissions
+                 "WRITE_ONLY" => 0, # Open file with O_WRONLY
                 );
 
   # Check to see whether we have an odd or even number of arguments
@@ -1485,6 +1497,7 @@ sub tempfile {
                                     "ErrStr"           => \$errstr,
                                     "use_exlock"       => $options{EXLOCK},
                                     "file_permissions" => $options{PERMS},
+                                    "write_only"       => $options{WRITE_ONLY},
                                    ) );
 
   # Set up an exit handler that can do whatever is right for the

@@ -2,7 +2,7 @@
 # Test for File::Temp - tempfile function
 
 use strict;
-use Test::More tests => 30;
+use Test::More tests => 35;
 use File::Spec;
 use Cwd qw/ cwd /;
 
@@ -95,8 +95,36 @@ push(@files, File::Spec->rel2abs($tempfile));
 			    DIR => $tempdir,
 			   );
 
-
 ok( (-f $tempfile ), "Local tempfile in tempdir exists");
+{
+  # Catch warning when reading from write-only filehandle
+  # or writing to read-only filehandle.
+  my $e;
+  local $SIG{__WARN__} = sub { $e++ };
+  print $fh 42;
+  <$fh>;
+  ok( !$e, "...and filehandle opened for reading and writing" );
+}
+push(@files, File::Spec->rel2abs($tempfile));
+
+# Test tempfile
+# ..and write-only this time
+($fh, $tempfile) = tempfile(
+			    DIR => $tempdir,
+                            WRITE_ONLY => 1,
+			   );
+
+ok( (-f $tempfile ), "Local WRITE_ONLY tempfile in tempdir exists");
+{
+  # Catch warning when reading from write-only filehandle
+  # or writing to read-only filehandle.
+  my $e;
+  local $SIG{__WARN__} = sub { $e++ };
+  print $fh 42;
+  ok( !$e, "...and filehandle opened for writing" );
+  <$fh>;
+  ok( $e, "...but not reading" );
+}
 push(@files, File::Spec->rel2abs($tempfile));
 
 # Test tempfile
