@@ -2333,6 +2333,56 @@ Current API available since 0.15.
 
 =back
 
+=head1 EXPORTS
+
+These functions are not exported by default but may be exported
+individually:
+
+  tempfile
+  tempdir
+  unlink0
+  cleanup
+
+The functions and constants in these export tags are exported by
+default:
+
+=over
+
+=item :POSIX
+
+Exports the L<POSIX functions|"POSIX FUNCTIONS">:
+
+  tmpnam
+  tmpfile
+
+=item :mktemp
+
+Exports the L<mktemp functions|"MKTEMP FUNCTIONS">:
+
+  mktemp
+  mkstemp
+  mkstemps
+  mkdtemp
+
+=item :seekable
+
+Exports the seek constants:
+
+  SEEK_SET
+  SEEK_CUR
+  SEEK_END
+
+=back
+
+So these two are equivalent:
+
+  use File::Temp;
+  use File::Temp qw/ :POSIX :mktemp :seekable /;
+
+Use an empty list to export nothing:
+
+  use File::Temp ();
+
 =head1 PACKAGE VARIABLES
 
 These functions control the global state of the package.
