@@ -1,8 +1,8 @@
-sudo: false
 addons:
   apt:
     packages:
       - aspell
+      - aspell-en
 language: perl
 perl:
   # Make sure that very old + very new + one threaded perl is
