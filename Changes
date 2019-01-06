@@ -1,4 +1,5 @@
 {{$NEXT}}
+          - fix longstanding pod formatting error (issue #19, RT#109526)
 
 0.2308    2018-07-11 21:06:16Z
           - remove File::Temp::Dir from the PAUSE index (it is not in its own

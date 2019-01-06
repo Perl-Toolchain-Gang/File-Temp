@@ -3,7 +3,7 @@ package File::Temp;
 
 our $VERSION = '0.2309';
 
-=begin __INTERNALS
+=begin :__INTERNALS
 
 =head1 PORTABILITY
 
@@ -41,7 +41,7 @@ The C<_can_do_level> method should be modified accordingly.
 
 =back
 
-=end __INTERNALS
+=end :__INTERNALS
 
 =head1 SYNOPSIS
 
