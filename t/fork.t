@@ -12,10 +12,14 @@ BEGIN {
      $Config::Config{useithreads} and
      $Config::Config{ccflags} =~ /-DPERL_IMPLICIT_SYS/
     );
-  if ( $can_fork ) {
+  if ( $can_fork && !(($^O eq 'MSWin32') && $Devel::Cover::VERSION) ) {
     print "1..8\n";
   } else {
-    print "1..0 # Skip No fork available\n";
+    if ( ($^O eq 'MSWin32') && $Devel::Cover::VERSION ) {
+        print "1..0 # Skip Devel::Cover coverage testing is incompatible with fork under 'MSWin32'\n";
+    } else {
+        print "1..0 # Skip No fork available\n";
+    }
     exit;
   }
 }
