@@ -307,6 +307,7 @@ my %FILES_CREATED_BY_OBJECT;
 #                        use of the O_TEMPORARY flag to sysopen.
 #                        Usually irrelevant on unix
 #   "use_exlock" => Indicates that O_EXLOCK should be used. Default is false.
+#   "file_permissions" => file permissions for sysopen(). Default is 0600.
 
 # Optionally a reference to a scalar can be passed into the function
 # On error this will be used to store the reason for the error
@@ -339,12 +340,13 @@ sub _gettemp {
 
   # Default options
   my %options = (
-                 "open" => 0,
-                 "mkdir" => 0,
-                 "suffixlen" => 0,
-                 "unlink_on_close" => 0,
-                 "use_exlock" => 0,
-                 "ErrStr" => \$tempErrStr,
+                 "open"             => 0,
+                 "mkdir"            => 0,
+                 "suffixlen"        => 0,
+                 "unlink_on_close"  => 0,
+                 "use_exlock"       => 0,
+                 "ErrStr"           => \$tempErrStr,
+                 "file_permissions" => undef,
                 );
 
   # Read the template
@@ -480,6 +482,9 @@ sub _gettemp {
     }
   }
 
+  my $perms = $options{file_permissions};
+  my $has_perms = defined $perms;
+  $perms = 0600 unless $has_perms;
 
   # Now try MAX_TRIES time to open the file
   for (my $i = 0; $i < MAX_TRIES; $i++) {
@@ -502,19 +507,19 @@ sub _gettemp {
       my $open_success = undef;
       if ( $^O eq 'VMS' and $options{"unlink_on_close"} && !$KEEP_ALL) {
         # make it auto delete on close by setting FAB$V_DLT bit
-        $fh = VMS::Stdio::vmssysopen($path, $OPENFLAGS, 0600, 'fop=dlt');
+        $fh = VMS::Stdio::vmssysopen($path, $OPENFLAGS, $perms, 'fop=dlt');
         $open_success = $fh;
       } else {
         my $flags = ( ($options{"unlink_on_close"} && !$KEEP_ALL) ?
                       $OPENTEMPFLAGS :
                       $OPENFLAGS );
         $flags |= $LOCKFLAG if (defined $LOCKFLAG && $options{use_exlock});
-        $open_success = sysopen($fh, $path, $flags, 0600);
+        $open_success = sysopen($fh, $path, $flags, $perms);
       }
       if ( $open_success ) {
 
         # in case of odd umask force rw
-        chmod(0600, $path);
+        chmod($perms, $path) unless $has_perms;
 
         # Opened successfully - return file handle and name
         return ($fh, $path);
@@ -1048,7 +1053,8 @@ that the temporary file is removed by the object destructor
 if UNLINK is set to true (the default).
 
 Supported arguments are the same as for C<tempfile>: UNLINK
-(defaulting to true), DIR, EXLOCK and SUFFIX. Additionally, the filename
+(defaulting to true), DIR, EXLOCK, PERMS and SUFFIX.
+Additionally, the filename
 template is specified using the TEMPLATE option. The OPEN option
 is not supported (the file is always opened).
 
@@ -1359,6 +1365,11 @@ versions, explicitly set C<< EXLOCK=>0 >>.
 
   ($fh, $filename) = tempfile($template, EXLOCK => 1);
 
+By default, the temp file is created with 0600 file permissions.
+Use C<PERMS> to change this:
+
+  ($fh, $filename) = tempfile($template, PERMS => 0666);
+
 Options can be combined as required.
 
 Will croak() if there is an error.
@@ -1370,6 +1381,8 @@ UNLINK flag available since 0.10.
 TMPDIR flag available since 0.19.
 
 EXLOCK flag available since 0.19.
+
+PERMS flag available since 0.24.
 
 =cut
 
@@ -1386,8 +1399,9 @@ sub tempfile {
                  "SUFFIX" => '',    # Template suffix
                  "UNLINK" => 0,     # Do not unlink file on exit
                  "OPEN"   => 1,     # Open file
-                 "TMPDIR" => 0, # Place tempfile in tempdir if template specified
-                 "EXLOCK" => 0, # Open file with O_EXLOCK
+                 "TMPDIR" => 0,     # Place tempfile in tempdir if template specified
+                 "EXLOCK" => 0,     # Open file with O_EXLOCK
+                 "PERMS"  => undef, # File permissions
                 );
 
   # Check to see whether we have an odd or even number of arguments
@@ -1464,12 +1478,13 @@ sub tempfile {
   my ($fh, $path, $errstr);
   croak "Error in tempfile() using template $template: $errstr"
     unless (($fh, $path) = _gettemp($template,
-                                    "open" => $options{'OPEN'},
-                                    "mkdir"=> 0 ,
-                                    "unlink_on_close" => $unlink_on_close,
-                                    "suffixlen" => length($options{'SUFFIX'}),
-                                    "ErrStr" => \$errstr,
-                                    "use_exlock" => $options{EXLOCK},
+                                    "open"             => $options{OPEN},
+                                    "mkdir"            => 0,
+                                    "unlink_on_close"  => $unlink_on_close,
+                                    "suffixlen"        => length($options{SUFFIX}),
+                                    "ErrStr"           => \$errstr,
+                                    "use_exlock"       => $options{EXLOCK},
+                                    "file_permissions" => $options{PERMS},
                                    ) );
 
   # Set up an exit handler that can do whatever is right for the
