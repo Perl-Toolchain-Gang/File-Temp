@@ -1,6 +1,8 @@
 {{$NEXT}}
           - add AppVeyor CI
           - Add PERMS options to create temp file with given file permissions
+          - Document exportable functions, constants and :tags
+          - Add WRITE_ONLY option to open temp file with O_WRONLY
 
 0.2309    2019-01-06 20:29:15Z
           - fix longstanding pod formatting error (issue #19, RT#109526)
