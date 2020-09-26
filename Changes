@@ -1,4 +1,4 @@
-{{$NEXT}}
+0.2310    2020-09-26 17:37:56Z
           - add AppVeyor CI
           - Add PERMS options to create temp file with given file permissions
           - remove remaining uses of indirect object syntax (#34, Nicolas R)

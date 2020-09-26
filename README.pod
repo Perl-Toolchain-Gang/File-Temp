@@ -8,7 +8,7 @@ File::Temp - return name and handle of a temporary file safely
 
 =head1 VERSION
 
-version 0.2309
+version 0.2310
 
 =head1 SYNOPSIS
 
@@ -179,7 +179,8 @@ that the temporary file is removed by the object destructor
 if UNLINK is set to true (the default).
 
 Supported arguments are the same as for C<tempfile>: UNLINK
-(defaulting to true), DIR, EXLOCK and SUFFIX. Additionally, the filename
+(defaulting to true), DIR, EXLOCK, PERMS and SUFFIX.
+Additionally, the filename
 template is specified using the TEMPLATE option. The OPEN option
 is not supported (the file is always opened).
 
@@ -364,6 +365,11 @@ versions, explicitly set C<< EXLOCK=>0 >>.
 
   ($fh, $filename) = tempfile($template, EXLOCK => 1);
 
+By default, the temp file is created with 0600 file permissions.
+Use C<PERMS> to change this:
+
+  ($fh, $filename) = tempfile($template, PERMS => 0666);
+
 Options can be combined as required.
 
 Will croak() if there is an error.
@@ -375,6 +381,8 @@ UNLINK flag available since 0.10.
 TMPDIR flag available since 0.19.
 
 EXLOCK flag available since 0.19.
+
+PERMS flag available since 0.24.
 
 =item B<tempdir>
 
@@ -966,13 +974,13 @@ Tim Jenness <tjenness@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords David Golden Karen Etheridge Slaven Rezic Peter Rabbitson Olivier Mengue Kevin Ryde John Acklam James E. Keenan Brian Mowrey Dagfinn Ilmari Mannsåker Steinbrunner Ed Avis Guillem Jover Ben Tilly
+=for stopwords Tim Jenness Karen Etheridge David Golden Slaven Rezic mohawk2 Roy Ivy III Peter Rabbitson Olivier Mengué John Acklam Gim Yee Nicolas R Brian Mowrey Dagfinn Ilmari Mannsåker Steinbrunner Ed Avis Guillem Jover James E. Keenan Kevin Ryde Ben Tilly
 
 =over 4
 
 =item *
 
-David Golden <dagolden@cpan.org>
+Tim Jenness <t.jenness@jach.hawaii.edu>
 
 =item *
 
@@ -980,7 +988,19 @@ Karen Etheridge <ether@cpan.org>
 
 =item *
 
-Slaven Rezic <slaven@rezic.de>
+David Golden <dagolden@cpan.org>
+
+=item *
+
+Slaven Rezic <srezic@cpan.org>
+
+=item *
+
+mohawk2 <mohawk2@users.noreply.github.com>
+
+=item *
+
+Roy Ivy III <rivy.dev@gmail.com>
 
 =item *
 
@@ -988,15 +1008,7 @@ Peter Rabbitson <ribasushi@cpan.org>
 
 =item *
 
-Olivier Mengue <dolmen@cpan.org>
-
-=item *
-
-David Golden <xdg@xdg.me>
-
-=item *
-
-Kevin Ryde <user42@zip.com.au>
+Olivier Mengué <dolmen@cpan.org>
 
 =item *
 
@@ -1004,11 +1016,11 @@ Peter John Acklam <pjacklam@online.no>
 
 =item *
 
-Slaven Rezic <slaven.rezic@idealo.de>
+Tim Gim Yee <tim.gim.yee@gmail.com>
 
 =item *
 
-James E. Keenan <jkeen@verizon.net>
+Nicolas R <atoomic@cpan.org>
 
 =item *
 
@@ -1032,13 +1044,21 @@ Guillem Jover <guillem@hadrons.org>
 
 =item *
 
+James E. Keenan <jkeen@verizon.net>
+
+=item *
+
+Kevin Ryde <user42@zip.com.au>
+
+=item *
+
 Ben Tilly <btilly@gmail.com>
 
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2019 by Tim Jenness and the UK Particle Physics and Astronomy Research Council.
+This software is copyright (c) 2020 by Tim Jenness and the UK Particle Physics and Astronomy Research Council.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
