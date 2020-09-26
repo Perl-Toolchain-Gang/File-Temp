@@ -804,7 +804,7 @@ sub _is_verysafe {
 
 sub _can_unlink_opened_file {
 
-  if (grep { $^O eq $_ } qw/MSWin32 os2 VMS dos MacOS haiku/) {
+  if (grep $^O eq $_, qw/MSWin32 os2 VMS dos MacOS haiku/) {
     return 0;
   } else {
     return 1;
@@ -1004,7 +1004,7 @@ sub _can_do_level {
 sub _parse_args {
   my $leading_template = (scalar(@_) % 2 == 1 ? shift(@_) : '' );
   my %args = @_;
-  %args = map { uc($_), $args{$_} } keys %args;
+  %args = map +(uc($_) => $args{$_}), keys %args;
 
   # template (store it in an array so that it will
   # disappear from the arg list of tempfile)
