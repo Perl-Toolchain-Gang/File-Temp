@@ -1,6 +1,7 @@
 {{$NEXT}}
           - add AppVeyor CI
           - Add PERMS options to create temp file with given file permissions
+          - remove remaining uses of indirect object syntax (#34, Nicolas R)
 
 0.2309    2019-01-06 20:29:15Z
           - fix longstanding pod formatting error (issue #19, RT#109526)
