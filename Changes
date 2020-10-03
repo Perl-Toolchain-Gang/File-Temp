@@ -1,4 +1,5 @@
 {{$NEXT}}
+          - Fix new PERMS test so as to also pass on root (RT#133443)
 
 0.2310    2020-09-26 17:37:56Z
           - add AppVeyor CI
