@@ -8,7 +8,7 @@ File::Temp - return name and handle of a temporary file safely
 
 =head1 VERSION
 
-version 0.2310
+version 0.2311
 
 =head1 SYNOPSIS
 
@@ -382,7 +382,7 @@ TMPDIR flag available since 0.19.
 
 EXLOCK flag available since 0.19.
 
-PERMS flag available since 0.24.
+PERMS flag available since 0.2310.
 
 =item B<tempdir>
 
