@@ -1382,7 +1382,7 @@ TMPDIR flag available since 0.19.
 
 EXLOCK flag available since 0.19.
 
-PERMS flag available since 0.24.
+PERMS flag available since 0.2310.
 
 =cut
 
