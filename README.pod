@@ -881,7 +881,7 @@ will need to pass the filename. You will have to clear the
 close-on-exec bit on that file descriptor before passing it to another
 process.
 
-    use Fcntl qw/F_SETFD F_GETFD/;
+    use Fcntl qw/F_SETFD/;
     fcntl($tmpfh, F_SETFD, 0)
         or die "Can't clear close-on-exec flag on temp fh: $!\n";
 
