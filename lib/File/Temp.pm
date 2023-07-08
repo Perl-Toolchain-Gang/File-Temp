@@ -658,7 +658,6 @@ sub _force_writable {
 #Args:  directory path to check
 #       Optionally: reference to scalar to contain error message
 # Returns true if the path is safe and false otherwise.
-# Returns undef if can not even run stat() on the path
 
 # This routine based on version written by Tom Christiansen
 
