@@ -47,17 +47,17 @@ The C<_can_do_level> method should be modified accordingly.
 
   use File::Temp qw/ tempfile tempdir /;
 
-  $fh = tempfile();
-  ($fh, $filename) = tempfile();
+  my $fh = tempfile();
+  my ($fh, $filename) = tempfile();
 
-  ($fh, $filename) = tempfile( $template, DIR => $dir);
-  ($fh, $filename) = tempfile( $template, SUFFIX => '.dat');
-  ($fh, $filename) = tempfile( $template, TMPDIR => 1 );
+  my ($fh, $filename) = tempfile( $template, DIR => $dir);
+  my ($fh, $filename) = tempfile( $template, SUFFIX => '.dat');
+  my ($fh, $filename) = tempfile( $template, TMPDIR => 1 );
 
   binmode( $fh, ":utf8" );
 
-  $dir = tempdir( CLEANUP => 1 );
-  ($fh, $filename) = tempfile( DIR => $dir );
+  my $dir = tempdir( CLEANUP => 1 );
+  my ($fh, $filename) = tempfile( DIR => $dir );
 
 Object interface:
 
@@ -65,18 +65,18 @@ Object interface:
   use File::Temp ();
   use File::Temp qw/ :seekable /;
 
-  $fh = File::Temp->new();
-  $fname = $fh->filename;
+  my $fh = File::Temp->new();
+  my $fname = $fh->filename;
 
-  $fh = File::Temp->new(TEMPLATE => $template);
-  $fname = $fh->filename;
+  my $fh = File::Temp->new(TEMPLATE => $template);
+  my $fname = $fh->filename;
 
-  $tmp = File::Temp->new( UNLINK => 0, SUFFIX => '.dat' );
+  my $tmp = File::Temp->new( UNLINK => 0, SUFFIX => '.dat' );
   print $tmp "Some data\n";
   print "Filename is $tmp\n";
   $tmp->seek( 0, SEEK_END );
 
-  $dir = File::Temp->newdir(); # CLEANUP => 1 by default
+  my $dir = File::Temp->newdir(); # CLEANUP => 1 by default
 
 The following interfaces are provided for compatibility with
 existing APIs. They should not be used in new code.
@@ -85,25 +85,25 @@ MkTemp family:
 
   use File::Temp qw/ :mktemp  /;
 
-  ($fh, $file) = mkstemp( "tmpfileXXXXX" );
-  ($fh, $file) = mkstemps( "tmpfileXXXXXX", $suffix);
+  my ($fh, $file) = mkstemp( "tmpfileXXXXX" );
+  my ($fh, $file) = mkstemps( "tmpfileXXXXXX", $suffix);
 
-  $tmpdir = mkdtemp( $template );
+  my $tmpdir = mkdtemp( $template );
 
-  $unopened_file = mktemp( $template );
+  my $unopened_file = mktemp( $template );
 
 POSIX functions:
 
   use File::Temp qw/ :POSIX /;
 
-  $file = tmpnam();
-  $fh = tmpfile();
+  my $file = tmpnam();
+  my $fh = tmpfile();
 
-  ($fh, $file) = tmpnam();
+  my ($fh, $file) = tmpnam();
 
 Compatibility functions:
 
-  $unopened_file = File::Temp::tempnam( $dir, $pfx );
+  my $unopened_file = File::Temp::tempnam( $dir, $pfx );
 
 =head1 DESCRIPTION
 
