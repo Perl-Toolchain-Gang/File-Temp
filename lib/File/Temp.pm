@@ -1016,6 +1016,10 @@ sub _parse_args {
   return( \@template, \%args );
 }
 
+sub _get_pid {
+	return *threads::tid{CODE} ? qq{$$-} . threads->tid : $$;
+}
+
 =head1 OBJECT-ORIENTED INTERFACE
 
 This is the primary interface for interacting with
@@ -1148,7 +1152,7 @@ sub newdir {
   return bless { DIRNAME => $tempdir,
                  REALNAME => $real_dir,
                  CLEANUP => $cleanup,
-                 LAUNCHPID => $$,
+                 LAUNCHPID => File::Temp::_get_pid(),
                }, "File::Temp::Dir";
 }
 
@@ -2633,7 +2637,7 @@ sub DESTROY {
   my $self = shift;
   local($., $@, $!, $^E, $?);
   if ($self->unlink_on_destroy && 
-      $$ == $self->{LAUNCHPID} && !$File::Temp::KEEP_ALL) {
+      File::Temp::_get_pid() eq $self->{LAUNCHPID} && !$File::Temp::KEEP_ALL) {
     if (-d $self->{REALNAME}) {
       # Some versions of rmtree will abort if you attempt to remove
       # the directory you are sitting in. We protect that and turn it
