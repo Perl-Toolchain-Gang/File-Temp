@@ -718,7 +718,7 @@ sub _is_safe {
 
 # Internal routine to check whether a directory is safe
 # for temp files. Safer than _is_safe since it checks for
-# the possibility of chown giveaway and if that is a possibility
+# the possibility of chown giveaway and if that is a possibility,
 # checks each directory in the path to see if it is safe (with _is_safe)
 
 # If _PC_CHOWN_RESTRICTED is not set, does the full test of each
@@ -737,18 +737,16 @@ sub _is_verysafe {
 
   my $err_ref = shift;
 
-  # Should Get the value of _PC_CHOWN_RESTRICTED if it is defined
-  # and If it is not there do the extensive test
+  # Should get the value of _PC_CHOWN_RESTRICTED if it is defined
+  # and if it is not there, do the extensive test
   local($@);
-  my $chown_restricted;
-  $chown_restricted = &POSIX::_PC_CHOWN_RESTRICTED()
-    if eval { &POSIX::_PC_CHOWN_RESTRICTED(); 1};
+  my $chown_restricted = eval { POSIX::_PC_CHOWN_RESTRICTED() };
 
-  # If chown_resticted is set to some value we should test it
+  # If chown_restricted is set to some value, we should test it
   if (defined $chown_restricted) {
 
     # Return if the current directory is safe
-    return _is_safe($path,$err_ref) if POSIX::sysconf( $chown_restricted );
+    return _is_safe($path, $err_ref) if POSIX::pathconf( $path, $chown_restricted );
 
   }
 
@@ -2367,7 +2365,7 @@ for sticky bit.
 
 In addition to the MEDIUM security checks, also check for the
 possibility of ``chown() giveaway'' using the L<POSIX|POSIX>
-sysconf() function. If this is a possibility, each directory in the
+pathconf() function. If this is a possibility, each directory in the
 path is checked in turn for safeness, recursively walking back to the
 root directory.
 

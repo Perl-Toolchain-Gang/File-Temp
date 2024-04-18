@@ -775,7 +775,7 @@ for sticky bit.
 
 In addition to the MEDIUM security checks, also check for the
 possibility of ``chown() giveaway'' using the L<POSIX|POSIX>
-sysconf() function. If this is a possibility, each directory in the
+pathconf() function. If this is a possibility, each directory in the
 path is checked in turn for safeness, recursively walking back to the
 root directory.
 
