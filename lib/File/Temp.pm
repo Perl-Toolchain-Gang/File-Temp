@@ -2554,7 +2554,7 @@ destruction), then you will get a warning from File::Path::rmtree().
 
 If you need to run code under taint mode, updating to the latest
 L<File::Spec> is highly recommended.  On Windows, if the directory
-given by L<File::Spec::tmpdir> isn't writable, File::Temp will attempt
+given by L<File::Spec/tmpdir> isn't writable, File::Temp will attempt
 to fallback to the user's local application data directory or croak
 with an error.
 
