@@ -1705,8 +1705,8 @@ sub tempdir  {
   # Create the directory
   my $tempdir;
   my $suffixlen = 0;
-  if ($^O eq 'VMS') {           # dir names can end in delimiters
-    $template =~ m/([\.\]:>]+)$/;
+  if ($^O eq 'VMS'
+      && ($template =~ m/([\.\]:>]+)$/)) {  # dir specs can end in delimiters
     $suffixlen = length($1);
   }
   if ( ($^O eq 'MacOS') && (substr($template, -1) eq ':') ) {
