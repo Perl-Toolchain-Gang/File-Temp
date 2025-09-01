@@ -2647,7 +2647,7 @@ sub DESTROY {
 
 1;
 
-=for Pod::Coverage STRINGIFY NUMIFY top_system_uid
+=for Pod::Coverage STRINGIFY NUMIFY top_system_uid MAX_TRIES MINX TEMPXXX
 
 =cut
 
